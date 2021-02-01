@@ -1345,6 +1345,7 @@ virsh attach-interface --domain n12 --type network --source n8n12 --model e1000 
 virsh attach-interface --domain n10 --type network --source n10n14 --model e1000 --mac 02:00:aa:01:dd:68 --config --live
 virsh attach-interface --domain n14 --type network --source n10n14 --model e1000 --mac 02:00:aa:01:18:68 --config --live
 
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt-get purge -y frr frr-pythontools"; done
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "curl -s https://deb.frrouting.org/frr/keys.asc | sudo apt-key add -"; done
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "echo deb https://deb.frrouting.org/frr bionic frr-stable | sudo tee -a /etc/apt/sources.list.d/frr.list"; done
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt update -y && sudo apt install frr frr-pythontools -y"; done

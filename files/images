@@ -30,6 +30,7 @@ https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=shari
 
 http://37.156.146.163/PUB/Cisco/IOS/Nexus3K_9K/
 http://37.156.146.163/PUB/Cisco/IOS/CSR1000v/
+https://techlearners.net/downloads/
 
 pip install gdown
 gdown https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=sharing

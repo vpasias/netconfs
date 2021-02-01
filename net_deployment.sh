@@ -16,7 +16,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -26,7 +26,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -36,7 +36,7 @@ interface eth2
  isis bfd
  isis hello-multiplier 3
 !
-interface eth3
+interface vpp2
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -46,7 +46,7 @@ interface eth3
  isis bfd
  isis hello-multiplier 3
 !
-interface eth4
+interface vpp3
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -56,7 +56,7 @@ interface eth4
  isis bfd
  isis hello-multiplier 3
 !
-interface eth5
+interface vpp4
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -101,7 +101,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -111,7 +111,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -121,7 +121,7 @@ interface eth2
  isis bfd
  isis hello-multiplier 3
 !
-interface eth3
+interface vpp2
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -131,7 +131,7 @@ interface eth3
  isis bfd
  isis hello-multiplier 3
 !
-interface eth4
+interface vpp3
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -141,7 +141,7 @@ interface eth4
  isis bfd
  isis hello-multiplier 3
 !
-interface eth5
+interface vpp4
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -186,7 +186,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -196,7 +196,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -206,7 +206,7 @@ interface eth2
  isis bfd
  isis hello-multiplier 3
 !
-interface eth3
+interface vpp2
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -216,7 +216,7 @@ interface eth3
  isis bfd
  isis hello-multiplier 3
 !
-interface eth4
+interface vpp3
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -226,7 +226,7 @@ interface eth4
  isis bfd
  isis hello-multiplier 3
 !
-interface eth5
+interface vpp4
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -301,7 +301,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -311,7 +311,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -321,7 +321,7 @@ interface eth2
  isis bfd
  isis hello-multiplier 3
 !
-interface eth3
+interface vpp2
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -331,7 +331,7 @@ interface eth3
  isis bfd
  isis hello-multiplier 3
 !
-interface eth4
+interface vpp3
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -341,7 +341,7 @@ interface eth4
  isis bfd
  isis hello-multiplier 3
 !
-interface eth5
+interface vpp4
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -416,7 +416,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -426,7 +426,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -436,7 +436,7 @@ interface eth2
  isis bfd
  isis hello-multiplier 3
 !
-interface eth3
+interface vpp2
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -446,7 +446,7 @@ interface eth3
  isis bfd
  isis hello-multiplier 3
 !
-interface eth4
+interface vpp3
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -456,7 +456,7 @@ interface eth4
  isis bfd
  isis hello-multiplier 3
 !
-interface eth5
+interface vpp4
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -501,7 +501,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -511,7 +511,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -521,7 +521,7 @@ interface eth2
  isis bfd
  isis hello-multiplier 3
 !
-interface eth3
+interface vpp2
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -531,7 +531,7 @@ interface eth3
  isis bfd
  isis hello-multiplier 3
 !
-interface eth4
+interface vpp3
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -541,7 +541,7 @@ interface eth4
  isis bfd
  isis hello-multiplier 3
 !
-interface eth5
+interface vpp4
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -586,7 +586,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -596,7 +596,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -685,7 +685,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -695,7 +695,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -784,7 +784,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -794,7 +794,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -883,7 +883,7 @@ interface lo
  isis metric 1
  isis passive
 !
-interface eth1
+interface vpp0
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -893,7 +893,7 @@ interface eth1
  isis bfd
  isis hello-multiplier 3
 !
-interface eth2
+interface vpp1
  ipv6 router isis 1
  ip router isis 1
  isis circuit-type level-2-only
@@ -971,9 +971,9 @@ for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all &&
 
 sleep 30
 
-for i in {1..6}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "cd /home/ubuntu/xdp-tutorial/packet-solutions && sudo make && sudo mount -t bpf bpf /sys/fs/bpf/ && sudo ./xdp_loader -d eth1 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth2 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth3 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth4 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth5 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_prog_user -d eth1 && sudo ./xdp_prog_user -d eth2 && sudo ./xdp_prog_user -d eth3 && sudo ./xdp_prog_user -d eth4 && sudo ./xdp_prog_user -d eth5"; done
+#for i in {1..6}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "cd /home/ubuntu/xdp-tutorial/packet-solutions && sudo make && sudo mount -t bpf bpf /sys/fs/bpf/ && sudo ./xdp_loader -d eth1 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth2 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth3 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth4 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth5 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_prog_user -d eth1 && sudo ./xdp_prog_user -d eth2 && sudo ./xdp_prog_user -d eth3 && sudo ./xdp_prog_user -d eth4 && sudo ./xdp_prog_user -d eth5"; done
 
-for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "cd /home/ubuntu/xdp-tutorial/packet-solutions && sudo make && sudo mount -t bpf bpf /sys/fs/bpf/ && sudo ./xdp_loader -d eth1 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth2 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth3 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_prog_user -d eth1 && sudo ./xdp_prog_user -d eth2 && sudo ./xdp_prog_user -d eth3"; done
+#for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "cd /home/ubuntu/xdp-tutorial/packet-solutions && sudo make && sudo mount -t bpf bpf /sys/fs/bpf/ && sudo ./xdp_loader -d eth1 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth2 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_loader -d eth3 -F — progsec xdp_router --filename xdp_prog_kern_03.o --auto-mode && sudo ./xdp_prog_user -d eth1 && sudo ./xdp_prog_user -d eth2 && sudo ./xdp_prog_user -d eth3"; done
 
 ssh -o "StrictHostKeyChecking=no" ubuntu@n11 "sudo ip a add fd00:99:0::11/64 dev ens8 && sudo ip a add 172.16.0.11/24 dev ens8 && sudo ip link set dev ens8 up"
 ssh -o "StrictHostKeyChecking=no" ubuntu@n12 "sudo ip a add fd00:99:0::12/64 dev ens8 && sudo ip a add 172.16.0.12/24 dev ens8 && sudo ip link set dev ens8 up"
@@ -988,11 +988,11 @@ for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip link 
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip link set vxlan100 up"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo brctl addbr br100"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo brctl addif br100 vxlan100"; done
-for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo brctl addif br100 eth3"; done
+for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo brctl addif br100 vpp2"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo brctl stp br100 off"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip link set br100 address 44:39:39:FF:40:94"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip link set br100 up"; done
-for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip link set eth3 up"; done
+for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip link set vpp2 up"; done
 
 ssh -o "StrictHostKeyChecking=no" ubuntu@n7 "sudo ip link add vxlan4000 type vxlan id 4000 local 7.7.7.7 nolearning"
 ssh -o "StrictHostKeyChecking=no" ubuntu@n8 "sudo ip link add vxlan4000 type vxlan id 4000 local 8.8.8.8 nolearning"

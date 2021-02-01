@@ -733,310 +733,313 @@ EOF"
 
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt install ifupdown2 -y && sudo apt remove netplan.io libnetplan0 -y && sudo rm -rf /etc/netplan/*.yml"; done
 
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "curl -sL https://deb.flexiwan.com/setup | sudo -E bash -"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt-get install -y flexiwan-router"; done
+
 for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
 
-sleep 30
+sleep 60
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.13.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.14.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/eth3.cfg
-allow-hotplug eth3
-auto eth3
-iface eth3 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp2.cfg
+allow-hotplug vpp2
+auto vpp2
+iface vpp2 inet static
     address 10.255.17.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/eth4.cfg
-allow-hotplug eth4
-auto eth4
-iface eth4 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp3.cfg
+allow-hotplug vpp3
+auto vpp3
+iface vpp3 inet static
     address 10.255.19.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/eth5.cfg
-allow-hotplug eth5
-auto eth5
-iface eth5 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n1 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp4.cfg
+allow-hotplug vpp4
+auto vpp4
+iface vpp4 inet static
     address 10.255.15.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.23.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.24.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/eth3.cfg
-allow-hotplug eth3
-auto eth3
-iface eth3 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp2.cfg
+allow-hotplug vpp2
+auto vpp2
+iface vpp2 inet static
     address 10.255.28.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/eth4.cfg
-allow-hotplug eth4
-auto eth4
-iface eth4 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp3.cfg
+allow-hotplug vpp3
+auto vpp3
+iface vpp3 inet static
     address 10.255.20.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/eth5.cfg
-allow-hotplug eth5
-auto eth5
-iface eth5 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n2 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp4.cfg
+allow-hotplug vpp4
+auto vpp4
+iface vpp4 inet static
     address 10.255.26.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.13.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.23.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/eth3.cfg
-allow-hotplug eth3
-auto eth3
-iface eth3 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp2.cfg
+allow-hotplug vpp2
+auto vpp2
+iface vpp2 inet static
     address 10.255.35.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/eth4.cfg
-allow-hotplug eth4
-auto eth4
-iface eth4 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp3.cfg
+allow-hotplug vpp3
+auto vpp3
+iface vpp3 inet static
     address 10.255.36.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/eth5.cfg
-allow-hotplug eth5
-auto eth5
-iface eth5 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n3 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp4.cfg
+allow-hotplug vpp4
+auto vpp4
+iface vpp4 inet static
     address 10.255.34.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.14.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.24.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/eth3.cfg
-allow-hotplug eth3
-auto eth3
-iface eth3 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp2.cfg
+allow-hotplug vpp2
+auto vpp2
+iface vpp2 inet static
     address 10.255.45.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/eth4.cfg
-allow-hotplug eth4
-auto eth4
-iface eth4 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp3.cfg
+allow-hotplug vpp3
+auto vpp3
+iface vpp3 inet static
     address 10.255.46.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/eth5.cfg
-allow-hotplug eth5
-auto eth5
-iface eth5 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n4 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp4.cfg
+allow-hotplug vpp4
+auto vpp4
+iface vpp4 inet static
     address 10.255.34.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.35.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.45.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/eth3.cfg
-allow-hotplug eth3
-auto eth3
-iface eth3 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp2.cfg
+allow-hotplug vpp2
+auto vpp2
+iface vpp2 inet static
     address 10.255.57.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/eth4.cfg
-allow-hotplug eth4
-auto eth4
-iface eth4 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp3.cfg
+allow-hotplug vpp3
+auto vpp3
+iface vpp3 inet static
     address 10.255.59.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/eth5.cfg
-allow-hotplug eth5
-auto eth5
-iface eth5 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n5 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp4.cfg
+allow-hotplug vpp4
+auto vpp4
+iface vpp4 inet static
     address 10.255.15.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.36.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.46.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/eth3.cfg
-allow-hotplug eth3
-auto eth3
-iface eth3 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp2.cfg
+allow-hotplug vpp2
+auto vpp2
+iface vpp2 inet static
     address 10.255.68.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/eth4.cfg
-allow-hotplug eth4
-auto eth4
-iface eth4 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp3.cfg
+allow-hotplug vpp3
+auto vpp3
+iface vpp3 inet static
     address 10.255.60.1/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/eth5.cfg
-allow-hotplug eth5
-auto eth5
-iface eth5 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n6 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp4.cfg
+allow-hotplug vpp4
+auto vpp4
+iface vpp4 inet static
     address 10.255.26.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n7 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n7 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.17.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n7 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n7 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.57.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n8 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n8 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.28.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n8 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n8 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.68.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n9 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n9 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.19.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n9 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n9 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.59.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n10 "cat << EOF | sudo tee /etc/network/interfaces.d/eth1.cfg
-allow-hotplug eth1
-auto eth1
-iface eth1 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n10 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp0.cfg
+allow-hotplug vpp0
+auto vpp0
+iface vpp0 inet static
     address 10.255.20.2/24
     mtu 9000
 EOF"
 
-ssh -o "StrictHostKeyChecking=no" ubuntu@n10 "cat << EOF | sudo tee /etc/network/interfaces.d/eth2.cfg
-allow-hotplug eth2
-auto eth2
-iface eth2 inet static
+ssh -o "StrictHostKeyChecking=no" ubuntu@n10 "cat << EOF | sudo tee /etc/network/interfaces.d/vpp1.cfg
+allow-hotplug vpp1
+auto vpp1
+iface vpp1 inet static
     address 10.255.60.2/24
     mtu 9000
 EOF"

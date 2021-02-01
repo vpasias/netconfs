@@ -550,11 +550,11 @@ net.ipv4.ip_forward=1
 net.ipv4.conf.all.forwarding=1
 net.ipv6.conf.all.forwarding=1
 net.mpls.conf.lo.input=1
-net.mpls.conf.eth1.input=1
-net.mpls.conf.eth2.input=1
-net.mpls.conf.eth3.input=1
-net.mpls.conf.eth4.input=1
-net.mpls.conf.eth5.input=1
+net.mpls.conf.vpp0.input=1
+net.mpls.conf.vpp1.input=1
+net.mpls.conf.vpp2.input=1
+net.mpls.conf.vpp3.input=1
+net.mpls.conf.vpp4.input=1
 net.mpls.platform_labels=100000
 EOF"; done
 
@@ -565,8 +565,8 @@ net.ipv6.conf.all.forwarding=1
 net.ipv4.tcp_l3mdev_accept=1
 net.ipv4.udp_l3mdev_accept=1
 net.mpls.conf.lo.input=1
-net.mpls.conf.eth1.input=1
-net.mpls.conf.eth2.input=1
+net.mpls.conf.vpp0.input=1
+net.mpls.conf.vpp1.input=1
 net.mpls.platform_labels=100000
 EOF"; done
 

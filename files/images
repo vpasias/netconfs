@@ -31,3 +31,6 @@ https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=shari
 pip install gdown
 gdown https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=sharing
 gdown https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH
+
+# Find checksum of vagrant box:
+https://hollo.me/devops/self-hosted-vagrant-cloud.html

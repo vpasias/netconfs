@@ -28,9 +28,21 @@ See below:
 https://drive.google.com/drive/folders/102jxZ9ECpe6ZFtXYdK_81iEVuuFoGOGR
 https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=sharing
 
+http://37.156.146.163/PUB/Cisco/IOS/Nexus3K_9K/
+http://37.156.146.163/PUB/Cisco/IOS/CSR1000v/
+
 pip install gdown
 gdown https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=sharing
 gdown https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH
 
 # Find checksum of vagrant box:
 https://hollo.me/devops/self-hosted-vagrant-cloud.html
+
+# Create IOSv box
+https://codingpackets.com/blog/cisco-iosv-vagrant-libvirt-box-install/
+
+# Create CSRv box
+https://codingpackets.com/blog/cisco-csr-1000v-vagrant-libvirt-box-install/
+
+# Create Nexus box
+https://github.com/mweisel/cisco-nxos9kv-vagrant-libvirt

@@ -27,3 +27,6 @@ http://www.idum.fr/Telechargements/Images%20GNS3%20-%20EVE-NG/Qemu/Cisco%20NX%20
 See below:
 https://drive.google.com/drive/folders/102jxZ9ECpe6ZFtXYdK_81iEVuuFoGOGR
 https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=sharing
+
+pip install gdown
+gdown https://drive.google.com/file/d/127DdecApVqsBR-zSc4CkqbZ1SbN5LvoH/view?usp=sharing

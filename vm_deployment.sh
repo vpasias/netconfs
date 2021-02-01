@@ -1371,9 +1371,9 @@ for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo DEBIAN_F
 
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo DEBIAN_FRONTEND=noninteractive apt-get -y install bridge-utils cpu-checker --no-install-recommends"; done
 
-for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt update -y && sudo apt install -y gcc make clang llvm libelf-dev gcc-multilib pkg-config"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt update -y && sudo apt install -y gcc make clang llvm libelf-dev gcc-multilib pkg-config"; done
 
-for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "git clone --recurse-submodules https://github.com/xdp-project/xdp-tutorial && cd /home/ubuntu/xdp-tutorial/ && git submodule update --init && rm -rf"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "git clone --recurse-submodules https://github.com/xdp-project/xdp-tutorial && cd /home/ubuntu/xdp-tutorial/ && git submodule update --init && rm -rf"; done
 
 for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
 #

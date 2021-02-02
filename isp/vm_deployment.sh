@@ -1358,6 +1358,7 @@ for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo usermod 
 for i in {1..6}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i 's/=no/=yes/' /etc/frr/daemons"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i "s/^bgpd=no/bgpd=yes/" /etc/frr/daemons"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i "s/^isisd=no/isisd=yes/" /etc/frr/daemons"; done
+for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i "s/^ospfd=no/ospfd=yes/" /etc/frr/daemons"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i "s/^ldpd=no/ldpd=yes/" /etc/frr/daemons"; done
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i "s/^bfdd=no/bfdd=yes/" /etc/frr/daemons"; done
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo systemctl enable frr.service"; done

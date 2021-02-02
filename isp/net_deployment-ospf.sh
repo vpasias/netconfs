@@ -9,16 +9,15 @@ service integrated-vtysh-config
 username iason nopassword
 !
 router ospf
- ospf router-id 192.168.255.1
- network 192.168.255.0/24 area 0
- network 10.11.0.0/16 area 0
+ ospf router-id 1.1.1.1
+ network 10.255.0.0/16 area 0
  capability opaque
  mpls-te on
- mpls-te router-address 192.168.255.1
+ mpls-te router-address 1.1.1.1
  segment-routing on
  segment-routing global-block 16000 23999
  segment-routing node-msd 8
- segment-routing prefix 192.168.255.1/32 index 1021
+ segment-routing prefix 1.1.1.1/32 index 1021
  router-info area
 !
 interface vpp0

@@ -151,6 +151,7 @@ Vagrant.configure("2") do |config|
 
   end
 end
+#
 
 vagrant up
 
@@ -159,4 +160,136 @@ exit
 
 vagrant destroy -f
 
-rm -f iosv.qcow2 && virsh undefine iosv
+# Creation of csr1000v box
+# https://codingpackets.com/blog/cisco-csr-1000v-vagrant-libvirt-box-install/
+
+mkdir -p ~/vagrant/boxes/cisco/csr1kv && cd ~/vagrant/boxes/cisco/csr1kv && cp /users/vpasias/csr1000v-universalk9.03.15.00.S.155-2.S-std.qcow2 . && ls -lah && \
+curl -O https://raw.githubusercontent.com/vagrant-libvirt/vagrant-libvirt/master/tools/create_box.sh
+
+virt-install \
+    --connect=qemu:///system \
+    --name=csr1000v \
+    --os-type=linux \
+    --os-variant=rhel4 \
+    --arch=x86_64 \
+    --cpu host \
+    --vcpus=1 \
+    --hvm \
+    --ram=4096 \
+    --disk path=csr1000v-universalk9.03.15.00.S.155-2.S-std.qcow2,bus=ide,format=qcow2 \
+    --network=network:default,model=virtio \
+    --import
+
+enable
+conf t
+platform console serial
+end
+copy system:running-config nvram:startup-config
+reload
+
+virsh console csr1000v
+
+en
+conf t
+
+hostname csr
+ip domain-name lab.local
+!
+crypto key generate rsa modulus 2048
+ip ssh version 2
+!
+aaa new-model
+!
+aaa authentication login default local
+aaa authorization exec default local
+!
+username vagrant privilege 15 secret vagrant
+!
+ip ssh pubkey-chain
+  username vagrant
+    key-hash ssh-rsa DD3BB82E850406E9ABFFA80AC0046ED6
+!
+!
+interface GigabitEthernet1
+  description vagrant-management
+  ip address dhcp
+  no shutdown
+!
+end
+
+wr
+wr mem
+
+show ip int brie
+# IP address: 192.168.121.227 
+
+ssh vagrant@192.168.121.227 -i ~/.vagrant.d/insecure_private_key
+exit
+
+virsh shutdown csr1000v
+
+cat << EOF | tee metadata.json
+{"provider":"libvirt","format":"qcow2","virtual_size":8}
+EOF
+
+bash create_box.sh csr1000v-universalk9.03.15.00.S.155-2.S-std.qcow2
+
+cat << EOF | tee csr1kv.json
+{
+  "name": "cisco/csr1000v",
+  "description": "Cisco csr1000v",
+  "versions": [
+    {
+      "version": "03.15.00.S-155-2-S",
+      "providers": [
+        {
+          "name": "libvirt",
+          "url": "file:///home/iason/vagrant/boxes/cisco/csr1kv/csr1000v-universalk9.03.15.00.S.155-2.S-std.box"
+        }
+      ]
+    }
+  ]
+}
+EOF
+
+vagrant box add csr1kv.json
+
+vagrant box list
+
+nano Vagrantfile
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "cisco/csr1000v"
+
+  # Turn off shared folders
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Do not try to insert new SSH key
+  config.ssh.insert_key = false
+
+  # Give VM time to boot
+  config.vm.boot_timeout = 180
+
+  # Set guest type to prevent guest type detection
+  config.vm.guest = :freebsd
+
+  # Provider-specific configuration
+  config.vm.provider :libvirt do |domain|
+    domain.nic_adapter_count = 8
+    domain.memory = 4096
+    domain.cpus = 2
+    domain.driver = "kvm"
+  end
+
+end
+#
+
+vagrant up
+
+vagrant ssh
+exit
+
+vagrant destroy -f

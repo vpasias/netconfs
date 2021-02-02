@@ -1,4 +1,41 @@
+chmod +x cloudlab-setup-ubuntu-tl.sh && ./cloudlab-setup-ubuntu-tl.sh && \
+sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass -y && \
+sudo sed -i 's/hosts:          files dns/hosts:          files libvirt libvirt_guest dns/' /etc/nsswitch.conf && sudo lsmod | grep kvm && sudo reboot
+#sudo systemctl restart libvirtd && sudo systemctl status libvirtd
 
+screen
+# Press Return to continue
+# detach from session without killing it: Ctrl a d 
+# to see screen sessions: screen -ls
+# detach from closed session: screen -d -r 2111.pts-0.node0
+# enter session: screen -r 2111.pts-0.node0
+# exit a session and terminate it: exit
+
+sudo -i
+cd /mnt/extra && cat /sys/module/kvm_intel/parameters/nested && cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l && free -h && df -hT && sudo virsh list --all && sudo brctl show
+
+# Create the iason user
+sudo useradd iason -m -s /bin/bash && sudo usermod -aG sudo iason && echo "iason:iason" | chpasswd && echo "iason ALL=(root) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/iason && \
+sudo chmod 0440 /etc/sudoers.d/iason && su - iason
+
+# Prepare the hypervisor node.
+mkdir .ssh && ssh-keygen -q -t rsa -N "" -f .ssh/id_rsa && cat .ssh/id_rsa.pub >> .ssh/authorized_keys && sudo bash -c "cat .ssh/id_rsa.pub >> /root/.ssh/authorized_keys" && \
+ssh -o "StrictHostKeyChecking=no" root@127.0.0.1 uname -a
+
+curl -fsSL http://bit.ly/initVagrant | PROVIDER=libvirt bash
+
+# http://www.nimbusproject.org/docs/current/admin/z2c/vmm-setup.html
+sudo adduser `id -un` libvirt-qemu && sudo adduser `id -un` kvm && sudo adduser `id -un` libvirt-dnsmasq && sudo sed -i 's/0770/0777/' /etc/libvirt/libvirtd.conf & sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+vagrant -v && vagrant plugin list
+
+# virsh pool-edit default 
+# Change permission to: 0777
+# sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+exit
+
+cd /mnt/extra
 cat << EOF | tee vagrant-libvirt-net.xml
 <network connections='1'>
   <name>vagrant-libvirt</name>
@@ -17,7 +54,16 @@ cat << EOF | tee vagrant-libvirt-net.xml
 EOF
 
 virsh net-define vagrant-libvirt-net.xml && \
-virsh net-list && virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt
+virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt
+
+su - iason
+
+virsh list --all && virsh net-list --all
+
+sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y ca-certificates git make nmap curl dnsmasq-base ebtables libvirt-bin libvirt-dev libxml2-dev libxslt-dev qemu ruby-dev unzip cpu-checker zlib1g-dev build-essential qemu-utils && \
+sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y vim net-tools curl rsync ssh jq python-pip python-dev sshpass wget && \
+sudo apt-get install python3-venv -y && \
+sudo -H pip install -U ansible pyyaml jinja2 setuptools
 
 #################################################################################################################################################################
 #################################################################################################################################################################
@@ -344,8 +390,7 @@ vagrant box add --provider libvirt --name cisco-nexus9500v-9.3.6 ./cisco-nxosv.b
 #################################################################################################################################################################
 #################################################################################################################################################################
 
-cd ~ && git clone https://github.com/ipspace/netsim-tools.git
-pip install ansible pyyaml jinja2
+cd ~ && git clone https://github.com/ipspace/netsim-tools.git && pip install pyyaml jinja2
 
 #################################################################################################################################################################
 #################################################################################################################################################################

@@ -1,3 +1,24 @@
+
+cat << EOF | tee vagrant-libvirt-net.xml
+<network connections='1'>
+  <name>vagrant-libvirt</name>
+  <forward mode='nat'>
+    <nat>
+      <port start='1024' end='65535'/>
+    </nat>
+  </forward>
+  <bridge name='virbr125' stp='on' delay='0'/>
+  <ip address='192.168.125.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.125.2' end='192.168.125.254'/>
+    </dhcp>
+  </ip>
+</network>
+EOF
+
+virsh net-define vagrant-libvirt-net.xml && \
+virsh net-list && virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt
+
 #################################################################################################################################################################
 #################################################################################################################################################################
 # Creation of IOSv box
@@ -11,7 +32,7 @@ qemu-img convert -f vmdk -O qcow2 vios-adventerprisek9-m.vmdk.SPA.156-1.T iosv.q
 
 virt-install \
     --connect=qemu:///system \
-    --network network=default,model=e1000 \
+    --network network=vagrant-libvirt,model=e1000 \
     --name=iosv \
     --cpu host \
     --arch=x86_64 \
@@ -81,9 +102,9 @@ wr
 wr mem
 
 show ip int brie
-# IP address: 192.168.121.63 
+# IP address: 192.168.125.63 
 
-ssh vagrant@192.168.121.63 -i ~/.vagrant.d/insecure_private_key
+ssh vagrant@192.168.125.63 -i ~/.vagrant.d/insecure_private_key
 exit
 
 virsh destroy iosv
@@ -182,7 +203,7 @@ virt-install \
     --hvm \
     --ram=4096 \
     --disk path=csr1000v-universalk9.03.15.00.S.155-2.S-std.qcow2,bus=ide,format=qcow2 \
-    --network=network:default,model=virtio \
+    --network=network:vagrant-libvirt,model=virtio \
     --import
 
 enable
@@ -226,9 +247,9 @@ wr
 wr mem
 
 show ip int brie
-# IP address: 192.168.121.227 
+# IP address: 192.168.125.227 
 
-ssh vagrant@192.168.121.227 -i ~/.vagrant.d/insecure_private_key
+ssh vagrant@192.168.125.227 -i ~/.vagrant.d/insecure_private_key
 exit
 
 virsh shutdown csr1000v
@@ -306,10 +327,15 @@ vagrant destroy -f
 #################################################################################################################################################################
 #################################################################################################################################################################
 
-cd ~ && git clone https://github.com/mweisel/cisco-nxos9kv-vagrant-libvirt && cd cisco-nxos9kv-vagrant-libvirt
+cd ~ && git clone https://github.com/vpasias/cisco-nxos9kv-vagrant-libvirt.git && cd cisco-nxos9kv-vagrant-libvirt
 
-wget 
-sudo cp nexus9500v.9.3.3.qcow2 /var/lib/libvirt/images/cisco-nxosv.qcow2
+wget http://37.156.146.163/PUB/Cisco/IOS/Nexus3K_9K/nexus9500v.9.3.6.qcow2 $$ sudo cp nexus9500v.9.3.6.qcow2 /var/lib/libvirt/images/cisco-nxosv.qcow2 && \
+sudo chown libvirt-qemu:kvm /var/lib/libvirt/images/cisco-nxosv.qcow2 && sudo chmod u+x /var/lib/libvirt/images/cisco-nxosv.qcow2 && \
+dpkg -L ovmf | grep -E 'OVMF_(CODE|VARS)\.fd'
+
+ansible-playbook main.yml
+
+vagrant box add --provider libvirt --name cisco-nexus9500v-9.3.6 ./cisco-nxosv.box
 
 #################################################################################################################################################################
 #################################################################################################################################################################

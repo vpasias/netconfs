@@ -20,6 +20,9 @@ router ospf
  segment-routing prefix 1.1.1.1/32 index 1021
  router-info area
 !
+interface lo
+ ip ospf area 0
+!
 interface vpp0
  ip ospf network point-to-point
  ip ospf bfd
@@ -65,75 +68,50 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::12/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp2
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp3
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp4
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0012.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 2.2.2.2
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 2.2.2.2
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::12/128 index 12 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 2.2.2.2/32 index 1022
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp2
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp3
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp4
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 bfd
 !
@@ -150,75 +128,50 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::13/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp2
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp3
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp4
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0013.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 3.3.3.3
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 3.3.3.3
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::13/128 index 13 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 3.3.3.3/32 index 1023
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp2
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp3
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp4
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 router bgp 65000
  bgp router-id 3.3.3.3
@@ -265,75 +218,50 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::14/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp2
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp3
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp4
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0014.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 4.4.4.4
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 4.4.4.4
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::14/128 index 14 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 4.4.4.4/32 index 1024
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp2
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp3
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp4
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 router bgp 65000
  bgp router-id 4.4.4.4
@@ -380,75 +308,50 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::15/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp2
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp3
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp4
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0015.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 5.5.5.5
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 5.5.5.5
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::15/128 index 15 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 5.5.5.5/32 index 1025
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp2
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp3
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp4
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 bfd
 !
@@ -465,75 +368,50 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::16/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp2
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp3
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp4
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0016.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 6.6.6.6
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 6.6.6.6
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::16/128 index 16 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 6.6.6.6/32 index 1026
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp2
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp3
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp4
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 bfd
 !
@@ -550,45 +428,32 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::17/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0017.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 7.7.7.7
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 7.7.7.7
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::17/128 index 17 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 7.7.7.7/32 index 1027
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 vrf red
  vni 1001
@@ -649,45 +514,32 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::18/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0018.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 8.8.8.8
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 8.8.8.8
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::18/128 index 18 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 8.8.8.8/32 index 1028
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 vrf red
  vni 1001
@@ -748,45 +600,32 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::19/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0019.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 9.9.9.9
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 9.9.9.9
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::19/128 index 19 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 9.9.9.9/32 index 1029
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 vrf red
  vni 1001
@@ -847,45 +686,32 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::20/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0020.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 10.10.10.10
+ network 10.255.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 10.10.10.10
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::20/128 index 20 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 10.10.10.10/32 index 1030
+ router-info area
+!
+interface lo
+ ip ospf area 0
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 vrf red
  vni 1001

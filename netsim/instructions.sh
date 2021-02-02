@@ -1,6 +1,3 @@
-git clone https://github.com/ipspace/netsim-tools.git
-pip install ansible pyyaml jinja2
-
 # Creation of IOSv box
 # https://codingpackets.com/blog/cisco-iosv-vagrant-libvirt-box-install/
 
@@ -293,3 +290,17 @@ vagrant ssh
 exit
 
 vagrant destroy -f
+
+# Netsim-tools installation
+git clone https://github.com/ipspace/netsim-tools.git
+pip install ansible pyyaml jinja2
+
+# Netsim Examples
+https://github.com/ipspace/netsim-examples.git && cd netsim-examples/BGP/IGP-metric/
+export PATH=/home/iason/netsim-tools:$PATH
+create-topology -t topology-ospf.yml -g -c -i
+
+vagrant up
+initial-config.ansible
+config.ansible -e config=igp
+config.ansible -e config=bgp

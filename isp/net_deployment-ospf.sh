@@ -8,75 +8,48 @@ log syslog informational
 service integrated-vtysh-config
 username iason nopassword
 !
-interface lo
- ipv6 address 5000::11/128
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1
- isis passive
-!
-interface vpp0
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp1
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp2
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp3
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-interface vpp4
- ipv6 router isis 1
- ip router isis 1
- isis circuit-type level-2-only
- isis metric 1000
- isis network point-to-point
- isis fast-reroute ti-lfa
- isis bfd
- isis hello-multiplier 3
-!
-router isis 1
- net 49.0000.0000.0000.0011.00
- is-type level-2-only
- topology ipv6-unicast
- lsp-timers gen-interval 5 refresh-interval 65000 max-lifetime 65535
- spf-interval 5
- log-adjacency-changes
+router ospf
+ ospf router-id 192.168.255.1
+ network 192.168.255.0/24 area 0
+ network 10.11.0.0/16 area 0
+ capability opaque
+ mpls-te on
+ mpls-te router-address 192.168.255.1
  segment-routing on
  segment-routing global-block 16000 23999
- segment-routing node-msd 16
- segment-routing prefix 5000::11/128 index 11 explicit-null
+ segment-routing node-msd 8
+ segment-routing prefix 192.168.255.1/32 index 1021
+ router-info area
+!
+interface vpp0
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp1
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp2
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp3
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
+!
+interface vpp4
+ ip ospf network point-to-point
+ ip ospf bfd
+ ip ospf hello-interval 10
+ ip ospf dead-interval 40
 !
 bfd
 !

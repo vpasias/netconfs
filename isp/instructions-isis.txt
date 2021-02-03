@@ -1,0 +1,196 @@
+chmod +x cloudlab-setup-ubuntu-tl.sh && ./cloudlab-setup-ubuntu-tl.sh && \
+sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass -y && \
+sudo sed -i 's/hosts:          files dns/hosts:          files libvirt libvirt_guest dns/' /etc/nsswitch.conf && sudo lsmod | grep kvm && sudo reboot
+#sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+screen
+# Press Return to continue
+# detach from session without killing it: Ctrl a d 
+# to see screen sessions: screen -ls
+# detach from closed session: screen -d -r 1929.pts-0.node0
+# enter session: screen -r 1929.pts-0.node0
+# exit a session and terminate it: exit
+
+sudo -i
+
+# Create OS node VMs
+cd /mnt/extra && cat /sys/module/kvm_intel/parameters/nested && cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l && free -h && df -hT && sudo virsh list --all && sudo brctl show && \
+mkdir -p /mnt/extra/virt/images && mkdir -p /mnt/extra/virt/vms && cd /mnt/extra/virt/images && \
+cd /usr/lib/ipxe/qemu/ && wget https://github.com/qemu/qemu/raw/master/pc-bios/efi-e1000e.rom && cd /mnt/extra && \
+wget -O "/mnt/extra/osinfo-db.tar.xz" https://releases.pagure.org/libosinfo/osinfo-db-20200813.tar.xz && sudo osinfo-db-import --local "/mnt/extra/osinfo-db.tar.xz" && \
+cd /mnt/extra/ && git clone https://github.com/giovtorres/kvm-install-vm.git && cd kvm-install-vm
+
+##################################################################################################################################################################################
+######################################## Ubuntu Router (https://listed.to/@techtrips) #############################################################################################################
+##################################################################################################################################################################################
+# rm -rf vm_deployment.sh
+
+git clone https://github.com/vpasias/netconfs.git && cd /mnt/extra/kvm-install-vm/netconfs/isp && ls -lah
+
+chmod +x vm_deployment.sh && ./vm_deployment.sh
+
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip a"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "uname -a"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo service frr status"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo service frr restart"; done
+
+# virsh console n1
+# virsh shutdown n1
+# virsh start n1
+# virsh list --all
+# for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
+
+########################################################################################################################################################################################
+########### Network Configuration #############################################################################################################################################################
+########################################################################################################################################################################################
+# rm -rf net_deployment.sh
+
+cd /mnt/extra/kvm-install-vm/netconfs/isp && cp net_deployment-isis.sh net_deployment.sh && chmod +x net_deployment.sh && ./net_deployment.sh
+
+ssh -o "StrictHostKeyChecking=no" ubuntu@n1
+ip -6 route show
+ip route show
+sudo vtysh
+show ipv6 route
+show ip route
+show mpls table
+show isis summary
+show isis hostname
+show isis interface
+show isis interface detail
+show isis neighbor
+show isis neighbor detail
+show isis topology
+show isis segment-routing node
+show isis segment-routing prefix-sids
+show isis database
+show bfd peers
+
+ssh -o "StrictHostKeyChecking=no" ubuntu@n3
+ip -6 route show
+ip route show
+sudo vtysh
+show ipv6 route
+show mpls table
+show isis summary
+show isis hostname
+show isis interface
+show isis interface detail
+show isis neighbor
+show isis neighbor detail
+show isis topology
+show isis segment-routing node
+show isis segment-routing prefix-sids
+show isis database
+show bfd peers
+show bgp summary
+show bgp l2vpn evpn summary
+
+ssh -o "StrictHostKeyChecking=no" ubuntu@n7
+ping -I 7.7.7.7 10.10.10.10
+ip vrf list
+ip route show vrf red
+ip route show table 1001
+sudo ip vrf exec red ping 1.0.0.1
+sudo vtysh
+show ipv6 route
+show bgp summary
+show bgp vrf red ipv4 unicast
+show bgp vrf blue ipv4 unicast
+show bgp l2vpn evpn summary
+show bgp l2vpn evpn
+show bgp l2vpn evpn 1.0.0.2
+show bgp l2vpn evpn 2.0.0.2
+show bgp vrf blue ipv4 unicast
+show bgp vrf red ipv4 unicast
+show interface vxlan1001
+show interface vxlan1002
+show evpn vni
+show evpn vni 1001
+show evpn vni 1002
+show bgp l2vpn evpn vni 1001
+show bgp l2vpn evpn vni 1002
+show evpn rmac vni 1001
+show evpn rmac vni 1002
+ip route show vrf red
+ip route show vrf blue
+sudo ip vrf exec red ping -I 1.0.0.1 1.0.0.4
+bridge fdb show dev vxlan1001
+sudo ip vrf exec blue traceroute 2.0.0.2
+sudo ip vrf exec red mtr 1.0.0.2
+sudo ip vrf exec blue iperf3 -Z -l 512 -B 2.0.0.1 -c 2.0.0.2 -i 4 -t 20
+brctl showmacs br1001
+brctl show br1001
+
+ssh -o "StrictHostKeyChecking=no" ubuntu@n10
+sudo vtysh
+show bgp l2vpn evpn
+show bgp l2vpn evpn 1.0.0.1
+show bgp l2vpn evpn 2.0.0.1
+sudo ip vrf exec blue iperf3 -s
+
+ssh -o "StrictHostKeyChecking=no" ubuntu@n11
+ip -6 route
+ping fd00:99::14
+ping 172.16.0.14
+sudo iperf3 -Z -l 512 -c 172.16.0.14 -i 1 -t 20
+
+ssh -o "StrictHostKeyChecking=no" ubuntu@n14
+ip -6 route
+ping fd00:99::11
+ping 172.16.0.11
+sudo iperf3 -s
+
+########################################################################################################################################################################
+########################################################################################################################################################################
+#################### Delete ##########################################################################################
+########################################################################################################################################################################
+########################################################################################################################################################################
+
+cd /mnt/extra/kvm-install-vm && \
+for i in {1..14}; do ./kvm-install-vm remove n$i; done && \
+virsh net-destroy managementn1 && rm -rf /mnt/extra/managementn1.xml && virsh net-undefine managementn1 && \
+virsh net-destroy managementn2 && rm -rf /mnt/extra/managementn2.xml && virsh net-undefine managementn2 && \
+virsh net-destroy managementn3 && rm -rf /mnt/extra/managementn3.xml && virsh net-undefine managementn3 && \
+virsh net-destroy managementn4 && rm -rf /mnt/extra/managementn4.xml && virsh net-undefine managementn4 && \
+virsh net-destroy managementn5 && rm -rf /mnt/extra/managementn5.xml && virsh net-undefine managementn5 && \
+virsh net-destroy managementn6 && rm -rf /mnt/extra/managementn6.xml && virsh net-undefine managementn6 && \
+virsh net-destroy managementn7 && rm -rf /mnt/extra/managementn7.xml && virsh net-undefine managementn7 && \
+virsh net-destroy managementn8 && rm -rf /mnt/extra/managementn8.xml && virsh net-undefine managementn8 && \
+virsh net-destroy managementn9 && rm -rf /mnt/extra/managementn9.xml && virsh net-undefine managementn9 && \
+virsh net-destroy managementn10 && rm -rf /mnt/extra/managementn10.xml && virsh net-undefine managementn10 && \
+virsh net-destroy managementn11 && rm -rf /mnt/extra/managementn11.xml && virsh net-undefine managementn11 && \
+virsh net-destroy managementn12 && rm -rf /mnt/extra/managementn12.xml && virsh net-undefine managementn12 && \
+virsh net-destroy managementn13 && rm -rf /mnt/extra/managementn13.xml && virsh net-undefine managementn13 && \
+virsh net-destroy managementn14 && rm -rf /mnt/extra/managementn14.xml && virsh net-undefine managementn14 && \
+virsh net-destroy n1n3 && rm -rf /mnt/extra/n1n3.xml && virsh net-undefine n1n3 && \
+virsh net-destroy n1n4 && rm -rf /mnt/extra/n1n4.xml && virsh net-undefine n1n4 && \
+virsh net-destroy n2n3 && rm -rf /mnt/extra/n2n3.xml && virsh net-undefine n2n3 && \
+virsh net-destroy n2n4 && rm -rf /mnt/extra/n2n4.xml && virsh net-undefine n2n4 && \
+virsh net-destroy n5n3 && rm -rf /mnt/extra/n5n3.xml && virsh net-undefine n5n3 && \
+virsh net-destroy n5n4 && rm -rf /mnt/extra/n5n4.xml && virsh net-undefine n5n4 && \
+virsh net-destroy n6n3 && rm -rf /mnt/extra/n6n3.xml && virsh net-undefine n6n3 && \
+virsh net-destroy n6n4 && rm -rf /mnt/extra/n6n4.xml && virsh net-undefine n6n4 && \
+virsh net-destroy n3n4 && rm -rf /mnt/extra/n3n4.xml && virsh net-undefine n3n4 && \
+virsh net-destroy n1n7 && rm -rf /mnt/extra/n1n7.xml && virsh net-undefine n1n7 && \
+virsh net-destroy n1n9 && rm -rf /mnt/extra/n1n9.xml && virsh net-undefine n1n9 && \
+virsh net-destroy n5n7 && rm -rf /mnt/extra/n5n7.xml && virsh net-undefine n5n7 && \
+virsh net-destroy n5n9 && rm -rf /mnt/extra/n5n9.xml && virsh net-undefine n5n9 && \
+virsh net-destroy n1n5 && rm -rf /mnt/extra/n1n5.xml && virsh net-undefine n1n5 && \
+virsh net-destroy n2n8 && rm -rf /mnt/extra/n2n8.xml && virsh net-undefine n2n8 && \
+virsh net-destroy n2n10 && rm -rf /mnt/extra/n2n10.xml && virsh net-undefine n2n10 && \
+virsh net-destroy n6n8 && rm -rf /mnt/extra/n6n8.xml && virsh net-undefine n6n8 && \
+virsh net-destroy n6n10 && rm -rf /mnt/extra/n6n10.xml && virsh net-undefine n6n10 && \
+virsh net-destroy n2n6 && rm -rf /mnt/extra/n2n6.xml && virsh net-undefine n2n6 && \
+virsh net-destroy n7n11 && rm -rf /mnt/extra/n7n11.xml && virsh net-undefine n7n11 && \
+virsh net-destroy n9n13 && rm -rf /mnt/extra/n9n13.xml && virsh net-undefine n9n13 && \
+virsh net-destroy n8n12 && rm -rf /mnt/extra/n8n12.xml && virsh net-undefine n8n12 && \
+virsh net-destroy n10n14 && rm -rf /mnt/extra/n10n14.xml && virsh net-undefine n10n14 && \
+rm -rf /root/.ssh/known_hosts && touch /root/.ssh/known_hosts && sudo virsh list --all && sudo brctl show && sudo virsh net-list --all
+
+#sudo rm -rf /var/lib/libvirt/dnsmasq/virbr0.*
+sudo rm -rf /mnt/extra/virt/images/* && ls -lah /mnt/extra/virt/images/ && sudo rm -rf /mnt/extra/virt/vms/* && ls -lah /mnt/extra/virt/vms/
+rm -rf vbdnode1
+#rm -rf /mnt/extra/external.xml && virsh net-undefine external && virsh net-destroy external
+virsh list --all && brctl show && virsh net-list --all
+df -hT && free -h

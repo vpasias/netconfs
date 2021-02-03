@@ -496,6 +496,10 @@ virsh list --all && brctl show && virsh net-list --all
 
 sleep 10
 
+################################################################################################################################################################
+# Start of Phase 1
+################################################################################################################################################################
+
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/g' /etc/default/grub"; done
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo grub-mkconfig -o /boot/grub/grub.cfg"; done
 
@@ -730,10 +734,6 @@ iface eth0 inet dhcp
 
 source /etc/network/interfaces.d/*.cfg
 EOF"
-
-for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "curl -sL https://deb.flexiwan.com/setup | sudo -E bash -"; done
-for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt-get install -y flexiwan-router"; done
-#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo fwkill && sudo systemctl disable flexiwan-router"; done
 
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt install ifupdown2 -y && sudo apt remove netplan.io libnetplan0 -y && sudo rm -rf /etc/netplan/*.yml"; done
 
@@ -1276,6 +1276,18 @@ iface lo1002 inet loopback
     address 2.0.0.4/32
     pre-up ip link add name lo1002 type dummy
 EOF"
+
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "curl -sL https://deb.flexiwan.com/setup | sudo -E bash -"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt-get install -y flexiwan-router"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo fwkill && sudo systemctl disable flexiwan-router"; done
+
+for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
+
+sleep 60
+
+#################################################################################################################################################################
+# End of Phase 1
+#################################################################################################################################################################
 
 virsh attach-interface --domain n1 --type network --source n1n3 --model e1000 --mac 02:00:aa:01:11:02 --config --live
 virsh attach-interface --domain n3 --type network --source n1n3 --model e1000 --mac 02:00:aa:01:21:02 --config --live

@@ -25,4 +25,22 @@ cd /mnt/extra/ && git clone https://github.com/giovtorres/kvm-install-vm.git && 
 ##################################################################################################################################################################################
 # rm -rf vm_deployment.sh
 
-git clone 
+git clone https://github.com/vpasias/netconfs.git && cd netconfs/isp && ls -lah
+
+chmod +x vm_deployment.sh && ./vm_deployment.sh
+
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip a"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "uname -a"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo service frr status"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo service frr restart"; done
+
+# virsh console n1
+# virsh shutdown n1
+# virsh start n1
+# virsh list --all
+# for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
+
+########################################################################################################################################################################################
+########### Network Configuration #############################################################################################################################################################
+########################################################################################################################################################################################
+# rm -rf net_deployment.sh

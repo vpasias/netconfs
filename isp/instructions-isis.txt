@@ -25,9 +25,9 @@ cd /mnt/extra/ && git clone https://github.com/giovtorres/kvm-install-vm.git && 
 ##################################################################################################################################################################################
 # rm -rf vm_deployment.sh
 
-git clone https://github.com/vpasias/netconfs.git && cd /mnt/extra/kvm-install-vm/netconfs/isp && ls -lah
+git clone https://github.com/vpasias/netconfs.git && ls -lah
 
-chmod +x vm_deployment.sh && ./vm_deployment.sh
+cd /mnt/extra/kvm-install-vm && cp /mnt/extra/kvm-install-vm/netconfs/isp/vm_deployment.sh . && chmod +x vm_deployment.sh && ./vm_deployment.sh
 
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo ip a"; done
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "uname -a"; done
@@ -45,7 +45,7 @@ for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo service 
 ########################################################################################################################################################################################
 # rm -rf net_deployment.sh
 
-cd /mnt/extra/kvm-install-vm/netconfs/isp && cp net_deployment-isis.sh net_deployment.sh && chmod +x net_deployment.sh && ./net_deployment.sh
+cd /mnt/extra/kvm-install-vm && cp /mnt/extra/kvm-install-vm/netconfs/isp/net_deployment-isis.sh . && cp net_deployment-isis.sh net_deployment.sh && chmod +x net_deployment.sh && ./net_deployment.sh
 
 ssh -o "StrictHostKeyChecking=no" ubuntu@n1
 ip -6 route show

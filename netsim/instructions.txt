@@ -422,3 +422,14 @@ create-topology -t topology.yml -g -c -i
 vagrant up
 initial-config.ansible
 config.ansible -e config=routing-ospf
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+# DR Data Center Solutions
+# 1) DR solution involving VRF/MP-BGP Router on a Stick with NAT - multiple VRFs with NAT:
+# https://dancwilliams.com/cisco-vrfmp-bgp-router-on-a-stick-with-nat/
+# https://sudonull.com/post/93630-Two-providers-at-the-same-time-or-Dual-ISP-with-VRF-on-Cisco
+# 2) DR solution involving multiple VRFs with BGP route targets import changes:
+# https://blog.ipspace.net/2019/12/you-dont-need-ip-renumbering-for.html
+#################################################################################################################################################################
+#################################################################################################################################################################

@@ -22,6 +22,11 @@ sudo chmod 0440 /etc/sudoers.d/iason && su - iason
 mkdir .ssh && ssh-keygen -q -t rsa -N "" -f .ssh/id_rsa && cat .ssh/id_rsa.pub >> .ssh/authorized_keys && sudo bash -c "cat .ssh/id_rsa.pub >> /root/.ssh/authorized_keys" && \
 ssh -o "StrictHostKeyChecking=no" root@127.0.0.1 uname -a
 
+# https://github.com/netenglabs/automatic-for-the-people
+# Vagrant 2.2.7
+# Ansible 2.9.5/2.9.9
+
+export PKG_VAGRANT_VERSION=2.2.7 && \
 curl -fsSL http://bit.ly/initVagrant | PROVIDER=libvirt bash
 
 # http://www.nimbusproject.org/docs/current/admin/z2c/vmm-setup.html
@@ -62,8 +67,7 @@ virsh list --all && virsh net-list --all
 
 sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y ca-certificates git make nmap curl dnsmasq-base ebtables libvirt-bin libvirt-dev libxml2-dev libxslt-dev qemu ruby-dev unzip cpu-checker zlib1g-dev build-essential qemu-utils && \
 sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y vim net-tools curl rsync ssh jq python-pip python-dev sshpass wget && \
-sudo apt-get install python3-venv -y && \
-sudo -H pip install -U ansible pyyaml jinja2 setuptools
+sudo apt-get install python3-venv -y && sudo -H pip install -U 'ansible==2.9.5' && sudo -H pip install -U pyyaml jinja2 setuptools
 
 #################################################################################################################################################################
 #################################################################################################################################################################

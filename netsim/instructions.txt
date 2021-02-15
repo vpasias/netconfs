@@ -26,7 +26,6 @@ ssh -o "StrictHostKeyChecking=no" root@127.0.0.1 uname -a
 # Vagrant 2.2.7
 # Ansible 2.9.5/2.9.9
 
-export PKG_VAGRANT_VERSION=2.2.7 && \
 curl -fsSL http://bit.ly/initVagrant | PROVIDER=libvirt bash
 
 # http://www.nimbusproject.org/docs/current/admin/z2c/vmm-setup.html
@@ -64,10 +63,6 @@ virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt
 su - iason
 
 virsh list --all && virsh net-list --all
-
-sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y ca-certificates git make nmap curl dnsmasq-base ebtables libvirt-bin libvirt-dev libxml2-dev libxslt-dev qemu ruby-dev unzip cpu-checker zlib1g-dev build-essential qemu-utils && \
-sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y vim net-tools curl rsync ssh jq python-pip python-dev sshpass wget && \
-sudo apt-get install python3-venv -y && sudo -H pip install -U 'ansible==2.9.5' && sudo -H pip install -U pyyaml jinja2 setuptools
 
 #################################################################################################################################################################
 #################################################################################################################################################################
@@ -332,6 +327,10 @@ vagrant box add csr1kv.json
 
 vagrant box list
 
+# Testing
+
+mkdir ~/csrv-test && cd ~/csrv-test
+
 nano Vagrantfile
 
 # -*- mode: ruby -*-
@@ -389,12 +388,32 @@ vagrant box add --provider libvirt --name cisco-nexus9500v-9.3.6 ./cisco-nxosv.b
 
 #################################################################################################################################################################
 #################################################################################################################################################################
-# Netsim-tools installation
+# Netsim-tools prerequisities installation
 # https://netsim-tools.readthedocs.io/en/latest/
 #################################################################################################################################################################
 #################################################################################################################################################################
 
-cd ~ && git clone https://github.com/ipspace/netsim-tools.git && pip install pyyaml jinja2
+sudo apt -y update && sudo apt install -y python3-minimal python3-pip -y && sudo -H pip3 install -U setuptools && sudo -H pip3 install -U pyyaml jinja2 && \
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common && \
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && \
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable" && \
+sudo apt-get update -y && \
+sudo apt-get install docker-ce docker-ce-cli containerd.io && \
+sudo usermod -aG docker $USER
+
+docker run -it --rm \
+    --user $(id -u):$(id -g) \
+    --volume $(pwd):/ansible \
+    --volume="/etc/group:/etc/group:ro" \
+    --volume="/etc/passwd:/etc/passwd:ro" \
+    --volume="/etc/shadow:/etc/shadow:ro" \
+    --volume="/home/$USER:/home/$USER" \
+    ipspace/automation:ubuntu $@
+
+docker ps && ansible --version
 
 #################################################################################################################################################################
 #################################################################################################################################################################
@@ -403,8 +422,8 @@ cd ~ && git clone https://github.com/ipspace/netsim-tools.git && pip install pyy
 #################################################################################################################################################################
 #################################################################################################################################################################
 
-cd ~ && git clone https://github.com/ipspace/netsim-examples.git && cd netsim-examples/BGP/IGP-metric/
-export PATH=/home/iason/netsim-tools:$PATH
+cd ~ && git clone --recurse-submodules https://github.com/ipspace/netsim-examples.git && cd netsim-example && ./setup.sh && cd BGP/IGP-metric/
+
 create-topology -t topology-ospf.yml -g -c -i
 
 vagrant up
@@ -419,8 +438,8 @@ config.ansible -e config=bgp
 #################################################################################################################################################################
 #################################################################################################################################################################
 
-cd ~ && git clone https://github.com/ipspace/netsim-examples.git && cd netsim-examples/routing/failover/
-export PATH=/home/iason/netsim-tools:$PATH
+cd ~ && git clone --recurse-submodules https://github.com/ipspace/netsim-examples.git && cd netsim-example && ./setup.sh && cd routing/failover/
+
 create-topology -t topology.yml -g -c -i
 
 vagrant up

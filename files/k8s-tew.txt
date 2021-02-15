@@ -119,7 +119,7 @@ for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo rm -rf /r
 
 for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo hostnamectl set-hostname n$i --static"; done
 
-for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt update -y && sudo apt-get install -y git vim net-tools wget curl bash-completion apt-utils iperf iperf3 mtr traceroute netcat sshpass"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt update -y && sudo apt-get install -y git vim net-tools wget curl bash-completion apt-utils iperf iperf3 mtr traceroute netcat sshpass socat"; done
 
 for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo chmod -x /etc/update-motd.d/*"; done
 
@@ -226,6 +226,7 @@ k8s-tew initialize -f
 
 # Full configuration
 k8s-tew configure --public-network=$IP_PREFIX.0/24 && \
+k8s-tew configure --deployment-directory /home/ubuntu && \
 k8s-tew configure --resolv-conf=/run/systemd/resolve/resolv.conf && \
 k8s-tew node-add -n n2 -i $IP_PREFIX.101 -x 0 -l controller && \
 k8s-tew node-add -n n3 -i $IP_PREFIX.102 -x 1 -l controller && \

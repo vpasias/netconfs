@@ -1,18 +1,5 @@
-chmod +x cloudlab-setup-ubuntu-tl.sh && ./cloudlab-setup-ubuntu-tl.sh && \
-sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass -y && \
+sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev -y && \
 sudo sed -i 's/hosts:          files dns/hosts:          files libvirt libvirt_guest dns/' /etc/nsswitch.conf && sudo lsmod | grep kvm && sudo reboot
-#sudo systemctl restart libvirtd && sudo systemctl status libvirtd
-
-screen
-# Press Return to continue
-# detach from session without killing it: Ctrl a d 
-# to see screen sessions: screen -ls
-# detach from closed session: screen -d -r 2111.pts-0.node0
-# enter session: screen -r 2111.pts-0.node0
-# exit a session and terminate it: exit
-
-sudo -i
-cd /mnt/extra && cat /sys/module/kvm_intel/parameters/nested && cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l && free -h && df -hT && sudo virsh list --all && sudo brctl show
 
 # Create the iason user
 sudo useradd iason -m -s /bin/bash && sudo usermod -aG sudo iason && echo "iason:iason" | chpasswd && echo "iason ALL=(root) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/iason && \
@@ -26,12 +13,12 @@ ssh -o "StrictHostKeyChecking=no" root@127.0.0.1 uname -a
 # Vagrant 2.2.7
 # Ansible 2.9.5/2.9.9
 
-curl -fsSL http://bit.ly/initVagrant | PROVIDER=libvirt bash
-
-# http://www.nimbusproject.org/docs/current/admin/z2c/vmm-setup.html
-sudo adduser `id -un` libvirt-qemu && sudo adduser `id -un` kvm && sudo adduser `id -un` libvirt-dnsmasq && sudo sed -i 's/0770/0777/' /etc/libvirt/libvirtd.conf & sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+curl -L -o vagrant.deb https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb && sudo dpkg -i vagrant.deb && vagrant plugin install vagrant-libvirt
 
 vagrant -v && vagrant plugin list
+
+# http://www.nimbusproject.org/docs/current/admin/z2c/vmm-setup.html
+sudo adduser `id -un` libvirt-qemu && sudo adduser `id -un` kvm && sudo adduser `id -un` libvirt-dnsmasq && sudo sed -i 's/0770/0777/' /etc/libvirt/libvirtd.conf && sudo systemctl restart libvirtd && sudo systemctl status libvirtd
 
 # virsh pool-edit default 
 # Change permission to: 0777

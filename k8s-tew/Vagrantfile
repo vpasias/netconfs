@@ -267,4 +267,5 @@ Vagrant.configure("2") do |config|
             add_machine(config, $storage_ram, $storage_cpus, storage_name(i), storage_ip(i))
         end
     end
+    config.vm.provision :shell, path: 'provision.sh'
 end

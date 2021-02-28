@@ -24,4 +24,14 @@ cat << EOF | sudo tee /etc/modprobe.d/qemu-system-x86.conf
 options kvm_intel nested=1
 EOF
 
-sudo reboot
+sudo modprobe -r kvm_intel
+
+sudo modprobe kvm_intel nested=1
+
+cat /sys/module/kvm_intel/parameters/nested
+
+sudo modinfo kvm_intel | grep -i nested
+
+uname -a
+
+#sudo reboot

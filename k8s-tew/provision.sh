@@ -2,10 +2,10 @@
 set -eux
 
 echo "root:gprm8350" | sudo chpasswd
-sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-sudo systemctl restart sshd
-sudo rm -rf /root/.ssh/authorized_keys
+#sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+#sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+#sudo systemctl restart sshd
+#sudo rm -rf /root/.ssh/authorized_keys
 
 sudo apt update -y && sudo apt-get install -y git vim net-tools wget curl bash-completion apt-utils
 

@@ -2,7 +2,6 @@
 set -eux
 
 echo "root:gprm8350" | sudo chpasswd
-echo "ubuntu:kyax7344" | sudo chpasswd
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 sudo systemctl restart sshd

@@ -1,8 +1,8 @@
 git clone https://gitlab.com/flexiwangroup/flexirouter.git && cd /home/vpasias/flexirouter && \
-git checkout d7ce403d0f6e4d851009ba098f8c196618e3ffd2 && git clone https://gitlab.com/flexiwangroup/flexiroutervpp.git vpp && \
-cd vpp && git checkout ec9b0c45f05a39de80ffb299a6b212ea0897e505 && cd /home/vpasias/flexirouter && \
+git checkout 8a7350ee3ac3d84b8936277a846c35f7ff0c0f64 && git clone https://gitlab.com/flexiwangroup/flexiroutervpp.git vpp && \
+cd vpp && git checkout cc32f89feac47f88f2b8dee3112905833fa4ca09 && cd /home/vpasias/flexirouter && \
 git clone https://gitlab.com/flexiwangroup/flexiroutersb.git vppsb && cd vppsb && \
-git checkout ed43b4dbe71e79d0b813fcafdb9bd4546579acfc && cd /home/vpasias/flexirouter && \
+git checkout fb66426541827e562311ebd701f1f3bbaa6a9094 && cd /home/vpasias/flexirouter && \
 cp /home/vpasias/flexirouter/scripts/prepare.sh /home/vpasias/flexirouter && cp /home/vpasias/flexirouter/scripts/vpp_build.sh /home/vpasias/flexirouter && \
 cp /home/vpasias/flexirouter/scripts/vpp_install.sh /home/vpasias/flexirouter && 
 cp /home/vpasias/flexirouter/scripts/vpp_build_and_install.sh /home/vpasias/flexirouter && \

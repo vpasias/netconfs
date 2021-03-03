@@ -42,14 +42,18 @@ docker run \
 # Put the produced VanillaStack into the 'key.pub' file
 nano key.pub
 
-ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2200 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2201 root@127.0.0.1 && \
-ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2202 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2203 root@127.0.0.1 && \
-ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2204 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2205 root@127.0.0.1 && \
-ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2206 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2207 root@127.0.0.1 && \
-ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2208 root@127.0.0.1
+vagrant port controller00 && vagrant port controller01 && vagrant port controller02 && vagrant port worker00 && vagrant port worker01 && vagrant port worker02 && \
+vagrant port storage00 && vagrant port storage01 && vagrant port storage02
 
-########################################################################################################################################################################
-#################### Delete ##########################################################################################
-########################################################################################################################################################################
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2222 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2223 root@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2224 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2225 root@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2226 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2227 root@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2228 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2229 root@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2230 root@127.0.0.1
+
+kubectl get nodes -o wide --all-namespaces && kubectl get pods -o wide --all-namespaces && kubectl get svc -o wide --all-namespaces && kubectl get deployments -o wide --all-namespaces
+
+################################################################################################################################################################################################# Delete #################################################################
+######################################################################################################################################################################
 
 vagrant destroy -f && vagrant status && vagrant global-status

@@ -1,0 +1,284 @@
+chmod +x cloudlab-setup-ubuntu-tl.sh && ./cloudlab-setup-ubuntu-tl.sh && \
+sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass -y && \
+sudo sed -i 's/hosts:          files dns/hosts:          files libvirt libvirt_guest dns/' /etc/nsswitch.conf && sudo lsmod | grep kvm && sudo reboot
+#sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+screen
+# Press Return to continue
+# detach from session without killing it: Ctrl a d 
+# to see screen sessions: screen -ls
+# detach from closed session: screen -d -r 1934.pts-0.node0
+# enter session: screen -r 1934.pts-0.node0
+# exit a session and terminate it: exit
+
+sudo -i
+
+# Create OS node VMs
+cd /mnt/extra && cat /sys/module/kvm_intel/parameters/nested && cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l && free -h && df -hT && sudo virsh list --all && sudo brctl show && \
+mkdir -p /mnt/extra/virt/images && mkdir -p /mnt/extra/virt/vms && cd /mnt/extra/virt/images && \
+wget https://cdimage.debian.org/cdimage/openstack/current-10/debian-10-openstack-amd64.qcow2 && qemu-img resize debian-10-openstack-amd64.qcow2 120G && qemu-img info debian-10-openstack-amd64.qcow2 && \
+cd /usr/lib/ipxe/qemu/ && wget https://github.com/qemu/qemu/raw/master/pc-bios/efi-e1000e.rom && cd /mnt/extra && \
+wget -O "/mnt/extra/osinfo-db.tar.xz" https://releases.pagure.org/libosinfo/osinfo-db-20200813.tar.xz && sudo osinfo-db-import --local "/mnt/extra/osinfo-db.tar.xz" && \
+cd /mnt/extra/ && git clone https://github.com/giovtorres/kvm-install-vm.git && cd kvm-install-vm
+
+##################################################################################################################################################################################
+######################################## Debian Servers based VanillaStack (https://docs.vanillastack.io/userguide/20.09/index.html) ############################
+##################################################################################################################################################################################
+# rm -rf vm_deployment.sh
+
+cd /mnt/extra/kvm-install-vm && nano vm_deployment.sh
+
+#!/bin/bash
+#
+HOME=/mnt/extra/
+
+cat > /mnt/extra/management.xml <<EOF
+<network>
+  <name>management</name>
+  <forward mode='nat'/>
+  <bridge name='virbr100' stp='off' macTableManager="kernel"/>
+  <mtu size="9216"/>
+  <mac address='52:54:00:8a:8b:cd'/>
+  <ip address='192.168.254.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.254.2' end='192.168.254.249'/>
+      <host mac='52:54:00:8a:8b:c1' name='n1' ip='192.168.254.101'/>
+      <host mac='52:54:00:8a:8b:c2' name='n2' ip='192.168.254.102'/>
+      <host mac='52:54:00:8a:8b:c3' name='n3' ip='192.168.254.103'/>
+      <host mac='52:54:00:8a:8b:c4' name='n4' ip='192.168.254.104'/>
+      <host mac='52:54:00:8a:8b:c5' name='n5' ip='192.168.254.105'/>
+      <host mac='52:54:00:8a:8b:c6' name='n6' ip='192.168.254.106'/>
+      <host mac='52:54:00:8a:8b:c7' name='n7' ip='192.168.254.107'/>
+      <host mac='52:54:00:8a:8b:c8' name='n8' ip='192.168.254.108'/>
+      <host mac='52:54:00:8a:8b:c9' name='n9' ip='192.168.254.109'/>
+    </dhcp>
+  </ip>
+</network>
+EOF
+
+cat > /mnt/extra/external.xml <<EOF
+<network>
+  <name>external</name>
+  <bridge name="virbr101" stp='off' macTableManager="kernel"/>
+  <mtu size="9216"/> 
+</network>
+EOF
+
+cat > /mnt/extra/internal.xml <<EOF
+<network>
+  <name>internal</name>
+  <bridge name="virbr102" stp='off' macTableManager="kernel"/>
+  <mtu size="9216"/> 
+</network>
+EOF
+
+virsh net-define /mnt/extra/management.xml && virsh net-autostart management && virsh net-start management
+virsh net-define /mnt/extra/external.xml && virsh net-autostart external && virsh net-start external
+virsh net-define /mnt/extra/internal.xml && virsh net-autostart internal && virsh net-start internal
+
+ip a && sudo virsh net-list --all
+
+sleep 20
+
+# Node 1 - master 1
+./kvm-install-vm create -c 4 -m 16384 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c1 n1
+
+#  Node 2 - master 2
+./kvm-install-vm create -c 4 -m 16384 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c2 n2
+
+# Node 3 - master 3
+./kvm-install-vm create -c 4 -m 16384 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c3 n3
+
+# Node 4 - worker 1
+./kvm-install-vm create -c 6 -m 32768 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c4 n4
+
+# Node 5 - worker 2
+./kvm-install-vm create -c 6 -m 32768 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c5 n5
+
+#  Node 6 - worker 3
+./kvm-install-vm create -c 6 -m 32768 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c6 n6
+
+# Node 7 - worker 4
+./kvm-install-vm create -c 6 -m 32768 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c7 n7
+
+# Node 8 - worker 5
+./kvm-install-vm create -c 6 -m 32768 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c8 n8
+
+# Node 9 - worker 6
+./kvm-install-vm create -c 6 -m 32768 -t debian10 -f host-passthrough -k /root/.ssh/id_rsa.pub -l /mnt/extra/virt/images -L /mnt/extra/virt/vms -b virbr100 -T US/Eastern -M 52:54:00:8a:8b:c9 n9
+
+virsh list --all && brctl show && virsh net-list --all
+
+sleep 10
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "cat << EOF | sudo tee /lib/systemd/system/ttyS0.service
+[Unit]
+Description=Serial Console Service
+
+[Service]
+ExecStart=/sbin/getty -L 115200 ttyS0 vt102
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF"; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo systemctl daemon-reload"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo systemctl enable ttyS0"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo systemctl start ttyS0"; done
+
+for i in {1..9}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..9}; do virsh start n$i; done && sleep 10 && virsh list --all
+
+sleep 30
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i 'echo "root:gprm8350" | sudo chpasswd'; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i 'echo "debian:kyax7344" | sudo chpasswd'; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo systemctl restart sshd"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo rm -rf /root/.ssh/authorized_keys"; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo hostnamectl set-hostname n$i --static"; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo apt update -y && sudo apt-get install -y git vim net-tools wget curl bash-completion apt-utils sshpass gcc make gnupg gnupg2 gnupg1 apt-transport-https"; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo chmod -x /etc/update-motd.d/*"; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i 'cat << EOF | sudo tee /etc/update-motd.d/01-custom
+#!/bin/sh
+echo "****************************WARNING****************************************
+UNAUTHORISED ACCESS IS PROHIBITED. VIOLATORS WILL BE PROSECUTED.
+*********************************************************************************"
+EOF'; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo chmod +x /etc/update-motd.d/01-custom"; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "cat << EOF | sudo tee /etc/modprobe.d/qemu-system-x86.conf
+options kvm_intel nested=1
+EOF"; done
+
+for i in {1..9}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..9}; do virsh start n$i; done && sleep 10 && virsh list --all
+
+sleep 30
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo mkdir -p /etc/systemd/system/networking.service.d"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "cat << EOF | sudo tee /etc/systemd/system/networking.service.d/reduce-timeout.conf
+[Service]
+TimeoutStartSec=15
+EOF"; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo apt update -y"; done
+
+for i in {1..9}; do virsh shutdown n$i; done && sleep 30 && virsh list --all && for i in {1..9}; do virsh start n$i; done && sleep 10 && virsh list --all
+
+sleep 10
+
+for i in {1..9}; do qemu-img create -f qcow2 vbdnode1$i 100G; done
+for i in {1..3}; do qemu-img create -f qcow2 vbdnode2$i 100G; done
+for i in {1..3}; do qemu-img create -f qcow2 vbdnode3$i 100G; done
+
+for i in {1..9}; do ./kvm-install-vm attach-disk -d 100 -s /mnt/extra/kvm-install-vm/vbdnode1$i.qcow2 -t vdb n$i; done
+for i in {1..3}; do ./kvm-install-vm attach-disk -d 100 -s /mnt/extra/kvm-install-vm/vbdnode2$i.qcow2 -t vdc n$i; done
+for i in {1..3}; do ./kvm-install-vm attach-disk -d 100 -s /mnt/extra/kvm-install-vm/vbdnode3$i.qcow2 -t vdd n$i; done
+
+for i in {1..9}; do virsh attach-interface --domain n$i --type network --source internal --model virtio --mac 02:00:aa:0a:01:1$i --config --live; done
+for i in {1..9}; do virsh attach-interface --domain n$i --type network --source external --model virtio --mac 02:00:aa:0a:02:1$i --config --live; done
+
+ssh -o "StrictHostKeyChecking=no" debian@n1 "cat << EOF | sudo tee /etc/hosts
+127.0.0.1 localhost
+192.168.254.101  n1
+192.168.254.102  n2
+192.168.254.103  n3
+192.168.254.104  n4
+192.168.254.105  n5
+192.168.254.106  n6
+192.168.254.107  n7
+192.168.254.108  n8
+192.168.254.109  n9
+
+# The following lines are desirable for IPv6 capable hosts
+::1 ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+EOF"
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo reboot"; done
+#
+
+chmod +x vm_deployment.sh && ./vm_deployment.sh
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo ip a"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "uname -a"; done
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo lsblk"; done
+
+# for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo ip link set mtu 9000 dev ens3 && sudo ip link set mtu 9000 dev eth1 && sudo ip link set mtu 9000 dev eth2"; done
+# virsh console n1
+# virsh shutdown n1
+# virsh start n1
+# virsh list --all
+# for i in {1..9}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..9}; do virsh start n$i; done && sleep 10 && virsh list --all
+
+########################################################################################################################################################################################
+########### Service Configuration #############################################################################################################################################################
+########################################################################################################################################################################################
+
+for h in n1 n2 n3 n4 n5 n6 n7 n8 n9; do sshpass -p gprm8350 ssh-copy-id -o "StrictHostKeyChecking=no" root@$h;done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo sed -i 's/PasswordAuthentication yes/PasswordAuthentication np/' /etc/ssh/sshd_config"; done && \
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" debian@n$i "sudo systemctl restart sshd"; done
+
+sudo apt update -y && sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common -y && curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add - && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" -y && sudo apt update -y && apt-cache policy docker-ce && sudo apt install docker-ce -y && sudo usermod -aG docker vpasias
+sudo systemctl status docker && docker images && docker ps -a
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" root@n$i "mkdir -p /etc/apt/sources.list.d"; done
+
+for i in {2..9}; do ssh -o "StrictHostKeyChecking=no" root@n$i 'cat << EOF | sudo tee /etc/apt/sources.list
+deb http://deb.debian.org/debian/ buster main
+deb-src http://deb.debian.org/debian/ buster main
+deb http://deb.debian.org/debian/ buster-updates main
+deb-src http://deb.debian.org/debian/ buster-updates main
+deb http://security.debian.org/debian-security buster/updates main
+deb-src http://security.debian.org/debian-security buster/updates main
+EOF'; done
+
+for i in {1..9}; do ssh -o "StrictHostKeyChecking=no" root@n$i "apt update -y"; done
+
+#############################################################################################################################################################
+
+docker pull harbor.vanillastack.io/vanillastack/installer:latest
+
+docker run \
+  --name VanillaStack-installer -d \
+  -p 8080:8080 \
+  harbor.vanillastack.io/vanillastack/installer:latest
+
+# 8080 -> [cloudlab server IP]:8080
+# URL: http://localhost:8080
+
+# Put the produced VanillaStack to 'key.pub' file
+nano key.pub
+
+for h in n1 n2 n3 n4 n5 n6 n7 n8 n9; do ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" root@$h;done && \
+for h in n1 n2 n3 n4 n5 n6 n7 n8 n9; do ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" debian@$h;done
+
+########################################################################################################################################################################
+########################################################################################################################################################################
+#################### Delete ##########################################################################################
+########################################################################################################################################################################
+########################################################################################################################################################################
+
+cd /mnt/extra/kvm-install-vm && \
+for i in {1..9}; do ./kvm-install-vm remove n$i; done && \
+virsh net-destroy management && rm -rf /mnt/extra/management.xml && virsh net-undefine management && \
+virsh net-destroy external && rm -rf /mnt/extra/external.xml && virsh net-undefine external && \
+virsh net-destroy internal && rm -rf /mnt/extra/internal.xml && virsh net-undefine internal && \
+sudo rm -rf /mnt/extra/virt/images/* && ls -lah /mnt/extra/virt/images/ && sudo rm -rf /mnt/extra/virt/vms/* && ls -lah /mnt/extra/virt/vms/ && \
+cd /mnt/extra/virt/images && wget https://cdimage.debian.org/cdimage/openstack/current-10/debian-10-openstack-amd64.qcow2 && qemu-img resize debian-10-openstack-amd64.qcow2 120G && qemu-img info debian-10-openstack-amd64.qcow2 && \
+cd /mnt/extra/kvm-install-vm && rm -rf vbdnode1* && rm -rf vbdnode2* && rm -rf vbdnode3* && rm -rf /root/.ssh/known_hosts && touch /root/.ssh/known_hosts && sudo virsh list --all && sudo brctl show && sudo virsh net-list --all
+
+#sudo rm -rf /var/lib/libvirt/dnsmasq/virbr0.*
+virsh list --all && brctl show && virsh net-list --all
+df -hT && free -h

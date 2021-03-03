@@ -1381,6 +1381,27 @@ for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i "
 for i in {7..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo sed -i "s/^bfdd=no/bfdd=yes/" /etc/frr/daemons"; done
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo systemctl enable frr.service"; done
 
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "cat << EOF | sudo tee /root/intconf.sh
+#!/bin/bash
+#
+
+service vpp start
+
+sleep 10
+
+vppctl enable tap-inject
+
+sleep 10
+
+sysctl -p
+
+EOF"; done
+
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo chmod +x /root/intconf.sh"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo systemctl daemon-reload"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo systemctl enable intconf"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo systemctl start intconf"; done
+
 for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
 
 sleep 30

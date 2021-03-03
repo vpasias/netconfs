@@ -7,6 +7,8 @@ ssh ubuntu@dev
 
 sudo apt update -y && sudo apt-get install -y git vim net-tools wget curl bash-completion apt-utils xfce4
 
+sudo apt-get install python3-cffi python3-pycparser -y
+
 git clone https://gitlab.com/flexiwangroup/flexirouter.git && cd /home/ubuntu/flexirouter && \
 git checkout 8a7350ee3ac3d84b8936277a846c35f7ff0c0f64 && git clone https://gitlab.com/flexiwangroup/flexiroutervpp.git vpp && \
 cd vpp && git checkout cc32f89feac47f88f2b8dee3112905833fa4ca09 && cd /home/ubuntu/flexirouter && \

@@ -32,7 +32,7 @@ cat /sys/module/kvm_intel/parameters/nested
 
 sudo modinfo kvm_intel | grep -i nested
 
-mkdir -p /etc/apt/sources.list.d
+sudo mkdir -p /etc/apt/sources.list.d
 
 sudo apt update -y
 

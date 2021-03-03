@@ -1277,11 +1277,15 @@ iface lo1002 inet loopback
     pre-up ip link add name lo1002 type dummy
 EOF"
 
-for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "curl -sL https://deb.flexiwan.com/setup | sudo -E bash -"; done
-for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt-get install -y flexiwan-router"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "curl -sL https://deb.flexiwan.com/setup | sudo -E bash -"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt-get install -y flexiwan-router"; done
 #for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo fwkill && sudo systemctl disable flexiwan-router"; done
 
-#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "git clone https://github.com/vpasias/vpp.git && cd vpp && 7z e vpp-dbg_21.01-rc2~12-gcc32f89fe_amd64.7z && sudo apt-get install python3-cffi python3-pycparser -y && sudo dpkg -i *.deb"; done
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "git clone https://github.com/vpasias/vpp.git && sudo apt-get install python3-cffi python3-pycparser -y"; done 
+
+for i in {1..10}; do scp -o "StrictHostKeyChecking=no" /home/vpasias/vpp-dbg_21.01-rc2~12-gcc32f89fe_amd64.deb ubuntu@n$i:/home/ubuntu/vpp; done
+
+for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "cd /home/ubuntu/vpp && sudo dpkg -i *.deb"; done
 
 for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
 

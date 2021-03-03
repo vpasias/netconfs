@@ -51,6 +51,16 @@ ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2226 root@127.0.0.1 &
 ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2228 root@127.0.0.1 && ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2229 root@127.0.0.1 && \
 ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2230 root@127.0.0.1
 
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2222 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2223 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2224 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2225 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2226 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2227 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2228 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2229 vagrant@127.0.0.1 && \
+ssh-copy-id -f -i key.pub -o "StrictHostKeyChecking=no" -p 2230 vagrant@127.0.0.1
+
 kubectl get nodes -o wide --all-namespaces && kubectl get pods -o wide --all-namespaces && kubectl get svc -o wide --all-namespaces && kubectl get deployments -o wide --all-namespaces
 
 ################################################################################################################################################################################################# Delete #################################################################

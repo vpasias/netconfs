@@ -532,7 +532,7 @@ for i in {1..14}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo rm -rf /
 
 for i in {1..14}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo hostnamectl set-hostname n$i --static"; done
 
-for i in {1..14}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt update -y && sudo apt-get install -y git vim net-tools wget curl bash-completion apt-utils"; done
+for i in {1..14}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt update -y && sudo apt-get install -y git vim net-tools wget curl bash-completion apt-utils p7zip-full p7zip-rar"; done
 
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo chmod -x /etc/update-motd.d/*"; done
 
@@ -1281,7 +1281,7 @@ for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "curl -sL http
 for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo apt-get install -y flexiwan-router"; done
 #for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "sudo fwkill && sudo systemctl disable flexiwan-router"; done
 
-#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "git clone https://github.com/vpasias/vpp.git && cd vpp && sudo apt-get install python3-cffi python3-pycparser -y && sudo dpkg -i *.deb"; done
+#for i in {1..10}; do ssh -o "StrictHostKeyChecking=no" ubuntu@n$i "git clone https://github.com/vpasias/vpp.git && cd vpp && 7z e vpp-dbg_21.01-rc2~12-gcc32f89fe_amd64.7z && sudo apt-get install python3-cffi python3-pycparser -y && sudo dpkg -i *.deb"; done
 
 for i in {1..14}; do virsh shutdown n$i; done && sleep 10 && virsh list --all && for i in {1..14}; do virsh start n$i; done && sleep 10 && virsh list --all
 

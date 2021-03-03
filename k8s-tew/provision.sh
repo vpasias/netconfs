@@ -32,6 +32,8 @@ cat /sys/module/kvm_intel/parameters/nested
 
 sudo modinfo kvm_intel | grep -i nested
 
+sudo apt update -y
+
 uname -a
 
 #sudo reboot

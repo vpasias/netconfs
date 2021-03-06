@@ -208,7 +208,7 @@ def add_machine(config, ram, cpus, name, ip)
             vb.cpus = cpus
             file_to_disk = name.vdi
             unless File.exist?(file_to_disk)
-	    vb.customize [ "createmedium", "disk", "--filename", name.vdi, "--format", "vmdk", "--size", 1024 * 30 ]
+	    vb.customize [ "createmedium", "disk", "--filename", name.vdi, "--format", "vdi", "--size", 1024 * 30 ]
             end
             vb.customize [ "storageattach", name , "--storagectl", "SATA Controller", "--port", "1", "--device", "0", "--type", "hdd", "--medium", "name.vdi"]
         end

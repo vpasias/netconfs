@@ -36,6 +36,7 @@ sudo mkdir -p /etc/apt/sources.list.d
 
 sudo apt update -y
 
+sudo lsblk -f
 uname -a
 
 #sudo reboot

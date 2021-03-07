@@ -63,7 +63,7 @@ $storage_cpus = 4
 # Environment variables
 ############################################################
 
-if ENV["MULTI_NODE"] 
+if ENV["MULTI_NODE"] == true
     $single_node = false
 else
     $single_node = true

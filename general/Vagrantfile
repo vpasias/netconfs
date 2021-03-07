@@ -229,7 +229,8 @@ end
 
 Vagrant.configure("2") do |config|
     config.vm.box = $box
-    config.disksize.size = '100GB'	
+    config.disksize.size = '100GB'
+    config.vm.provision "shell", path: "disk-extend.sh"
     config.vm.synced_folder '.', '/vagrant', disabled: true
     config.vm.box_check_update = false
 	

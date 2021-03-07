@@ -1,4 +1,5 @@
 #!/bin/bash
+# https://marcbrandner.com/blog/increasing-disk-space-of-a-linux-based-vagrant-box-on-provisioning/
 echo "> Installing required tools for file system management"
 if  [ -n "$(command -v yum)" ]; then
     echo ">> Detected yum-based Linux"

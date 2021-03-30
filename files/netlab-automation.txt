@@ -1,0 +1,4 @@
+netlab-automation
+# https://www.dmac.tech/creating-our-network-automation-lab/
+
+https://github.com/danielmacuare/netlab-automation.git

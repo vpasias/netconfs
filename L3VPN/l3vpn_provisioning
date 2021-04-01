@@ -22,7 +22,7 @@ case "$X" in
         ;;
 esac
 
-sudo ip addr add 172.20.5."$loopback_addr"/32 dev lo
+sudo ip addr add 192.168.254."$loopback_addr"/32 dev lo
 sudo apt install -y tcpdump vim curl gnupg2 wget net-tools
 if [[ !("$router_type" =~ "ce") ]]; then
     sudo sysctl net.ipv4.ip_forward=1

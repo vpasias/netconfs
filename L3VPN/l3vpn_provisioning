@@ -30,6 +30,7 @@ if [[ !("$router_type" =~ "ce") ]]; then
     sudo sysctl net.ipv6.conf.all.forwarding=1
     sudo modprobe mpls_router
     sudo modprobe mpls_iptunnel
+    # sudo modprobe mpls_gso
     sudo sysctl net.mpls.platform_labels=100000
     for interface in "${mpls_ints[@]}"; do
         sudo sysctl net.mpls.conf."$interface".input=1

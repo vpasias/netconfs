@@ -3,9 +3,10 @@ https://github.com/lwieske/kubeadm-ha-stacked-vagrant
 
 export PKG_VAGRANT_VERSION=2.2.10
 curl -fsSL http://bit.ly/initVagrant | PROVIDER=virtualbox bash
+vagrant plugin install vagrant-vbguest hostmanager vagrant-hostmanager
+vagrant -v && vboxmanage -V && vagrant plugin list && vagrant box list && vagrant global-status
 
 git clone https://github.com/lwieske/kubeadm-ha-stacked-vagrant.git && cd kubeadm-ha-stacked-vagrant
-vagrant plugin install vagrant-vbguest hostmanager vagrant-hostmanager
 cd boxes && ./build.sh
 cd ..
 ./run.sh

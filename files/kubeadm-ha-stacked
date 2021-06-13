@@ -2,7 +2,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plan
 https://github.com/lwieske/kubeadm-ha-stacked-vagrant
 
 git clone https://github.com/lwieske/kubeadm-ha-stacked-vagrant.git && cd kubeadm-ha-stacked-vagrant
-
+vagrant plugin install vagrant-vbguest
 cd boxes && ./build.sh
 cd ~
 ./run.sh

@@ -1,6 +1,9 @@
 Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plane) + 3 executor data plane
 https://github.com/lwieske/kubeadm-ha-stacked-vagrant
 
+export PKG_VAGRANT_VERSION=2.2.10
+curl -fsSL http://bit.ly/initVagrant | PROVIDER=virtualbox bash
+
 git clone https://github.com/lwieske/kubeadm-ha-stacked-vagrant.git && cd kubeadm-ha-stacked-vagrant
 vagrant plugin install vagrant-vbguest hostmanager vagrant-hostmanager
 cd boxes && ./build.sh

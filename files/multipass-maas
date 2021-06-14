@@ -36,7 +36,6 @@ write_files:
    path: /tmp/maas.net
 runcmd:
  - apt-get update
- - add-apt-repository ppa:maas/stable --yes
  - apt-get install libvirt-bin qemu-kvm jq snap --yes
  - virsh net-destroy default
  - virsh net-undefine default

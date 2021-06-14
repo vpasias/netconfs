@@ -1,1 +1,67 @@
 https://github.com/roaksoax/multipass-maas
+
+cat << EOF | sudo tee maas.cfg
+#cloud-config
+#
+#    Copyright (C) 2021
+#
+#    Authors: Vasilios Pasias <pasiasv@gmail.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, version 3 of the License.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ssh_pwauth: yes
+chpasswd:
+  list: |
+    multipass:multipass
+  expire: False
+write_files:
+ - content: |
+     <network>
+       <name>maas</name>
+       <forward mode='nat'>
+       </forward>
+       <ip address='192.168.150.1' netmask='255.255.255.0'>
+       </ip>
+     </network>
+   path: /tmp/maas.net
+runcmd:
+ - apt-get update
+ - add-apt-repository ppa:maas/stable --yes
+ - apt-get install libvirt-bin qemu-kvm jq snap --yes
+ - virsh net-destroy default
+ - virsh net-undefine default
+ - virsh net-define /tmp/maas.net
+ - virsh net-autostart maas
+ - virsh net-start maas
+ - snap install maas-test-db
+ - snap install maas --channel=2.9/stable
+ - maas init region+rack --maas-url http://localhost:5240/MAAS --database-uri maas-test-db:///
+ - maas createadmin --username admin --password admin --email admin@example.com
+ - maas apikey --username admin > /home/multipass/admin-api-key
+ - export API_KEY_FILE=/home/multipass/admin-api-key
+ - mkdir -p /var/snap/maas/current/root/.ssh
+ - ssh-keygen -q -N '' -f /var/snap/maas/current/root/.ssh/id_rsa
+ - maas login admin 'http://localhost:5240/MAAS/' - < $API_KEY_FILE
+ - export SUBNET=192.168.150.0/24
+ - export FABRIC_ID=$(maas admin subnet read "$SUBNET" | jq -r ".vlan.fabric_id")
+ - export VLAN_TAG=$(maas admin subnet read "$SUBNET" | jq -r ".vlan.vid")
+ - export PRIMARY_RACK=$(maas admin rack-controllers read | jq -r ".[] | .system_id")
+ - maas admin subnet update $SUBNET gateway_ip=192.168.150.1
+ - maas admin ipranges create type=dynamic start_ip=192.168.150.200 end_ip=192.168.150.254
+ - maas admin vlan update $FABRIC_ID $VLAN_TAG dhcp_on=True primary_rack=$PRIMARY_RACK
+ - maas admin pods create type=virsh power_address=qemu+ssh://multipass@192.168.150.1/system power_pass=multipass
+ - export status="downloading"
+ - while [ "$status" != "synced" ]; do export status=$(maas admin rack-controller list-boot-images $PRIMARY_RACK | jq -r .status); sleep 1; done
+EOF
+
+multipass launch daily:focal --name maas -c 52 -m 320G -d 1300G --cloud-init maas.cfg

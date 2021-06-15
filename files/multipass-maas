@@ -1,3 +1,8 @@
+sudo apt update
+sudo apt install snapd
+
+sudo snap install multipass
+
 https://github.com/roaksoax/multipass-maas
 
 cat << EOF | sudo tee maas.cfg
@@ -63,4 +68,5 @@ runcmd:
  - while [ "$status" != "synced" ]; do export status=$(maas admin rack-controller list-boot-images $PRIMARY_RACK | jq -r .status); sleep 1; done
 EOF
 
-multipass launch daily:focal --name maas -c 52 -m 320G -d 1300G --cloud-init maas.cfg
+#multipass launch --name maas -c 52 -m 320G -d 1300G --cloud-init maas.cfg
+multipass launch --name maas -c 48 -m 224G -d 1300G --cloud-init maas.cfg

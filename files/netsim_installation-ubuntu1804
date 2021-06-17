@@ -1,0 +1,82 @@
+# Executed at iason user
+su - iason
+# Install dependencies part 1
+mkdir -p /home/iason/tmp && sudo apt-get update && sudo apt-get install -y python3-pip && sudo apt-get upgrade && \
+sudo apt-get install -y libvirt-dev qemu-kvm virtinst ruby-libvirt qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt1-dev && \
+sudo apt-get install -y libxml2-dev zlib1g-dev ruby-dev python3-venv sshpass tree jq && \
+sudo apt install software-properties-common -y && \
+sudo apt-add-repository ppa:ansible/ansible -y && \
+sudo apt update && sudo apt install ansible -y && \
+curl -O https://releases.hashicorp.com/vagrant/2.2.6/vagrant_2.2.6_x86_64.deb && \
+sudo apt install -y ./vagrant_2.2.6_x86_64.deb && ansible --version && vagrant --version
+# Install dependencies part 2
+cat << EOF | tee install.libvirt
+#!/usr/bin/env ansible-playbook
+#
+- name: Install netsim-tools and dependencies for libvirt provider
+  hosts: localhost
+  connection: local
+  vars:
+    clone_to: /home/iason/netsim-tools
+    vagrant_libvirt_version: 0.4.1
+    netsim_tools_version: master
+    ansible_collections:
+    - cisco.ios
+    - cisco.nxos
+    - arista.eos
+    - junipernetworks.junos
+  tasks:
+  - copy:
+      dest: /home/iason/tmp/ansible-collections.yml
+      content: |
+        ---
+        collections:
+        {% for c in ansible_collections %}
+        - name: {{ c }}
+        {% endfor %}
+  - name: Install ansible dependencies
+    shell: "ansible-galaxy collection install -r /home/iason/tmp/ansible-collections.yml"
+    register: galaxy_install
+    changed_when: '"Installing" in galaxy_install.stdout'
+  - name: Install vagrant-libvirt Vagrant plugin
+    shell: "vagrant plugin install vagrant-libvirt --plugin-version={{ vagrant_libvirt_version }}"
+  - name: Add vagrant user to libvirt group
+    user:
+      name: "{{ lookup('env', 'USER') }}"
+      groups: libvirt
+      append: yes
+  - name: Clone netsim-tools
+    git:
+      repo: https://github.com/ipspace/netsim-tools.git
+      version: "{{ netsim_tools_version }}"
+      dest: "{{ clone_to }}"
+    become: yes
+  - name: Change owner of netsim-tools folder to current user
+    file:
+      path: "{{ clone_to }}"
+      owner: "{{ ansible_effective_user_id }}"
+      group: "{{ ansible_effective_group_id }}"
+      recurse: yes
+    become: yes
+  - name: Create a python virtual environment and install requirements
+    shell:
+      cmd: python3 -m venv venv
+      chdir: "{{ clone_to }}"
+      creates: "{{ clone_to }}/venv"
+  - name: Install requirements.txt
+    shell:
+      cmd: "{{ clone_to }}/venv/bin/pip install -r requirements.txt"
+      chdir: "{{ clone_to }}"
+  - name: Delete existing vagrant-libvirt network
+    shell: virsh net-undefine vagrant-libvirt && virsh net-destroy vagrant-libvirt
+    failed_when: False
+    become: yes
+  - name: Add vagrant-libvirt virtual network from netsim-tools template
+    shell: "virsh net-define {{ clone_to + '/netsim/templates/provider/libvirt/vagrant-libvirt.xml' }}"
+    become: yes
+EOF
+ansible-playbook install.libvirt
+sudo usermod -aG libvirt vagrant && pip install -r /home/iason/netsim-tools/requirements.txt && pip install paramiko
+exit
+su - iason
+vagrant -v && virsh list --all && virsh net-list --all

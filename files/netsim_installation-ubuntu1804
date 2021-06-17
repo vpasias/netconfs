@@ -2,7 +2,7 @@
 su - iason
 # Install dependencies part 1
 mkdir -p /home/iason/tmp && sudo apt-get update && sudo apt-get install -y python3-pip && sudo apt-get upgrade && \
-sudo apt-get install -y libvirt-dev qemu-kvm virtinst ruby-libvirt qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt1-dev && \
+sudo apt-get install -y libvirt-dev qemu-kvm virtinst ruby-libvirt qemu qemu-utils libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt1-dev && \
 sudo apt-get install -y libxml2-dev zlib1g-dev ruby-dev python3-venv sshpass tree jq && \
 sudo apt install software-properties-common -y && \
 sudo apt-add-repository ppa:ansible/ansible -y && \
@@ -40,6 +40,8 @@ cat << EOF | tee install.libvirt
     changed_when: '"Installing" in galaxy_install.stdout'
   - name: Install vagrant-libvirt Vagrant plugin
     shell: "vagrant plugin install vagrant-libvirt --plugin-version={{ vagrant_libvirt_version }}"
+  - name: Install vagrant-mutate Vagrant plugin
+    shell: "vagrant plugin install vagrant-mutate"
   - name: Add vagrant user to libvirt group
     user:
       name: "{{ lookup('env', 'USER') }}"
@@ -79,4 +81,4 @@ ansible-playbook install.libvirt
 sudo usermod -aG libvirt vagrant && pip install -r /home/iason/netsim-tools/requirements.txt && pip install paramiko
 exit
 su - iason
-vagrant -v && virsh list --all && virsh net-list --all
+vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list

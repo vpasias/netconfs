@@ -1,7 +1,7 @@
 # Executed at iason user
 su - iason
 # Install dependencies part 1
-mkdir -p /home/iason/tmp && sudo apt-get update && sudo apt-get install -y python3 python3-pip && sudo apt-get upgrade && \
+mkdir -p /home/iason/tmp && sudo apt-get update && sudo apt-get upgrade && sudo apt-get install -y python3 python3-pip && \
 sudo apt-get install -y libvirt-dev qemu-kvm virtinst ruby-libvirt qemu qemu-utils libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt1-dev && \
 sudo apt-get install -y libxml2-dev zlib1g-dev ruby-dev python3-venv sshpass tree jq && \
 sudo apt install software-properties-common -y && \
@@ -11,7 +11,7 @@ curl -O https://releases.hashicorp.com/vagrant/2.2.6/vagrant_2.2.6_x86_64.deb &&
 sudo apt install -y ./vagrant_2.2.6_x86_64.deb && sudo usermod -aG libvirt iason
 exit
 su - iason
-vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list
+vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list && python3 -V
 # Install dependencies part 2
 cat << EOF | tee install.dep
 #!/usr/bin/env ansible-playbook
@@ -68,7 +68,7 @@ cat << EOF | tee install.dep
       cmd: python3 -m venv venv
       chdir: "{{ clone_to }}"
       creates: "{{ clone_to }}/venv"
-  - name: Install requirements.txt
+  - name: Install requirements.txt - pip
     shell:
       cmd: "{{ clone_to }}/venv/bin/pip install -r requirements.txt"
       chdir: "{{ clone_to }}"
@@ -82,4 +82,5 @@ cat << EOF | tee install.dep
 EOF
 ansible-playbook install.dep
 #pip install -r /home/iason/netsim-tools/requirements.txt && pip install paramiko
+#pip3 install -r /home/iason/netsim-tools/requirements.txt && pip3 install paramiko
 vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list

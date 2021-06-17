@@ -8,9 +8,12 @@ sudo apt install software-properties-common -y && \
 sudo apt-add-repository ppa:ansible/ansible -y && \
 sudo apt update && sudo apt install ansible -y && \
 curl -O https://releases.hashicorp.com/vagrant/2.2.6/vagrant_2.2.6_x86_64.deb && \
-sudo apt install -y ./vagrant_2.2.6_x86_64.deb && ansible --version && vagrant --version
+sudo apt install -y ./vagrant_2.2.6_x86_64.deb && sudo usermod -aG libvirt iason
+exit
+su - iason
+vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list
 # Install dependencies part 2
-cat << EOF | tee install.libvirt
+cat << EOF | tee install.dep
 #!/usr/bin/env ansible-playbook
 #
 - name: Install netsim-tools and dependencies for libvirt provider
@@ -77,9 +80,6 @@ cat << EOF | tee install.libvirt
     shell: "virsh net-define {{ clone_to + '/netsim/templates/provider/libvirt/vagrant-libvirt.xml' }}"
     become: yes
 EOF
-ansible-playbook install.libvirt
-sudo usermod -aG libvirt iason
-pip install -r /home/iason/netsim-tools/requirements.txt && pip install paramiko
-exit
-su - iason
+ansible-playbook install.dep
+#pip install -r /home/iason/netsim-tools/requirements.txt && pip install paramiko
 vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list

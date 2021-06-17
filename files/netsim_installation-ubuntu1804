@@ -1,7 +1,7 @@
 # Executed at iason user
 su - iason
 # Install dependencies part 1
-mkdir -p /home/iason/tmp && sudo apt-get update && sudo apt-get install -y python3-pip && sudo apt-get upgrade && \
+mkdir -p /home/iason/tmp && sudo apt-get update && sudo apt-get install -y python3 python3-pip && sudo apt-get upgrade && \
 sudo apt-get install -y libvirt-dev qemu-kvm virtinst ruby-libvirt qemu qemu-utils libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt1-dev && \
 sudo apt-get install -y libxml2-dev zlib1g-dev ruby-dev python3-venv sshpass tree jq && \
 sudo apt install software-properties-common -y && \

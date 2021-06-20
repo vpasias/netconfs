@@ -8,7 +8,7 @@ sudo apt install software-properties-common -y && \
 sudo apt-add-repository ppa:ansible/ansible -y && \
 sudo apt update && sudo apt install ansible -y && \
 curl -O https://releases.hashicorp.com/vagrant/2.2.6/vagrant_2.2.6_x86_64.deb && \
-sudo apt install -y ./vagrant_2.2.6_x86_64.deb && sudo usermod -aG libvirt iason
+sudo apt install -y ./vagrant_2.2.6_x86_64.deb --allow-downgrades && sudo usermod -aG libvirt iason
 exit
 su - iason
 vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list && python3 -V

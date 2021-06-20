@@ -7,8 +7,8 @@ sudo apt-get install -y libxml2-dev zlib1g-dev ruby-dev python3-venv sshpass tre
 sudo apt install software-properties-common -y && \
 sudo apt-add-repository ppa:ansible/ansible -y && \
 sudo apt update && sudo apt install ansible -y && \
-curl -O https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb && \
-sudo apt install -y ./vagrant_2.2.7_x86_64.deb --allow-downgrades && sudo usermod -aG libvirt iason
+curl -O https://releases.hashicorp.com/vagrant/2.2.8/vagrant_2.2.8_x86_64.deb && \
+sudo apt install -y ./vagrant_2.2.8_x86_64.deb --allow-downgrades && sudo usermod -aG libvirt iason
 exit
 su - iason
 vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list && python3 -V

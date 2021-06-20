@@ -82,5 +82,5 @@ cat << EOF | tee /home/iason/tmp/install.dep
 EOF
 ansible-playbook /home/iason/tmp/install.dep
 #pip install -r /home/iason/netsim-tools/requirements.txt && pip install paramiko
-pip3 install -r /home/iason/netsim-tools/requirements.txt && pip3 install paramiko setuptools_rust
+pip3 instal setuptools_rust && pip3 install -r /home/iason/netsim-tools/requirements.txt && pip3 install paramiko
 vagrant -v && virsh list --all && virsh net-list --all && vagrant plugin list && vagrant box list

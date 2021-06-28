@@ -1,0 +1,52 @@
+cat /etc/group | grep libvirt | awk -F':' {'print $1'} | xargs -n1 sudo adduser iason && \
+sudo adduser iason kvm
+
+# exec su -l iason && id | grep libvirt
+
+sudo apt-get install jq unzip -y
+
+# explicitly choose version OR pull latest using github api
+#export TERRA_VERSION=1.0.1
+export TERRA_VERSION=$(curl -sL https://api.github.com/repos/hashicorp/terraform/releases/latest | jq -r ".tag_name" | cut -c2-)
+
+# download & unzip
+wget https://releases.hashicorp.com/terraform/${TERRA_VERSION}/terraform_${TERRA_VERSION}_linux_amd64.zip && unzip terraform_${TERRA_VERSION}_linux_amd64.zip && \
+chmod +x terraform && sudo mv terraform /usr/local/bin/.
+
+# validate
+terraform version
+
+# initialize
+terraform init
+#Terraform initialized in an empty directory!
+
+# Install terraform kvm plugin 
+mkdir -p ~/.terraform.d/plugins && cd $_ && \
+wget https://github.com/dmacvicar/terraform-provider-libvirt/releases/download/v0.6.2/terraform-provider-libvirt-0.6.2+git.1585292411.8cbe9ad0.Ubuntu_18.04.amd64.tar.gz && \
+tar xvfz terraform*.tar.gz
+
+git clone https://github.com/fabianlee/terraform-libvirt-ubuntu-examples.git && cd terraform-libvirt-ubuntu-examples/staticip
+
+make create-keypair
+#ssh-keygen -t rsa -b 4096 -f id_rsa -C staticip -N "" -q
+
+# initialise plan
+make init
+#terraform init
+
+# show plan
+terraform plan
+
+# apply plan
+make apply
+#terraform apply
+
+# underlying libvirt list of domains & have libvirt show all IP address leases
+virsh list && virsh net-dhcp-leases default
+
+# have terraform show IP address
+make metadata
+terraform refresh && terraform output ips
+
+# Destroy
+make destroy

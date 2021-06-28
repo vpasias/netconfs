@@ -25,6 +25,7 @@ mkdir -p ~/.terraform.d/plugins && cd $_ && \
 wget https://github.com/dmacvicar/terraform-provider-libvirt/releases/download/v0.6.2/terraform-provider-libvirt-0.6.2+git.1585292411.8cbe9ad0.Ubuntu_18.04.amd64.tar.gz && \
 tar xvfz terraform*.tar.gz
 
+# as per: https://fabianlee.org/2020/02/22/kvm-terraform-and-cloud-init-to-create-local-kvm-resources/
 git clone https://github.com/fabianlee/terraform-libvirt-ubuntu-examples.git && cd terraform-libvirt-ubuntu-examples/staticip
 
 make create-keypair

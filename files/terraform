@@ -52,4 +52,5 @@ terraform refresh && terraform output ips
 # Destroy
 make destroy
 
+# https://github.com/goffinet/terraform-libvirt
 # https://itnext.io/how-to-use-terraform-to-create-a-small-scale-cloud-infrastructure-abf54fabc9dd#73cd

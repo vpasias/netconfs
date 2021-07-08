@@ -1,0 +1,102 @@
+# Service Provider Network Topology
+# This topology includes IBGP session between AS-edge devices
+# and EBGP sessions with two external routers, based on a SR-MPLS core.
+#
+nodes:
+# Core routers - P routers - backbone super-spine switches
+  c1:
+    device: eos
+    module: [ sr,isis ] 
+  c2:
+    device: eos
+    module: [ sr,isis ]
+  c3:
+    device: eos
+    module: [ sr,isis ]  
+  c4:
+    device: eos
+    module: [ sr,isis ]      
+# Agreggation routers - PE routers - distribution super-spine switches
+  a1:
+    device: eos
+    module: [ sr,isis ]  
+  a2:
+    device: eos
+    module: [ sr,isis ]
+  a3:
+    device: eos
+    module: [ sr,isis ]    
+  a4:
+    device: eos
+    module: [ sr,isis ]
+# Edge routers - PE routers - access/spine switches
+  e1:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e3:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e4:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+# Customer routers - CE routers - leaf/ToR switches
+  x1:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65002
+
+links:
+# Core layer links
+- c1-c2
+- c1-c3
+- c2-c4
+- c3-c4
+- c1-c4
+- c2-c3
+
+# Agreggation layer links
+- a1-c1
+- a1-c2
+- a2-c1
+- a2-c2
+- a1-a2
+- a3-c3
+- a3-c4
+- a4-c3
+- a4-c4
+- a3-a4
+
+# Edge layer links
+- e1-a1
+- e1-a2
+- e2-a1
+- e2-a2
+- e3-a3
+- e3-a4
+- e4-a3
+- e4-a4
+
+# External links
+- x1-e1
+- x2-e3
+
+# Stub links
+- x1
+- x2

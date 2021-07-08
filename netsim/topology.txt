@@ -1,3 +1,9 @@
 x1 - e1 - a1 - c1 - c2 - a3 - e3 - x2
         X |  X |  X |  X |  X
      e2 - a2 - c3 - c4 - a4 - e3
+
+
+
+http://etutorials.org/Networking/MPLS+VPN+security/Part+III+Practical+Guidelines+to+MPLS+VPN+Security/Chapter+8.+Secure+Operation+and+Maintenance+of+an+MPLS+Core/Management+Network+Security/
+
+https://i1.wp.com/www.packetnetworking.com/wp-content/uploads/2020/10/blog_ISP_services-1.png?ssl=1

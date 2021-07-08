@@ -1,6 +1,6 @@
 # Service Provider Network Topology
-# This topology includes IBGP session between AS-edge devices
-# and EBGP sessions with two external routers, based on a SR-MPLS core.
+# This topology includes IBGP sessions between AS-edge devices
+# and EBGP sessions with two external routers, based on an SR-MPLS core.
 #
 nodes:
 # Core routers - P routers - backbone super-spine switches

@@ -3,7 +3,7 @@
 # and EBGP sessions with two external routers.
 #
 nodes:
-# Core routers
+# Core routers - P routers - super-spine switches
   c1:
     device: eos
     module: [ sr,isis ]
@@ -36,7 +36,7 @@ nodes:
         unnumbered: true
       loopback:
         ipv6: 2001:db8:cafe::/48        
-# Agreggation routers
+# Agreggation routers - PE routers - spine switches
   a1:
     device: eos
     module: [ sr,isis ]  
@@ -49,7 +49,7 @@ nodes:
   a4:
     device: eos
     module: [ sr,isis ]
-# Edge routers
+# Edge routers - PE routers - access/leaf switches
   e1:
     device: eos
     module: [ sr, isis, bgp ]
@@ -70,7 +70,7 @@ nodes:
     module: [ sr, isis, bgp ]
     bgp:
       as: 65000      
-# Customer routers
+# Customer routers - CE routers - ToR switches
   x1:
     device: eos
     module: [ bgp ]

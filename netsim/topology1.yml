@@ -1,6 +1,6 @@
 # Service Provider Network Topology
 # This topology combines SR-MPLS topology with IBGP session between AS-edge devices
-# and EBGP sessions with two external routers.
+# and EBGP sessions with two external routers. 
 #
 nodes:
 # Core routers - P routers - backbone super-spine switches
@@ -69,7 +69,7 @@ nodes:
     device: eos
     module: [ sr, isis, bgp ]
     bgp:
-      as: 65000      
+      as: 65000
 # Customer routers - CE routers - leaf/ToR switches
   x1:
     device: eos

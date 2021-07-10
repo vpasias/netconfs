@@ -16,10 +16,9 @@ sudo chmod +x /usr/local/bin/kubectl && kubectl version --short --client
 
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.0/kind-linux-amd64 && chmod +x ./kind && mv ./kind /bin/kind && kind --version
 
-kind create cluster
+kind create cluster 
 
-kubectl get nodes -o wide --all-namespaces
-kubectl get pods -o wide --all-namespaces
+kind get clusters && kubectl get nodes -o wide --all-namespaces && kubectl get pods -o wide --all-namespaces
 
 kubectl apply -f https://raw.githubusercontent.com/Kupenstack/kupenstack/main/config/demo/kupenstack-controller-manager.yaml
 

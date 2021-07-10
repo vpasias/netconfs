@@ -36,5 +36,8 @@ kubectl get keypairs -o wide
 kubectl describe ns default
 kubectl get svc -o wide --all-namespaces
 kubectl get deployments -o wide --all-namespaces
-# 32020 -> localhost:32020
+
+# See node IP address from command: kubectl get nodes -o wide
+# node IP address: 172.18.0.2 
+# 32020 -> 172.18.0.2:32020
 # URL: http://localhost:32020

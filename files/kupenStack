@@ -44,3 +44,6 @@ kubectl get deployments -o wide --all-namespaces
 
 # Delete vm: virtualmachine-sample
 kubectl delete vm virtualmachine-sample
+
+# Delete the kind cluster
+kind delete cluster

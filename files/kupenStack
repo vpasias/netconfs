@@ -33,3 +33,4 @@ kubectl get networks
 kubectl get flavors
 kubectl get images
 kubectl get keypairs -o wide
+kubectl describe ns default

@@ -36,3 +36,5 @@ kubectl get keypairs -o wide
 kubectl describe ns default
 kubectl get svc -o wide --all-namespaces
 kubectl get deployments -o wide --all-namespaces
+# 32020 -> localhost:32020
+# URL: http://localhost:32020

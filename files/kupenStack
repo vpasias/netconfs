@@ -23,7 +23,8 @@ kubectl get pods -o wide --all-namespaces
 
 kubectl apply -f https://raw.githubusercontent.com/Kupenstack/kupenstack/main/config/demo/kupenstack-controller-manager.yaml
 
-kubectl get pods -n kupenstack-control
+kubectl get pods -o wide -n kupenstack-control
+kubectl get pods -o wide -n kupenstack
 
 kubectl apply -f https://raw.githubusercontent.com/Kupenstack/kupenstack/main/config/demo/vm-sample.yaml
 

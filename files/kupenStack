@@ -14,3 +14,15 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 sudo curl -L "https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
 sudo chmod +x /usr/local/bin/kubectl && kubectl version --short --client
+
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.0/kind-linux-amd64 && chmod +x ./kind && mv ./kind /bin/kind && kind --version
+
+kind create cluster
+
+kubectl apply -f https://raw.githubusercontent.com/Kupenstack/kupenstack/main/config/demo/kupenstack-controller-manager.yaml
+
+kubectl get pods -n kupenstack-control
+
+kubectl apply -f https://raw.githubusercontent.com/Kupenstack/kupenstack/main/config/demo/vm-sample.yaml
+
+kubectl get virtualmachineskubectl get vm -o widekubectl get networkskubectl get flavorskubectl get imageskubectl get keypairs -o wide

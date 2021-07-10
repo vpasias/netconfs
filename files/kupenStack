@@ -41,3 +41,6 @@ kubectl get deployments -o wide --all-namespaces
 # node IP address: 172.18.0.2 
 # 32020 -> 172.18.0.2:32020
 # URL: http://localhost:32020
+
+# Delete vm: virtualmachine-sample
+kubectl delete vm virtualmachine-sample

@@ -907,6 +907,7 @@ netlab config x4econf.j2 -l x4
 
 netlab connect x3
 sh running-config
+sh bgp summary
 show ip route 10.0.0.16
 show ip route 172.16.0.16/14
 show ip route vrf CUSTOMER

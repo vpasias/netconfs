@@ -1,5 +1,19 @@
-sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev -y && \
+chmod +x cloudlab-setup-ubuntu-tl.sh && ./cloudlab-setup-ubuntu-tl.sh && \
+sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass ovmf -y && \
 sudo sed -i 's/hosts:          files dns/hosts:          files libvirt libvirt_guest dns/' /etc/nsswitch.conf && sudo lsmod | grep kvm && sudo reboot
+#sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+screen
+# Press Return to continue
+# detach from session without killing it: Ctrl a d 
+# to see screen sessions: screen -ls
+# detach from closed session: screen -d -r 1984.pts-0.node0
+# enter session: screen -r 1984.pts-0.node0
+# exit a session and terminate it: exit
+## Quit a session: screen -XS 2034.pts-0.node0 quit
+
+sudo -i
+cd /mnt/extra && cat /sys/module/kvm_intel/parameters/nested && cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l && free -h && df -hT && sudo virsh list --all && sudo brctl show
 
 # Create the iason user
 sudo useradd iason -m -s /bin/bash && sudo usermod -aG sudo iason && echo "iason:iason" | chpasswd && echo "iason ALL=(root) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/iason && \
@@ -9,172 +23,996 @@ sudo chmod 0440 /etc/sudoers.d/iason && su - iason
 mkdir .ssh && ssh-keygen -q -t rsa -N "" -f .ssh/id_rsa && cat .ssh/id_rsa.pub >> .ssh/authorized_keys && sudo bash -c "cat .ssh/id_rsa.pub >> /root/.ssh/authorized_keys" && \
 ssh -o "StrictHostKeyChecking=no" root@127.0.0.1 uname -a
 
-# https://github.com/netenglabs/automatic-for-the-people
-# Vagrant 2.2.7
-# Ansible 2.9.5/2.9.9
+# Install dependencies
 
-curl -L -o vagrant.deb https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb && sudo dpkg -i vagrant.deb && vagrant plugin install vagrant-libvirt
+sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.9 -y
 
-vagrant -v && vagrant plugin list
+# sudo rm -rf /usr/bin/python3 && sudo ln -s $(which python3.9) /usr/bin/python3
+# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
+# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
+# sudo update-alternatives --config python3
+# Now type 2 and hit enter for Python 3.9
+# sudo apt download python3-minimal -y && sudo apt install --reinstall ./python3-minimal_*.deb && sudo apt install -f && sudo apt-get update
 
-# http://www.nimbusproject.org/docs/current/admin/z2c/vmm-setup.html
-sudo adduser `id -un` libvirt-qemu && sudo adduser `id -un` kvm && sudo adduser `id -un` libvirt-dnsmasq && sudo sed -i 's/0770/0777/' /etc/libvirt/libvirtd.conf && sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+curl -O https://releases.hashicorp.com/vagrant/2.2.8/vagrant_2.2.8_x86_64.deb && sudo apt install -y ./vagrant_2.2.8_x86_64.deb --allow-downgrades
 
-# virsh pool-edit default 
-# Change permission to: 0777
-# sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+sudo apt-get update && sudo apt-get install -y python3-pip && pip3 install --upgrade pip && pip3 install setuptools_rust && sudo python3.9 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
+
+# reconfigure libvirt by setting: security_driver = "none" to file /etc/libvirt/qemu.conf with: sudo nano /etc/libvirt/qemu.conf and restart libvirt with: sudo systemctl restart libvirtd
+# cat /sys/module/kvm/parameters/halt_poll_ns
+
+sudo usermod -aG libvirt iason && sudo adduser `id -un` libvirt-qemu && sudo adduser `id -un` kvm && sudo adduser `id -un` libvirt-dnsmasq && sudo sed -i 's/0770/0777/' /etc/libvirt/libvirtd.conf && \
+echo 0 | sudo tee /sys/module/kvm/parameters/halt_poll_ns && echo 'security_driver = "none"' | sudo tee /etc/libvirt/qemu.conf && \
+sudo systemctl restart libvirtd && sudo systemctl status libvirtd
 
 exit
 
-cd /mnt/extra
-cat << EOF | tee vagrant-libvirt-net.xml
-<network connections='1'>
+su - iason
+
+vagrant -v && virsh list --all && virsh net-list --all && virsh pool-list && vagrant plugin list && vagrant box list && ansible --version && python3 --version && python --version && mkdir -p /home/iason/tmp
+
+### Create new vagrant-libvirt network
+
+cat << EOF | tee /home/iason/tmp/vagrant-libvirt.xml
+<network>
   <name>vagrant-libvirt</name>
+  <uuid>7ed704dd-3901-452c-91d0-58ad75901b1d</uuid>
   <forward mode='nat'>
     <nat>
       <port start='1024' end='65535'/>
     </nat>
   </forward>
-  <bridge name='virbr125' stp='on' delay='0'/>
-  <ip address='192.168.125.1' netmask='255.255.255.0'>
+  <bridge name='virbr1' stp='on' delay='0'/>
+  <mac address='52:54:00:d8:3f:0d'/>
+  <ip address='192.168.121.1' netmask='255.255.255.0'>
     <dhcp>
-      <range start='192.168.125.2' end='192.168.125.254'/>
+      <range start='192.168.121.2' end='192.168.121.99'/>
+      <host mac='08:4F:A9:00:00:01' ip='192.168.121.101'/>
+      <host mac='08:4F:A9:00:00:02' ip='192.168.121.102'/>
+      <host mac='08:4F:A9:00:00:03' ip='192.168.121.103'/>
+      <host mac='08:4F:A9:00:00:04' ip='192.168.121.104'/>
+      <host mac='08:4F:A9:00:00:05' ip='192.168.121.105'/>
+      <host mac='08:4F:A9:00:00:06' ip='192.168.121.106'/>
+      <host mac='08:4F:A9:00:00:07' ip='192.168.121.107'/>
+      <host mac='08:4F:A9:00:00:08' ip='192.168.121.108'/>
+      <host mac='08:4F:A9:00:00:09' ip='192.168.121.109'/>
+      <host mac='08:4F:A9:00:00:0A' ip='192.168.121.110'/>
+      <host mac='08:4F:A9:00:00:0B' ip='192.168.121.111'/>
+      <host mac='08:4F:A9:00:00:0C' ip='192.168.121.112'/>
+      <host mac='08:4F:A9:00:00:0D' ip='192.168.121.113'/>
+      <host mac='08:4F:A9:00:00:0E' ip='192.168.121.114'/>
+      <host mac='08:4F:A9:00:00:0F' ip='192.168.121.115'/>
+      <host mac='08:4F:A9:00:00:10' ip='192.168.121.116'/>
+      <host mac='08:4F:A9:00:00:11' ip='192.168.121.117'/>
+      <host mac='08:4F:A9:00:00:12' ip='192.168.121.118'/>
+      <host mac='08:4F:A9:00:00:13' ip='192.168.121.119'/>
+      <host mac='08:4F:A9:00:00:14' ip='192.168.121.120'/>
+      <host mac='08:4F:A9:00:00:15' ip='192.168.121.121'/>
+      <host mac='08:4F:A9:00:00:16' ip='192.168.121.122'/>
+      <host mac='08:4F:A9:00:00:17' ip='192.168.121.123'/>
+      <host mac='08:4F:A9:00:00:18' ip='192.168.121.124'/>
+      <host mac='08:4F:A9:00:00:19' ip='192.168.121.125'/>
+      <host mac='52:54:00:7A:00:01' ip='192.168.121.200'/>
+      <host mac='52:54:00:05:00:01' ip='192.168.121.201'/>
     </dhcp>
   </ip>
 </network>
 EOF
 
-virsh net-define vagrant-libvirt-net.xml && \
-virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt
+virsh net-destroy vagrant-libvirt && virsh net-undefine vagrant-libvirt && virsh net-define /home/iason/tmp/vagrant-libvirt.xml && virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt && \
+virsh net-list
 
-su - iason
-
-virsh list --all && virsh net-list --all
+# For Cisco CSR router: sudo vim /usr/local/lib/python3.9/dist-packages/netsim/ansible/templates/initial/ios.j2 -> change: no ip domain-lookup to: no ip domain lookup
+sudo sed -i 's/no ip domain-lookup/no ip domain lookup/' /usr/local/lib/python3.9/dist-packages/netsim/ansible/templates/initial/ios.j2
 
 #################################################################################################################################################################
-#################################################################################################################################################################
-# Creation of IOSv box
-# https://codingpackets.com/blog/cisco-iosv-vagrant-libvirt-box-install/
-#################################################################################################################################################################
+### Tests ###
 #################################################################################################################################################################
 
-cd ~ && mkdir -p ~/vagrant/boxes/cisco/iosv && cd ~/vagrant/boxes/cisco/iosv && cp /users/vpasias/vios-adventerprisek9-m.vmdk.SPA.156-1.T . && ls -lah && \
-curl -O https://raw.githubusercontent.com/vagrant-libvirt/vagrant-libvirt/master/tools/create_box.sh && \
-qemu-img convert -f vmdk -O qcow2 vios-adventerprisek9-m.vmdk.SPA.156-1.T iosv.qcow2
+### Test 1 ###
 
-virt-install \
-    --connect=qemu:///system \
-    --network network=vagrant-libvirt,model=e1000 \
-    --name=iosv \
-    --cpu host \
-    --arch=x86_64 \
-    --machine=pc-1.0 \
-    --vcpus=1 \
-    --ram=512 \
-    --os-type=linux \
-    --noacpi \
-    --virt-type=kvm \
-    --watchdog i6300esb,action=reset \
-    --disk path=iosv.qcow2,format=qcow2,device=disk,bus=virtio,cache=writethrough \
-    --graphics none \
-    --import
-    
-no
-en
-conf t
+mkdir -p ntest1
+cat << EOF | tee ntest1/topology.yml
+---
+defaults:
+  device: cumulus
 
-hostname iosv
-!
-ip domain-name lab.local
-!
-crypto key generate rsa modulus 2048
-ip ssh version 2
-!
-aaa new-model
-!
-aaa authentication login default local
-aaa authorization exec default local
-!
-username vagrant privilege 15 secret vagrant
-!
-ip ssh pubkey-chain
-  username vagrant
-    key-hash ssh-rsa DD3BB82E850406E9ABFFA80AC0046ED6
-!
-vrf definition MGMT
- description Management interface
- !
- address-family ipv4
- exit-address-family
-!
-interface GigabitEthernet0/0
-  description vagrant-management
-  vrf forwarding MGMT
-  ip address dhcp
-  duplex auto
-  speed auto
-  media-type rj45
-  no shutdown
-!
-line vty 0 4
- transport input ssh
-!
-event manager applet ENABLE-MGMT
- event syslog pattern "SYS-5-RESTART"
- action 0 cli command "enable"
- action 1 cli command "conf t"
- action 2 cli command "crypto key generate rsa modulus 2048"
- action 3 cli command "interface GigabitEthernet0/0"
- action 4 cli command "no shutdown"
- action 5 cli command "exit"
-!
-end
+nodes: [ s1, s2, s3 ]
+links: [ s1-s2, s2-s3, s1-s2-s3 ]
+EOF
 
-wr
-wr mem
+cd ntest1/ && netlab create
+vagrant up
+vagrant ssh s1
 
-show ip int brie
-# IP address: 192.168.125.63 
+# Delete
+vagrant destroy -f && cd
 
-ssh vagrant@192.168.125.63 -i ~/.vagrant.d/insecure_private_key
+### Test 2 ###
+
+mkdir -p ntest2
+
+cat << EOF | tee ntest2/topology.yml
+module: [ bgp, ospf ]
+
+bgp:
+  as: 65000
+ospf:
+  area: 0.0.0.0
+defaults:
+  device: cumulus
+nodes:
+  - name: r1
+  - name: r2
+links:
+  - r1-r2
+EOF
+
+cd ntest2/ && netlab create
+
+vagrant up
+
+#virsh list
+#virsh console netsim-tools_r1
+
+# ANSIBLE_STDOUT_CALLBACK=dense netlab initial -o
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect r1
+sudo vtysh
+sh ip ospf neighbor
+sh ip bgp neighbor
+sh ip bgp summary
+sh ip route
+exit
 exit
 
-virsh destroy iosv
+# Delete
+vagrant destroy -f && cd
 
-cat << EOF | tee metadata.json
-{"provider":"libvirt","format":"qcow2","virtual_size":2}
+### Test 3 ###
+
+mkdir -p ntest3
+
+cat << EOF | tee ntest3/topology.yml
+---
+defaults:
+  device: eos
+module: [ ospf ]
+
+nodes: [ r1, r2 ]
+links:
+- r1
+- r2
+- r1-r2
 EOF
 
-bash create_box.sh iosv.qcow2
+cd ntest3/ && netlab create
 
-cat << EOF | tee iosv.json
-{
-  "name": "cisco/iosv",
-  "description": "Cisco IOSv",
-  "versions": [
-    {
-      "version": "15.6-1-T",
-      "providers": [
-        {
-          "name": "libvirt",
-          "url": "file:///home/iason/vagrant/boxes/cisco/iosv/iosv.box"
-        }
-      ]
-    }
-  ]
-}
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect r1
+show ip ospf neighbor
+show ip route
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 4 ###
+
+mkdir -p ntest4
+
+cat << EOF | tee ntest4/topology.yml
+#
+# This topology combines SR-MPLS topology with IBGP session between AS-edge devices
+# and EBGP sessions with two external routers.
+#
+# The goal: test BGP-free core based on Segment Routing
+#
+nodes:
+  e1:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  c1:
+    device: eos
+    module: [ sr,isis ]
+  c2:
+    device: eos
+    module: [ sr,isis ]
+  x1:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65002
+
+links:
+# Core links
+- e1-c1
+- e1-c2
+- e2-c1
+- e2-c2
+
+# External links
+- x1-e1
+- x2-e2
+
+# Stub links
+- x1
+- x2
 EOF
 
-vagrant box add iosv.json
+cd ntest4/ && netlab create
 
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect x1
+show ip route
+
+netlab connect x2
+ping 172.16.0.5 source Ethernet2
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 5 ###
+
+mkdir -p ntest5
+
+cat << EOF | tee ntest5/topology.yml
+module: [ bgp, ospf ]
+
+bgp:
+  as: 65000
+ospf:
+  area: 0.0.0.0
+defaults:
+  device: nxos
+nodes:
+  - name: r1
+  - name: r2
+links:
+  - r1-r2
+EOF
+
+cd ntest5/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect r1
+#sh ip bgp neighbors | i "neighbor is"
+#sh ip route
+
+echo "no feature telnet" > config.j2
+netlab config config.j2
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 6 ###
+
+mkdir -p ntest6
+
+cat << EOF | tee ntest6/topology.yml
+#
+# Simple Leaf-Spine iBGP example
+#
+module: [ bgp,ospf ]
+
+addressing:
+  p2p:
+    unnumbered: true
+
+bgp:
+  as: 65000
+  rr_list: [ s1, s2 ]
+ospf:
+  area: 0.0.0.0
+defaults:
+  device: nxos
+
+nodes:
+  s1:
+    device: nxos
+  s2:
+    device: nxos
+  l1:
+    device: nxos
+  l2:
+    device: nxos
+  l3:
+    device: nxos
+  l4:
+    device: nxos
+
+links:
+- s1-l1
+- s1-l2
+- s1-l3
+- s1-l4
+- s2-l1
+- s2-l2
+- s2-l3
+- s2-l4
+EOF
+
+cd ntest6/ && netlab create
+
+vagrant up
+
+# wait 2 minutes and end vagrant with Ctrl+C + Ctrl+C
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect l1
+#sh ip bgp neighbors | i "neighbor is"
+#sh ip route
+
+echo "no feature telnet" > config.j2
+netlab config config.j2
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 7 ###
+
+mkdir -p ntest7
+
+cat << EOF | tee ntest7/topology.yml
+#
+# SR - ISIS topology file eos - csr
+#
+module: [ sr,isis ]
+
+addressing:
+  p2p:
+    unnumbered: true
+  loopback:
+    ipv6: 2001:db8:cafe::/48
+
+nodes:
+  e1:
+    device: eos
+  e2:
+    device: eos
+  c1:
+    device: eos
+  c2:
+    device: eos
+
+links:
+- e1-c1
+- e1-c2
+- e2-c1
+- e2-c2
+- e1
+- e2
+EOF
+
+cd ntest7/ && netlab create
+
+vagrant up
+#vagrant up c1 c2 && vagrant up e1 e2
+
+# wait 5 minutes and end vagrant with Ctrl+C + Ctrl+C
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect c1
+show ip route
+sh isis neighbors
+sh ipv6 route
+sh isis segment-routing adjacency-segments
+sh isis segment-routing prefix-segments
+exit
+
+netlab connect e1
+ping 10.0.0.4
+traceroute 10.0.0.4
+
+# rm -rf host_vars/
+# killall ruby && killall vagrant
+# ps -ef | grep ruby
+# ps -ef | grep vagrant
+# kill -9 ...
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 8 ###
+
+mkdir -p ntest8
+
+cat << EOF | tee ntest8/topology.yml
+#
+# This topology combines SR-MPLS topology with IBGP session between AS-edge devices
+# and EBGP sessions with two external routers.
+#
+# The goal: test BGP-free core based on Segment Routing
+#
+
+nodes:
+  e1:
+    device: csr
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: csr
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  c1:
+    device: csr
+    module: [ sr,isis ]
+  c2:
+    device: csr
+    module: [ sr,isis ]
+  x1:
+    device: csr
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: csr
+    module: [ bgp ]
+    bgp:
+      as: 65002
+
+links:
+# Core links
+- e1-c1
+- e1-c2
+- e2-c1
+- e2-c2
+
+# External links
+- e1-x1
+- e2-x2
+
+# Stub links
+- x1
+- x2
+EOF
+
+cd ntest8/ && netlab create
+
+vagrant up
+# vagrant up c1 c2 && vagrant up e1 e2 && vagrant up x1 x2
+# vagrant up c1 c2 e1 e2 && vagrant up x1 x2
+
+# wait 2 minutes and end vagrant with Ctrl+Z
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect c1
+show ip route
+show ipv6 route
+sh isis neighbors
+sh isis segment-routing adjacency-segments
+sh isis segment-routing prefix-segments
+exit
+
+netlab connect e1
+sh ip bgp neighbors | i "neighbor is"
+exit
+
+netlab connect x2
+sh ip bgp neighbors | i "neighbor is"
+#ping 172.16.0.5 source Ethernet2
+#ping 172.16.0.5 source  GigabitEthernet3
+ping 172.16.0.5 source 172.16.1.6
+exit
+
+# Delete
+vagrant destroy -f && cd
+
+### Test ISP1 ###
+
+mkdir -p isp1
+
+cat << EOF | tee isp1/topology.yml
+# Service Provider Network Topology
+# This topology includes IBGP sessions between AS-edge devices
+# and EBGP sessions with two external routers, based on an SRv6-enabled core.
+#
+nodes:
+# Core routers - P routers - backbone super-spine switches
+  c1:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48
+  c3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48        
+# Agreggation routers - PE L1 routers - distribution super-spine switches
+  a1:
+    device: eos
+    module: [ sr,isis ] 
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+# Edge routers - PE L2 routers - access/spine switches
+  e1:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e3:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e4:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+# Customer routers - CE routers - leaf/ToR switches
+  x1:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65002
+
+links:
+# Core layer links
+- c1-c2
+- c1-c3
+- c2-c4
+- c3-c4
+- c1-c4
+- c2-c3
+
+# Agreggation layer links
+- a1-c1
+- a1-c2
+- a2-c1
+- a2-c2
+- a1-a2
+- a3-c3
+- a3-c4
+- a4-c3
+- a4-c4
+- a3-a4
+
+# Edge layer links
+- e1-a1
+- e1-a2
+- e2-a1
+- e2-a2
+- e3-a3
+- e3-a4
+- e4-a3
+- e4-a4
+
+# External links
+- x1-e1
+- x2-e3
+
+# Stub links
+- x1
+- x2
+EOF
+
+cd isp1/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect x1
+show ip route
+exit
+
+netlab connect x2
+ping 172.16.0.13 source Ethernet2
+traceroute 172.16.0.13 source Ethernet2
+exit
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab collect
+
+# Delete
+vagrant destroy -f && cd
+
+### Test ISP2 ###
+
+mkdir -p isp2
+
+cat << EOF | tee isp1/topology.yml
+# Service Provider Network Topology
+# This topology includes IBGP sessions between AS-edge devices
+# and EBGP sessions with two external routers, based on an SRv6-enabled core.
+#
+nodes:
+# Core routers - P routers - backbone super-spine switches
+  c1:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48
+  c3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48        
+# Agreggation routers - PE L1 routers - distribution super-spine switches
+  a1:
+    device: eos
+    module: [ sr,isis ] 
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+# Edge routers - PE L2 routers - access/spine switches
+  e1:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e3:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e4:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+# Customer routers - CE routers - leaf/ToR switches
+  x1:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65002
+  x3:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65000
+  x4:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65000
+
+links:
+# Core layer links
+- c1-c2
+- c1-c3
+- c2-c4
+- c3-c4
+- c1-c4
+- c2-c3
+
+# Agreggation layer links
+- a1-c1
+- a1-c2
+- a2-c1
+- a2-c2
+- a1-a2
+- a3-c3
+- a3-c4
+- a4-c3
+- a4-c4
+- a3-a4
+
+# Edge layer links
+- e1-a1
+- e1-a2
+- e2-a1
+- e2-a2
+- e3-a3
+- e3-a4
+- e4-a3
+- e4-a4
+
+# External links
+- x1-e1
+- x2-e3
+- x3-e2
+- x4-e4
+
+# Stub links
+- x1
+- x2
+- x3
+- x4
+EOF
+
+cd isp2/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect x1
+show ip route
+exit
+
+netlab connect x2
+ping 172.16.0.13 source Ethernet2
+traceroute 172.16.0.13 source Ethernet2
+exit
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab collect
+
+# Delete
+vagrant destroy -f && cd
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+### Creation of Boxes ###
+#################################################################################################################################################################
+#################################################################################################################################################################
+
+#################################################################################################################################################################
+### Cisco Nexus box creation (cisco/nexus9300v) ### 
+#################################################################################################################################################################
+
+# cd /home/iason/tmp && wget http://37.156.146.163/PUB/Cisco/IOS/Nexus3K_9K/nexus9300v.9.3.4.box
+# vagrant box add nexus9300v.9.3.4.box --name cisco/nexus9300v
+# Install virtualbox
+#sudo apt update && \
+#wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add - && wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add - && \
+#sudo add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian bionic contrib" && sudo apt update && sudo apt install virtualbox-6.1 -y && sudo adduser `id -un` vboxusers
+#exit
+#su - iason
+#vboxmanage -V
+# vboxmanage setproperty machinefolder /mnt/extra/libvirt/ && vboxmanage list systemproperties | grep folder && vboxmanage list hostonlyifs
+
+vagrant box add vpasias/nswitch
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-nswitch/ /home/iason/.vagrant.d/boxes/cisco-VAGRANTSLASH-nexus9300v/
+vagrant plugin install vagrant-mutate && vagrant box list
+vagrant mutate cisco/nexus9300v libvirt
+vagrant box list && vagrant box remove cisco/nexus9300v --provider virtualbox && vagrant box list
+
+#sudo apt remove --purge *virtualbox* -y && sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+#################################################################################################################################################################
+### Arista vEOS box creation (arista/veos) ### 
+#################################################################################################################################################################
+
+vagrant box add vpasias/verouter
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-verouter/ /home/iason/.vagrant.d/boxes/arista-VAGRANTSLASH-veos/
 vagrant box list
 
-# Testing
+# Test
+
+mkdir ~/arista-test && cd ~/arista-test
+
+cat << EOF | tee Vagrantfile
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "arista/veos"
+
+  # Turn off shared folders
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
+
+  # Dont change default SSH key
+  config.ssh.insert_key = false
+  config.ssh.shell = "bash"
+  config.vm.guest = :freebsd
+
+  config.vm.provider :libvirt do |domain|
+    domain.disk_bus = 'ide'
+    domain.cpus = 2
+    domain.memory = 2048
+  end
+
+end
+EOF
+
+vagrant up
+
+vagrant ssh
+show ip int brie
+exit
+
+vagrant destroy -f && cd
+
+#################################################################################################################################################################
+###  Creation of csr1000v box (cisco/csr1000v) ### 
+#################################################################################################################################################################
+
+vagrant box add vpasias/cixrouter
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-cixrouter/ /home/iason/.vagrant.d/boxes/cisco-VAGRANTSLASH-csr1000v/
+vagrant box list
+
+# Test
+
+mkdir ~/csrv-test && cd ~/csrv-test
+
+cat << EOF | tee Vagrantfile
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "cisco/csr1000v"
+
+  # Turn off shared folders
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Do not try to insert new SSH key
+  config.ssh.insert_key = false
+
+  # Give VM time to boot
+  config.vm.boot_timeout = 180
+
+  # Set guest type to prevent guest type detection
+  config.vm.guest = :freebsd
+
+  # Provider-specific configuration
+  config.vm.provider :libvirt do |domain|
+    domain.nic_adapter_count = 8
+    domain.memory = 4096
+    domain.cpus = 2
+    domain.driver = "kvm"
+  end
+
+end
+EOF
+
+vagrant up
+
+vagrant ssh
+show ip int brie
+exit
+
+vagrant destroy -f
+
+#################################################################################################################################################################
+###  Creation of IOSv box (cisco/iosv) ### 
+#################################################################################################################################################################
+
+vagrant box add vpasias/cirouter
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-cirouter/ /home/iason/.vagrant.d/boxes/cisco-VAGRANTSLASH-iosv/
+vagrant box list
+
+# Test
 
 mkdir ~/iosv-test && cd ~/iosv-test
 
-nano Vagrantfile
-
+cat << EOF | tee Vagrantfile
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -205,233 +1043,15 @@ Vagrant.configure("2") do |config|
 
   end
 end
-#
+EOF
 
 vagrant up
 
 vagrant ssh
-exit
-
-vagrant destroy -f
-
-#################################################################################################################################################################
-#################################################################################################################################################################
-# Creation of csr1000v box
-# https://codingpackets.com/blog/cisco-csr-1000v-vagrant-libvirt-box-install/
-#################################################################################################################################################################
-#################################################################################################################################################################
-
-mkdir -p ~/vagrant/boxes/cisco/csr1kv && cd ~/vagrant/boxes/cisco/csr1kv && cp /users/vpasias/csr1000v-universalk9.03.15.00.S.155-2.S-std.qcow2 . && ls -lah && \
-curl -O https://raw.githubusercontent.com/vagrant-libvirt/vagrant-libvirt/master/tools/create_box.sh
-
-virt-install \
-    --connect=qemu:///system \
-    --name=csr1000v \
-    --os-type=linux \
-    --os-variant=rhel4 \
-    --arch=x86_64 \
-    --cpu host \
-    --vcpus=1 \
-    --hvm \
-    --ram=4096 \
-    --disk path=csr1000v-universalk9.03.15.00.S.155-2.S-std.qcow2,bus=ide,format=qcow2 \
-    --network=network:vagrant-libvirt,model=virtio \
-    --import
-
-enable
-conf t
-platform console serial
-end
-copy system:running-config nvram:startup-config
-reload
-
-virsh console csr1000v
-
-en
-conf t
-
-hostname csr
-ip domain-name lab.local
-!
-crypto key generate rsa modulus 2048
-ip ssh version 2
-!
-aaa new-model
-!
-aaa authentication login default local
-aaa authorization exec default local
-!
-username vagrant privilege 15 secret vagrant
-!
-ip ssh pubkey-chain
-  username vagrant
-    key-hash ssh-rsa DD3BB82E850406E9ABFFA80AC0046ED6
-!
-!
-interface GigabitEthernet1
-  description vagrant-management
-  ip address dhcp
-  no shutdown
-!
-end
-
-wr
-wr mem
-
 show ip int brie
-# IP address: 192.168.125.227 
-
-ssh vagrant@192.168.125.227 -i ~/.vagrant.d/insecure_private_key
-exit
-
-virsh shutdown csr1000v
-
-cat << EOF | tee metadata.json
-{"provider":"libvirt","format":"qcow2","virtual_size":8}
-EOF
-
-bash create_box.sh csr1000v-universalk9.03.15.00.S.155-2.S-std.qcow2
-
-cat << EOF | tee csr1kv.json
-{
-  "name": "cisco/csr1000v",
-  "description": "Cisco csr1000v",
-  "versions": [
-    {
-      "version": "03.15.00.S-155-2-S",
-      "providers": [
-        {
-          "name": "libvirt",
-          "url": "file:///home/iason/vagrant/boxes/cisco/csr1kv/csr1000v-universalk9.03.15.00.S.155-2.S-std.box"
-        }
-      ]
-    }
-  ]
-}
-EOF
-
-vagrant box add csr1kv.json
-
-vagrant box list
-
-# Testing
-
-mkdir ~/csrv-test && cd ~/csrv-test
-
-nano Vagrantfile
-
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
-Vagrant.configure("2") do |config|
-  config.vm.box = "cisco/csr1000v"
-
-  # Turn off shared folders
-  config.vm.synced_folder ".", "/vagrant", disabled: true
-
-  # Do not try to insert new SSH key
-  config.ssh.insert_key = false
-
-  # Give VM time to boot
-  config.vm.boot_timeout = 180
-
-  # Set guest type to prevent guest type detection
-  config.vm.guest = :freebsd
-
-  # Provider-specific configuration
-  config.vm.provider :libvirt do |domain|
-    domain.nic_adapter_count = 8
-    domain.memory = 4096
-    domain.cpus = 2
-    domain.driver = "kvm"
-  end
-
-end
-#
-
-vagrant up
-
-vagrant ssh
 exit
 
 vagrant destroy -f
-
-#################################################################################################################################################################
-#################################################################################################################################################################
-# Creation of Nexus 9000v box
-# https://github.com/mweisel/cisco-nxos9kv-vagrant-libvirt
-#################################################################################################################################################################
-#################################################################################################################################################################
-
-cd ~ && git clone https://github.com/vpasias/cisco-nxos9kv-vagrant-libvirt.git && cd cisco-nxos9kv-vagrant-libvirt
-
-wget http://37.156.146.163/PUB/Cisco/IOS/Nexus3K_9K/nexus9500v.9.3.6.qcow2 $$ sudo cp nexus9500v.9.3.6.qcow2 /var/lib/libvirt/images/cisco-nxosv.qcow2 && \
-sudo chown libvirt-qemu:kvm /var/lib/libvirt/images/cisco-nxosv.qcow2 && sudo chmod u+x /var/lib/libvirt/images/cisco-nxosv.qcow2 && \
-dpkg -L ovmf | grep -E 'OVMF_(CODE|VARS)\.fd'
-
-ansible-playbook main.yml
-
-vagrant box add --provider libvirt --name cisco-nexus9500v-9.3.6 ./cisco-nxosv.box
-
-#################################################################################################################################################################
-#################################################################################################################################################################
-# Netsim-tools prerequisities installation
-# https://netsim-tools.readthedocs.io/en/latest/
-#################################################################################################################################################################
-#################################################################################################################################################################
-
-sudo apt -y update && sudo apt install -y python3-minimal python3-pip jq apt-transport-https ca-certificates gnupg-agent software-properties-common tree ack curl && \ 
-sudo -H pip3 install -U setuptools && sudo -H pip3 install -U pyyaml jinja2 && \
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && \
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable" && \
-sudo apt-get update -y && \
-sudo apt-get install docker-ce docker-ce-cli containerd.io && \
-sudo usermod -aG docker $USER
-
-docker run -it --rm \
-    --user $(id -u):$(id -g) \
-    --volume $(pwd):/ansible \
-    --volume="/etc/group:/etc/group:ro" \
-    --volume="/etc/passwd:/etc/passwd:ro" \
-    --volume="/etc/shadow:/etc/shadow:ro" \
-    --volume="/home/$USER:/home/$USER" \
-    ipspace/automation:ubuntu $@
-
-docker ps && ansible --version
-
-#################################################################################################################################################################
-#################################################################################################################################################################
-# Netsim Example 1
-# https://github.com/ipspace/netsim-examples/tree/master/BGP/IGP-metric
-#################################################################################################################################################################
-#################################################################################################################################################################
-
-cd ~ && git clone --recurse-submodules https://github.com/ipspace/netsim-examples.git && cd netsim-example && ./setup.sh && cd BGP/IGP-metric/
-
-create-topology -t topology-ospf.yml -g -c -i
-
-vagrant up
-initial-config.ansible
-config.ansible -e config=igp
-config.ansible -e config=bgp
-
-#################################################################################################################################################################
-#################################################################################################################################################################
-# Netsim Example 2
-# https://github.com/ipspace/netsim-examples/tree/master/routing/failover
-#################################################################################################################################################################
-#################################################################################################################################################################
-
-cd ~ && git clone --recurse-submodules https://github.com/ipspace/netsim-examples.git && cd netsim-example && ./setup.sh && cd routing/failover/
-
-create-topology -t topology.yml -g -c -i
-
-vagrant up
-initial-config.ansible
-config.ansible -e config=routing-ospf
 
 #################################################################################################################################################################
 #################################################################################################################################################################

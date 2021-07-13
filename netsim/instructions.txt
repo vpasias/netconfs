@@ -805,12 +805,12 @@ nodes:
     device: eos
     module: [ bgp ]
     bgp:
-      as: 65000
+      as: 65005
   x4:
     device: eos
     module: [ bgp ]
     bgp:
-      as: 65000
+      as: 65005
 
 links:
 # Core layer links
@@ -872,6 +872,44 @@ traceroute 172.16.0.13 source Ethernet2
 exit
 
 ANSIBLE_STDOUT_CALLBACK=dense netlab collect
+
+# Change IP addresses based on the output of the collected x3.cfg and x4.cfg files by the previous command
+cat << EOF | tee x3econf.j2
+router bgp {{ bgp.as }}
+ address-family vpn-ipv4
+  neighbor 10.0.0.16 activate
+  neighbor 10.0.0.16 encapsulation mpls next-hop-self source-interface Loopback0
+!
+vrf CUSTOMER
+rd 10.0.0.15:1
+route-target import vpn-ipv4 10.0.0.16:1
+route-target export vpn-ipv4 10.0.0.15:1
+redistribute connected
+!
+EOF
+
+cat << EOF | tee x4econf.j2
+router bgp {{ bgp.as }}
+ address-family vpn-ipv4
+  neighbor 10.0.0.15 activate
+  neighbor 10.0.0.15 encapsulation mpls next-hop-self source-interface Loopback0
+!
+vrf CUSTOMER
+rd 10.0.0.16:1
+route-target import vpn-ipv4 10.0.0.15:1
+route-target export vpn-ipv4 10.0.0.16:1
+redistribute connected
+!
+EOF
+
+netlab config x3econf.j2 -l x3
+netlab config x4econf.j2 -l x4
+
+netlab connect x3
+sh running-config
+show ip route 10.0.0.16
+show ip route 172.16.0.16/14
+show ip route vrf CUSTOMER
 
 # Delete
 vagrant destroy -f && cd

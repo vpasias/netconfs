@@ -5,3 +5,6 @@ https://www.arista.com/en/um-eos/eos-bgpmpls-l3-vpn
 
 Juniper:
 https://gitlab.com/mwiget
+
+Terrible: IaC for QEMU/KVM
+https://github.com/89luca89/terrible

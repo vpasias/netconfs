@@ -11,3 +11,6 @@ https://github.com/89luca89/terrible
 
 Network Engineering:
 https://netquirks.co.uk/
+
+Nautobot:
+http://blog.networktocode.com/post/getting-nautobot-up-and-running-in-the-lab/

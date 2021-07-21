@@ -2,6 +2,7 @@ Arista L3VPN:
 https://blog.thomarite.uk/index.php/2020/05/25/mpls-segment-routing-arista-lab/
 https://github.com/thomarite/ceos-testing/tree/master/topology/config
 https://www.arista.com/en/um-eos/eos-bgpmpls-l3-vpn
+https://routingcraft.net/close-to-the-edge/
 
 Juniper:
 https://gitlab.com/mwiget

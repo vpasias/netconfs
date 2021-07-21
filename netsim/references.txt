@@ -8,3 +8,6 @@ https://gitlab.com/mwiget
 
 Terrible: IaC for QEMU/KVM
 https://github.com/89luca89/terrible
+
+Network Engineering:
+https://netquirks.co.uk/

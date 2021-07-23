@@ -7,8 +7,8 @@ screen
 # Press Return to continue
 # detach from session without killing it: Ctrl a d 
 # to see screen sessions: screen -ls
-# detach from closed session: screen -d -r 1984.pts-0.node0
-# enter session: screen -r 1984.pts-0.node0
+# detach from closed session: screen -d -r 3100.pts-0.node0
+# enter session: screen -r 3100.pts-0.node0
 # exit a session and terminate it: exit
 ## Quit a session: screen -XS 2034.pts-0.node0 quit
 
@@ -25,18 +25,21 @@ ssh -o "StrictHostKeyChecking=no" root@127.0.0.1 uname -a
 
 # Install dependencies
 
-sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.9 -y
+sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.8 -y
+#sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.9 -y
 
 # sudo rm -rf /usr/bin/python3 && sudo ln -s $(which python3.9) /usr/bin/python3
 # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
-# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
+# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2 (or python3.8)
 # sudo update-alternatives --config python3
-# Now type 2 and hit enter for Python 3.9
+# Now type 2 and hit enter for Python 3.9/Python 3.8
 # sudo apt download python3-minimal -y && sudo apt install --reinstall ./python3-minimal_*.deb && sudo apt install -f && sudo apt-get update
 
 curl -O https://releases.hashicorp.com/vagrant/2.2.8/vagrant_2.2.8_x86_64.deb && sudo apt install -y ./vagrant_2.2.8_x86_64.deb --allow-downgrades
 
-sudo apt-get update && sudo apt-get install -y python3-pip && pip3 install --upgrade pip && pip3 install setuptools_rust && sudo python3.9 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
+sudo apt-get update && sudo apt-get install -y python3-pip && pip3 install --upgrade pip && pip3 install setuptools_rust && sudo python3.8 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
+# sudo apt-get update && sudo apt install python3.9-distutils -y && sudo apt-get install -y python3-pip && sudo python3.9 -m pip install --upgrade pip && pip3 install --upgrade setuptools && \
+# pip3 install setuptools_rust && pip3 install --upgrade pip && pip3 install --upgrade distlib  && sudo python3.9 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
 
 # reconfigure libvirt by setting: security_driver = "none" to file /etc/libvirt/qemu.conf with: sudo nano /etc/libvirt/qemu.conf and restart libvirt with: sudo systemctl restart libvirtd
 # cat /sys/module/kvm/parameters/halt_poll_ns
@@ -49,7 +52,7 @@ exit
 
 su - iason
 
-vagrant -v && virsh list --all && virsh net-list --all && virsh pool-list && vagrant plugin list && vagrant box list && ansible --version && python3 --version && python --version && mkdir -p /home/iason/tmp
+vagrant -v && virsh list --all && virsh net-list --all && virsh pool-list && vagrant plugin list && vagrant box list && ansible --version && python3 --version && python --version && python3.8 --version && mkdir -p /home/iason/tmp
 
 ### Create new vagrant-libvirt network
 
@@ -92,6 +95,11 @@ cat << EOF | tee /home/iason/tmp/vagrant-libvirt.xml
       <host mac='08:4F:A9:00:00:17' ip='192.168.121.123'/>
       <host mac='08:4F:A9:00:00:18' ip='192.168.121.124'/>
       <host mac='08:4F:A9:00:00:19' ip='192.168.121.125'/>
+      <host mac='08:4F:A9:00:00:1A' ip='192.168.121.126'/>
+      <host mac='08:4F:A9:00:00:1B' ip='192.168.121.127'/>
+      <host mac='08:4F:A9:00:00:1C' ip='192.168.121.128'/>
+      <host mac='08:4F:A9:00:00:1D' ip='192.168.121.129'/>
+      <host mac='08:4F:A9:00:00:1E' ip='192.168.121.130'/>
       <host mac='52:54:00:7A:00:01' ip='192.168.121.200'/>
       <host mac='52:54:00:05:00:01' ip='192.168.121.201'/>
     </dhcp>
@@ -99,11 +107,18 @@ cat << EOF | tee /home/iason/tmp/vagrant-libvirt.xml
 </network>
 EOF
 
-virsh net-destroy vagrant-libvirt && virsh net-undefine vagrant-libvirt && virsh net-define /home/iason/tmp/vagrant-libvirt.xml && virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt && \
-virsh net-list
+# To delete the existing vagrant-libvirt netwrk: 
+# virsh net-destroy vagrant-libvirt && rm -rf /home/iason/tmp/vagrant-libvirt.xml
 
-# For Cisco CSR router: sudo vim /usr/local/lib/python3.9/dist-packages/netsim/ansible/templates/initial/ios.j2 -> change: no ip domain-lookup to: no ip domain lookup
-sudo sed -i 's/no ip domain-lookup/no ip domain lookup/' /usr/local/lib/python3.9/dist-packages/netsim/ansible/templates/initial/ios.j2
+virsh net-undefine vagrant-libvirt && virsh net-define /home/iason/tmp/vagrant-libvirt.xml && virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt && virsh net-list
+
+# For Cisco CSR router change: no ip domain-lookup to: no ip domain lookup
+# sudo sed -i 's/no ip domain-lookup/no ip domain lookup/' /usr/local/lib/python3.9/dist-packages/netsim/ansible/templates/initial/ios.j2
+sudo sed -i 's/no ip domain-lookup/no ip domain lookup/' /usr/local/lib/python3.8/dist-packages/netsim/ansible/templates/initial/ios.j2
+
+# For Arista router in order to use EVPN change:
+#sudo sed -i '1i service routing protocols model multi-agent' /usr/local/lib/python3.8/dist-packages/netsim/ansible/templates/initial/eos.j2 && \
+#sudo sed -i '2i !' /usr/local/lib/python3.8/dist-packages/netsim/ansible/templates/initial/eos.j2
 
 #################################################################################################################################################################
 ### Tests ###
@@ -196,6 +211,7 @@ ANSIBLE_STDOUT_CALLBACK=dense netlab initial
 netlab connect r1
 show ip ospf neighbor
 show ip route
+exit
 
 # Delete
 vagrant destroy -f && cd
@@ -525,10 +541,15 @@ exit
 vagrant destroy -f && cd
 
 ### Test ISP1 ###
+# General ISP connectivity over Segment Routing IPv6 core
 
-mkdir -p isp1
+#################################################################################################################################################################
+    x1 - e1 - a1 - c1 - c2 - a3 - e3 - x2
+            X  |   X  |  X  |  X  |  X
+         e2 - a2 - c3 - c4 - a4 - e3
+#################################################################################################################################################################
 
-cat << EOF | tee isp1/topology.yml
+mkdir -p isp1 && cat << EOF | tee isp1/topology.yml
 # Service Provider Network Topology
 # This topology includes IBGP sessions between AS-edge devices
 # and EBGP sessions with two external routers, based on an SRv6-enabled core.
@@ -693,11 +714,24 @@ ANSIBLE_STDOUT_CALLBACK=dense netlab collect
 # Delete
 vagrant destroy -f && cd
 
-### Test ISP2 ###
+### Test ISP3 ###
+# EVPN L2 multipoint & IP-VPN connectivity using MPLS  over Segment Routing IPv6 core 
+# See also: 
+# https://www.arista.com/en/um-eos/eos-sample-configurations#xx1276044
+# https://karneliuk.com/2018/12/sp-part-2-evpn-l2-multipoint-over-segment-routing-with-arista-cisco-nokia/
+# https://www.arista.com/en/um-eos/eos-bgpmpls-l3-vpn
+# https://karneliuk.com/2018/11/sp-part-1-segment-routing-and-ip-vpn-for-with-arista-cisco-nokia/
 
-mkdir -p isp2
+#################################################################################################################################################################
+         x5 - e5                     e6 - x6
+                   ||                        ||
+x1 - e1 - a1 - c1 - c2 - a3 - e3 - x2
+              X  ||  X  |  X  |  X  || X
+x3 - e2 - a2 - c3 - c4 - a4 - e3 - x4
 
-cat << EOF | tee isp1/topology.yml
+#################################################################################################################################################################
+
+mkdir -p isp3 && cat << EOF | tee isp3/topology.yml
 # Service Provider Network Topology
 # This topology includes IBGP sessions between AS-edge devices
 # and EBGP sessions with two external routers, based on an SRv6-enabled core.
@@ -779,7 +813,7 @@ nodes:
     device: eos
     module: [ sr, isis, bgp ]
     bgp:
-      as: 65000
+      as: 65100
   e3:
     device: eos
     module: [ sr, isis, bgp ]
@@ -789,7 +823,17 @@ nodes:
     device: eos
     module: [ sr, isis, bgp ]
     bgp:
-      as: 65000
+      as: 65100
+  e5:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65200
+  e6:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65200
 # Customer routers - CE routers - leaf/ToR switches
   x1:
     device: eos
@@ -802,15 +846,13 @@ nodes:
     bgp:
       as: 65002
   x3:
-    device: eos
-    module: [ bgp ]
-    bgp:
-      as: 65005
+    device: cumulus
   x4:
-    device: eos
-    module: [ bgp ]
-    bgp:
-      as: 65005
+    device: cumulus
+  x5:
+    device: cumulus
+  x6:
+    device: cumulus
 
 links:
 # Core layer links
@@ -842,21 +884,29 @@ links:
 - e3-a4
 - e4-a3
 - e4-a4
+- e5-a1
+- e5-a2
+- e6-a3
+- e6-a4
 
 # External links
 - x1-e1
 - x2-e3
 - x3-e2
 - x4-e4
+- x5-e5
+- x6-e6
 
 # Stub links
 - x1
 - x2
 - x3
 - x4
+- x5
+- x6
 EOF
 
-cd isp2/ && netlab create
+cd isp3/ && netlab create
 
 vagrant up
 
@@ -867,53 +917,281 @@ show ip route
 exit
 
 netlab connect x2
-ping 172.16.0.13 source Ethernet2
-traceroute 172.16.0.13 source Ethernet2
+ping 172.16.0.15 source Ethernet2
+traceroute 172.16.0.15 source Ethernet2
 exit
 
 ANSIBLE_STDOUT_CALLBACK=dense netlab collect
 
+# EVPN L2 multipoint 
+# Change IP addresses based on the output of the collected e2.cfg and e4.cfg files by the previous command
+cat << EOF | tee e2econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 22
+   name CUST234
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 22
+   switchport mode trunk
+!
+router bgp 65100
+   router-id 10.0.0.10
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.12 remote-as 65100
+   neighbor 10.0.0.12 update-source Loopback0
+   neighbor 10.0.0.12 fall-over bfd
+   neighbor 10.0.0.12 send-community standard extended
+   neighbor 10.0.0.12 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.12 activate
+   !
+   no address-family ipv4
+      no network 10.0.0.10/32
+   !
+   vlan 22
+      rd 10.0.0.10:234
+      route-target both 65100:234
+      redistribute learned
+   !
+!
+EOF
+
+cat << EOF | tee e4econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 22
+   name CUST234
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 22
+   switchport mode trunk
+!
+router bgp 65100
+   router-id 10.0.0.12
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.10 remote-as 65100
+   neighbor 10.0.0.10 update-source Loopback0
+   neighbor 10.0.0.10 fall-over bfd
+   neighbor 10.0.0.10 send-community standard extended
+   neighbor 10.0.0.10 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.10 activate
+   !
+   no address-family ipv4
+      no network 10.0.0.12/32
+  !
+   vlan 22
+      rd 10.0.0.12:234
+      route-target both 65100:234
+      redistribute learned
+   !
+!
+EOF
+
+netlab config e2econf.j2 -l e2 && netlab config e4econf.j2 -l e4
+
+netlab connect e2
+wr mem
+reload
+
+netlab connect e4
+wr mem
+reload
+
+netlab connect e2
+show bgp ipv4 unicast summary
+show bgp evpn summary
+show bgp evpn extcommunity rt 65100:234
+exit
+
 # Change IP addresses based on the output of the collected x3.cfg and x4.cfg files by the previous command
-cat << EOF | tee x3econf.j2
-router bgp {{ bgp.as }}
- address-family vpn-ipv4
-  neighbor 10.0.0.16 activate
-  neighbor 10.0.0.16 encapsulation mpls next-hop-self source-interface Loopback0
-!
-vrf CUSTOMER
-rd 10.0.0.15:1
-route-target import vpn-ipv4 10.0.0.16:1
-route-target export vpn-ipv4 10.0.0.15:1
-redistribute connected
-!
-EOF
+netlab connect x3
+# configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 22 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 22 && sudo net add vlan 22 hwaddress 00:FF:5E:00:00:22 && sudo net add vlan 22 ip address 192.168.0.22/24 && sudo net add vlan 22 vlan-id 22 && sudo net add vlan 22 vlan-raw-device bridge && sudo net add vlan 22 vrf CUST1 && sudo net add vrf CUST1 vrf-table auto && sudo net commit && sudo net show configuration
+exit
 
-cat << EOF | tee x4econf.j2
-router bgp {{ bgp.as }}
- address-family vpn-ipv4
-  neighbor 10.0.0.15 activate
-  neighbor 10.0.0.15 encapsulation mpls next-hop-self source-interface Loopback0
-!
-vrf CUSTOMER
-rd 10.0.0.16:1
-route-target import vpn-ipv4 10.0.0.15:1
-route-target export vpn-ipv4 10.0.0.16:1
-redistribute connected
-!
-EOF
-
-netlab config x3econf.j2 -l x3
-netlab config x4econf.j2 -l x4
+netlab connect x4
+# configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 22 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 22 && sudo net add vlan 22 hwaddress 00:FF:5E:00:00:24 && sudo net add vlan 22 ip address 192.168.0.24/24 && sudo net add vlan 22 vlan-id 22 && sudo net add vlan 22 vlan-raw-device bridge && sudo net add vlan 22 vrf CUST1 && sudo net add vrf CUST1 vrf-table auto && sudo net commit && sudo net show configuration
+exit
 
 netlab connect x3
-sh running-config
-sh bgp summary
-show ip route 10.0.0.16
-show ip route 172.16.0.16/14
-show ip route vrf CUSTOMER
+# Tests
+ping -I CUST1 192.168.0.22 -c 3
+ping -I CUST1 192.168.0.24 -c 60
+sudo ip vrf exec CUST1 traceroute 192.168.0.24
+exit
+
+# IP-VPN / L3VPN
+# Change IP addresses based on the output of the collected e5.cfg and e6.cfg files by the previous command
+cat << EOF | tee e5econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 33
+   name CUST567
+!
+vrf instance CUST567
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 33
+   switchport mode trunk
+!
+interface Vlan33
+   vrf forwarding CUST567
+   ip address virtual 192.168.10.1/24
+   ipv6 address virtual fc00::192:168:10:1/112
+!
+ip routing
+ip routing vrf CUST567
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST567
+!
+router bgp 65200
+   router-id 10.0.0.13
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.14 remote-as 65200
+   neighbor 10.0.0.14 update-source Loopback0
+   neighbor 10.0.0.14 fall-over bfd
+   neighbor 10.0.0.14 send-community standard extended
+   neighbor 10.0.0.14 maximum-routes 12000
+   !
+   address-family vpn-ipv4
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.14 activate
+   !
+   address-family vpn-ipv6
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.14 activate
+   !
+   no address-family ipv4
+      no network 10.0.0.13/32
+   !
+   vrf CUST567
+      rd 10.0.0.13:567
+      route-target import vpn-ipv6 65200:567
+      route-target import vpn-ipv4 65200:567
+      route-target export vpn-ipv6 65200:567
+      route-target export vpn-ipv4 65200:567
+      redistribute connected
+   !
+!
+EOF
+
+cat << EOF | tee e6econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 33
+   name CUST567
+!
+vrf instance CUST567
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 33
+   switchport mode trunk
+!
+interface Vlan33
+   vrf forwarding CUST567
+   ip address virtual 192.168.10.254/24
+   ipv6 address virtual fc00::192:168:10:254/112
+!
+ip routing
+ip routing vrf CUST567
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST567
+!
+router bgp 65200
+   router-id 10.0.0.14
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.13 remote-as 65200
+   neighbor 10.0.0.13 update-source Loopback0
+   neighbor 10.0.0.13 fall-over bfd
+   neighbor 10.0.0.13 send-community standard extended
+   neighbor 10.0.0.13 maximum-routes 12000
+   !
+   address-family vpn-ipv4
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.13 activate
+   !
+   address-family vpn-ipv6
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.13 activate
+   !
+   no address-family ipv4
+      no network 10.0.0.14/32
+  !
+  vrf CUST567
+     rd 10.0.0.14:567
+     route-target import vpn-ipv6 65200:567
+     route-target import vpn-ipv4 65200:567
+     route-target export vpn-ipv6 65200:567
+     route-target export vpn-ipv4 65200:567
+     redistribute connected
+   !
+!
+EOF
+
+netlab config e5econf.j2 -l e5 && netlab config e6econf.j2 -l e6
+
+netlab connect e5
+wr mem
+reload
+
+netlab connect e6
+wr mem
+reload
+
+netlab connect e5
+show bgp ipv4 unicast summary
+show bgp vpn-ipv4 summary
+show bgp vpn-ipv6 summary
+show bgp vpn-ipv4
+show bgp vpn-ipv6
+show ip route vrf CUST567
+exit
+
+# Change IP addresses based on the output of the collected x3.cfg and x4.cfg files by the previous command
+netlab connect x5
+# configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 33 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 33 && sudo net add vlan 33 hwaddress 00:FF:5E:00:01:22 && sudo net add vlan 33 ip address 192.168.10.22/24 && sudo net add vlan 33 vlan-id 33 && sudo net add vlan 33 vlan-raw-device bridge && sudo net add vlan 33 vrf CUST2 && sudo net add vrf CUST2 vrf-table auto && sudo net commit && sudo net show configuration
+exit
+
+netlab connect x6
+# configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 33 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 33 && sudo net add vlan 33 hwaddress 00:FF:5E:00:01:24 && sudo net add vlan 33 ip address 192.168.10.24/24 && sudo net add vlan 33 vlan-id 33 && sudo net add vlan 33 vlan-raw-device bridge && sudo net add vlan 33 vrf CUST2 && sudo net add vrf CUST2 vrf-table auto && sudo net commit && sudo net show configuration
+exit
+
+netlab connect x5
+# Tests
+ping -I CUST2 192.168.10.22 -c 3
+ping -I CUST2 192.168.10.24 -c 60
+sudo ip vrf exec CUST2 traceroute 192.168.10.24
+exit
 
 # Delete
-vagrant destroy -f && cd
+vagrant destroy -f && vagrant destroy -f && cd
 
 #################################################################################################################################################################
 #################################################################################################################################################################
@@ -1092,13 +1370,5 @@ exit
 
 vagrant destroy -f
 
-#################################################################################################################################################################
-#################################################################################################################################################################
-# DR Data Center Solutions
-# 1) DR solution involving VRF/MP-BGP Router on a Stick with NAT - multiple VRFs with NAT:
-# https://dancwilliams.com/cisco-vrfmp-bgp-router-on-a-stick-with-nat/
-# https://sudonull.com/post/93630-Two-providers-at-the-same-time-or-Dual-ISP-with-VRF-on-Cisco
-# 2) DR solution involving multiple VRFs with BGP route targets import changes:
-# https://blog.ipspace.net/2019/12/you-dont-need-ip-renumbering-for.html
 #################################################################################################################################################################
 #################################################################################################################################################################

@@ -1085,9 +1085,16 @@ cat << EOF | tee e5econf.j2
 service routing protocols model multi-agent
 !
 vlan 33
-   name CUST567
+   name CUST-A
 !
-vrf instance CUST567
+vlan 44
+   name CUST-B
+!
+vrf instance CUST-A
+   rd 65200:1
+!
+vrf instance CUST-B
+   rd 65200:2
 !
 interface Ethernet3
    switchport
@@ -1097,15 +1104,22 @@ interface Ethernet3
    switchport mode trunk
 !
 interface Vlan33
-   vrf forwarding CUST567
-   ip address virtual 192.168.10.1/24
-   ipv6 address virtual fc00::192:168:10:1/112
+   vrf forwarding CUST-A
+!
+interface Vlan44
+   vrf forwarding CUST-B
+!
+interface Loopback2
+   vrf CUST-A
+   ip address 192.168.10.1/32
 !
 ip routing
-ip routing vrf CUST567
+ip routing vrf CUST-A
+ip routing vrf CUST-B
 !
 ipv6 unicast-routing
-ipv6 unicast-routing vrf CUST567
+ipv6 unicast-routing vrf CUST-A
+ipv6 unicast-routing vrf CUST-B
 !
 router bgp 65200
    router-id 10.0.0.13
@@ -1127,14 +1141,15 @@ router bgp 65200
    no address-family ipv4
       no network 10.0.0.13/32
    !
-   vrf CUST567
-      rd 10.0.0.13:567
-      route-target import vpn-ipv6 65200:567
-      route-target import vpn-ipv4 65200:567
-      route-target export vpn-ipv6 65200:567
-      route-target export vpn-ipv4 65200:567
+   vrf CUST-A
+      rd 65200:1
+      route-target import vpn-ipv6 65200:1
+      route-target import vpn-ipv4 65200:1
+      route-target export vpn-ipv6 65200:1
+      route-target export vpn-ipv4 65200:1
+      network 192.168.10.1/32
       redistribute connected
-   !
+  !
 !
 EOF
 
@@ -1143,9 +1158,16 @@ cat << EOF | tee e6econf.j2
 service routing protocols model multi-agent
 !
 vlan 33
-   name CUST567
+   name CUST-A
 !
-vrf instance CUST567
+vlan 44
+   name CUST-B
+!
+vrf instance CUST-A
+   rd 65200:1
+!
+vrf instance CUST-B
+   rd 65200:2
 !
 interface Ethernet3
    switchport
@@ -1155,15 +1177,22 @@ interface Ethernet3
    switchport mode trunk
 !
 interface Vlan33
-   vrf forwarding CUST567
-   ip address virtual 192.168.10.254/24
-   ipv6 address virtual fc00::192:168:10:254/112
+   vrf forwarding CUST-A
+!
+interface Vlan44
+   vrf forwarding CUST-B
+!
+interface Loopback2
+   vrf CUST-A
+   ip address 192.168.10.2/32
 !
 ip routing
-ip routing vrf CUST567
+ip routing vrf CUST-A
+ip routing vrf CUST-B
 !
 ipv6 unicast-routing
-ipv6 unicast-routing vrf CUST567
+ipv6 unicast-routing vrf CUST-A
+ipv6 unicast-routing vrf CUST-B
 !
 router bgp 65200
    router-id 10.0.0.14
@@ -1185,14 +1214,15 @@ router bgp 65200
    no address-family ipv4
       no network 10.0.0.14/32
   !
-  vrf CUST567
-     rd 10.0.0.14:567
-     route-target import vpn-ipv6 65200:567
-     route-target import vpn-ipv4 65200:567
-     route-target export vpn-ipv6 65200:567
-     route-target export vpn-ipv4 65200:567
-     redistribute connected
-   !
+   vrf CUST-A
+      rd 65200:1
+      route-target import vpn-ipv6 65200:1
+      route-target import vpn-ipv4 65200:1
+      route-target export vpn-ipv6 65200:1
+      route-target export vpn-ipv4 65200:1
+      network 192.168.10.2/32
+      redistribute connected
+  !
 !
 EOF
 
@@ -1212,7 +1242,8 @@ show bgp vpn-ipv4 summary
 show bgp vpn-ipv6 summary
 show bgp vpn-ipv4
 show bgp vpn-ipv6
-show ip route vrf CUST567
+show ip route vrf CUST-A
+show ip route vrf CUST-B
 exit
 
 # Change IP addresses based on the output of the collected x3.cfg and x4.cfg files by the previous command

@@ -1111,7 +1111,7 @@ interface Vlan44
 !
 interface Loopback2
    vrf CUST-A
-   ip address 192.168.10.1/32
+   ip address 192.168.10.251/32
 !
 ip routing
 ip routing vrf CUST-A
@@ -1147,7 +1147,7 @@ router bgp 65200
       route-target import vpn-ipv4 65200:1
       route-target export vpn-ipv6 65200:1
       route-target export vpn-ipv4 65200:1
-      network 192.168.10.1/32
+      network 192.168.10.0/24
       redistribute connected
   !
 !
@@ -1184,7 +1184,7 @@ interface Vlan44
 !
 interface Loopback2
    vrf CUST-A
-   ip address 192.168.10.2/32
+   ip address 192.168.10.252/32
 !
 ip routing
 ip routing vrf CUST-A
@@ -1220,7 +1220,7 @@ router bgp 65200
       route-target import vpn-ipv4 65200:1
       route-target export vpn-ipv6 65200:1
       route-target export vpn-ipv4 65200:1
-      network 192.168.10.2/32
+      network 192.168.10.0/24
       redistribute connected
   !
 !
@@ -1249,12 +1249,12 @@ exit
 # Change IP addresses based on the output of the collected x3.cfg and x4.cfg files by the previous command
 netlab connect x5
 # configuration
-sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 33 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 33 && sudo net add vlan 33 hwaddress 00:FF:5E:00:01:22 && sudo net add vlan 33 ip address 192.168.10.22/24 && sudo net add vlan 33 vlan-id 33 && sudo net add vlan 33 vlan-raw-device bridge && sudo net add vlan 33 vrf CUST2 && sudo net add vrf CUST2 vrf-table auto && sudo net commit && sudo net show configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 33 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 33 && sudo net add vlan 33 hwaddress 00:FF:5E:00:01:22 && sudo net add vlan 33 ip address 192.168.10.22/24 && sudo net add vlan 33 vlan-id 33 && sudo net add vlan 33 vlan-raw-device bridge && sudo net add vlan 33 vrf CUST-A && sudo net add vrf CUST-A vrf-table auto && sudo net commit && sudo net show configuration
 exit
 
 netlab connect x6
 # configuration
-sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 33 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 33 && sudo net add vlan 33 hwaddress 00:FF:5E:00:01:24 && sudo net add vlan 33 ip address 192.168.10.24/24 && sudo net add vlan 33 vlan-id 33 && sudo net add vlan 33 vlan-raw-device bridge && sudo net add vlan 33 vrf CUST2 && sudo net add vrf CUST2 vrf-table auto && sudo net commit && sudo net show configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 33 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 33 && sudo net add vlan 33 hwaddress 00:FF:5E:00:01:24 && sudo net add vlan 33 ip address 192.168.10.24/24 && sudo net add vlan 33 vlan-id 33 && sudo net add vlan 33 vlan-raw-device bridge && sudo net add vlan 33 vrf CUST-A && sudo net add vrf CUST-A vrf-table auto && sudo net commit && sudo net show configuration
 exit
 
 netlab connect x5

@@ -1044,7 +1044,39 @@ router bgp 65100
 !
 EOF
 
-netlab config e2econf.j2 -l e2 && netlab config e4econf.j2 -l e4
+cat << EOF | tee x7econf.j2
+!
+ip vrf CUST1
+!
+interface GigabitEthernet0/1
+ no shut
+!
+interface GigabitEthernet0/1.22
+ encapsulation dot1q 22 
+ ip address 192.168.0.25 255.255.255.0
+!
+interface GigabitEthernet0/1.22
+ ip vrf forwarding CUST1
+!
+EOF
+
+cat << EOF | tee x8econf.j2
+!
+ip vrf CUST1
+!
+interface GigabitEthernet0/1
+ no shut
+!
+interface GigabitEthernet0/1.22
+ encapsulation dot1q 22 
+ ip address 192.168.0.26 255.255.255.0
+!
+interface GigabitEthernet0/1.22
+ ip vrf forwarding CUST1 
+!
+EOF
+
+netlab config e2econf.j2 -l e2 && netlab config e4econf.j2 -l e4 && netlab config x7econf.j2 -l x7 && netlab config x8econf.j2 -l x8
 
 netlab connect e2
 wr mem

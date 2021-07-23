@@ -3,6 +3,10 @@ https://blog.thomarite.uk/index.php/2020/05/25/mpls-segment-routing-arista-lab/
 https://github.com/thomarite/ceos-testing/tree/master/topology/config
 https://www.arista.com/en/um-eos/eos-bgpmpls-l3-vpn
 https://routingcraft.net/close-to-the-edge/
+https://changineer.info/network/arista_eos/arista_eos_evpn_layer3.html
+
+Arista L2VPN:
+https://changineer.info/network/arista_eos/arista_eos_evpn_layer2.html
 
 Arista EVPN Data Center
 https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjVh8jjmfTxAhXI8qQKHWf5AM8QFjABegQIAxAD&url=http%3A%2F%2Fallvpc.net%2FEVPN_Deployment_Guide.pdf&usg=AOvVaw1c3fyysBypwMHys6kBmL9g

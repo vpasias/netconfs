@@ -1259,9 +1259,9 @@ exit
 
 netlab connect x5
 # Tests
-ping -I CUST2 192.168.10.22 -c 3
-ping -I CUST2 192.168.10.24 -c 60
-sudo ip vrf exec CUST2 traceroute 192.168.10.24
+ping -I CUST-A 192.168.10.22 -c 3
+ping -I CUST-A 192.168.10.24 -c 60
+sudo ip vrf exec CUST-A traceroute 192.168.10.24
 exit
 
 # Delete

@@ -3,7 +3,10 @@ https://blog.thomarite.uk/index.php/2020/05/25/mpls-segment-routing-arista-lab/
 https://github.com/thomarite/ceos-testing/tree/master/topology/config
 https://www.arista.com/en/um-eos/eos-bgpmpls-l3-vpn
 https://routingcraft.net/close-to-the-edge/
+# Layer 3 EVPN with multiple VRFs and VLANs per host
 https://changineer.info/network/arista_eos/arista_eos_evpn_layer3.html
+# Layer 3 EVPN between different customers/ISPs (different VLANs)
+https://changineer.info/network/arista_eos/arista_eos_evpn_isp.html
 
 Arista L2VPN:
 https://changineer.info/network/arista_eos/arista_eos_evpn_layer2.html

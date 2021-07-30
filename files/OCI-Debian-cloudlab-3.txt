@@ -118,7 +118,7 @@ brctl show | more
 #sudo sed -i 's/infomaniak.ch/vipnet.vip/' /etc/oci-poc/oci-poc.conf && \
 #sudo sed -i 's/a_big_secret/gprm8350/' /etc/oci-poc/oci-poc.conf && sudo sed -i 's/84.16.67.69/8.8.8.8/' /etc/oci-poc/oci-poc.conf && sudo sed -i 's/84.16.67.70/8.8.4.4/' /etc/oci-poc/oci-poc.conf
 
-nano /etc/oci-poc/oci-poc.conf
+rm -rf /etc/oci-poc/oci-poc.conf && nano /etc/oci-poc/oci-poc.conf
 ###################################
 ### Domain and host information ###
 ###################################

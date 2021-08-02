@@ -655,6 +655,8 @@ show bgp ipv4 unicast summary
 show bgp evpn summary
 show bgp evpn
 show ip route vrf GATEWAY
+show vxlan address-table
+show interfaces vxlan 1
 exit
 
 netlab connect x5
@@ -662,10 +664,8 @@ netlab connect x5
 ping vrf CUST-A 192.168.10.5
 ping vrf CUST-A 192.168.10.6
 traceroute vrf CUST-A 192.168.10.6
-ping 192.168.11.5
-ping 192.168.11.6
-traceroute 192.168.11.6
 ping vrf CUST-A 192.168.11.6
+traceroute vrf CUST-A 192.168.11.6
 show arp vrf CUST-A 
 exit
 

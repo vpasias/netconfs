@@ -390,9 +390,9 @@ vlan 33
    name CUST-A
 !
 vlan 34
-   name CUST-A1
+   name CUST-B
 !
-vrf instance CUST-A
+vrf instance CUST-C
 !
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -404,9 +404,11 @@ interface Vxlan1
 !
 ip routing
 ip routing vrf CUST-A
+ip routing vrf CUST-B
 !
 ipv6 unicast-routing
 ipv6 unicast-routing vrf CUST-A
+ipv6 unicast-routing vrf CUST-B
 !
 interface Ethernet3
    switchport
@@ -417,6 +419,8 @@ interface Ethernet3
 !
 router bgp 65200
    router-id 10.0.0.13
+   no bgp default ipv4-unicast
+   timers bgp 10 30
    maximum-paths 128 ecmp 128
    neighbor 10.0.0.14 remote-as 65200
    neighbor 10.0.0.14 update-source Loopback0
@@ -431,7 +435,7 @@ router bgp 65200
    no address-family ipv4
       no network 10.0.0.13/32
    !
-   vrf CUST-A
+   vrf CUST-C
       rd 10.0.0.13:123
       route-target import evpn 123:1230
       route-target export evpn 123:1230
@@ -458,9 +462,9 @@ vlan 33
    name CUST-A
 !
 vlan 34
-   name CUST-A1
+   name CUST-B
 !
-vrf instance CUST-A
+vrf instance CUST-C
 !
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -472,9 +476,11 @@ interface Vxlan1
 !
 ip routing
 ip routing vrf CUST-A
+ip routing vrf CUST-B
 !
 ipv6 unicast-routing
 ipv6 unicast-routing vrf CUST-A
+ipv6 unicast-routing vrf CUST-B
 !
 interface Ethernet3
    switchport
@@ -485,6 +491,8 @@ interface Ethernet3
 !
 router bgp 65200
    router-id 10.0.0.14
+   no bgp default ipv4-unicast
+   timers bgp 10 30
    maximum-paths 128 ecmp 128
    neighbor 10.0.0.13 remote-as 65200
    neighbor 10.0.0.13 update-source Loopback0
@@ -499,7 +507,7 @@ router bgp 65200
    no address-family ipv4
       no network 10.0.0.14/32
   !
-   vrf CUST-A
+   vrf CUST-C
       rd 10.0.0.13:123
       route-target import evpn 123:1230
       route-target export evpn 123:1230
@@ -524,11 +532,13 @@ cat << EOF | tee x5econf.j2
 !
 vrf instance CUST-A
 !
+vrf instance CUST-B
+!
 vlan 33
    name CUST-A
 !
 vlan 34
-   name CUST-A1
+   name CUST-B
 !
 interface Ethernet1
    switchport
@@ -542,9 +552,12 @@ interface Vlan33
    ip address 192.168.10.5/24
 !
 interface Vlan34
+   vrf CUST-B
    ip address 192.168.11.5/24
 !
-ip routing vrf CUST-A
+no ip routing
+no ip routing vrf CUST-A
+no ip routing vrf CUST-B
 !
 EOF
 
@@ -552,11 +565,13 @@ cat << EOF | tee x6econf.j2
 !
 vrf instance CUST-A
 !
+vrf instance CUST-B
+!
 vlan 33
    name CUST-A
 !
 vlan 34
-   name CUST-A1
+   name CUST-B
 !
 interface Ethernet1
    switchport
@@ -570,9 +585,12 @@ interface Vlan33
    ip address 192.168.10.6/24
 !
 interface Vlan34
+   vrf CUST-B
    ip address 192.168.11.6/24
 !
-ip routing vrf CUST-A
+no ip routing
+no ip routing vrf CUST-A
+no ip routing vrf CUST-B
 !
 EOF
 

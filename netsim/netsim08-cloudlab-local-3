@@ -1,0 +1,2118 @@
+chmod +x cloudlab-setup-ubuntu-tl.sh && ./cloudlab-setup-ubuntu-tl.sh && \
+sudo apt-get install libvirt-bin genisoimage libguestfs-tools libosinfo-bin virtinst qemu-kvm git vim net-tools wget curl bash-completion python-pip libvirt-daemon-system virt-manager bridge-utils libnss-libvirt libvirt-clients osinfo-db-tools intltool sshpass ovmf -y && \
+sudo sed -i 's/hosts:          files dns/hosts:          files libvirt libvirt_guest dns/' /etc/nsswitch.conf && sudo lsmod | grep kvm && sudo reboot
+#sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+screen
+# Press Return to continue
+# detach from session without killing it: Ctrl a d 
+# to see screen sessions: screen -ls
+# detach from closed session: screen -d -r 1887.pts-0.node0
+# enter session: screen -r 1887.pts-0.node0
+# exit a session and terminate it: exit
+## Quit a session: screen -XS 2034.pts-0.node0 quit
+
+sudo -i
+cd /mnt/extra && cat /sys/module/kvm_intel/parameters/nested && cat /proc/cpuinfo | awk '/^processor/{print $3}' | wc -l && free -h && df -hT && sudo virsh list --all && sudo brctl show
+
+# Create the iason user
+sudo useradd iason -m -s /bin/bash && sudo usermod -aG sudo iason && echo "iason:iason" | chpasswd && echo "iason ALL=(root) NOPASSWD:ALL" | sudo tee -a /etc/sudoers.d/iason && \
+sudo chmod 0440 /etc/sudoers.d/iason && su - iason
+
+# Prepare the hypervisor node.
+mkdir .ssh && ssh-keygen -q -t rsa -N "" -f .ssh/id_rsa && cat .ssh/id_rsa.pub >> .ssh/authorized_keys && sudo bash -c "cat .ssh/id_rsa.pub >> /root/.ssh/authorized_keys" && \
+ssh -o "StrictHostKeyChecking=no" root@127.0.0.1 uname -a
+
+# Install dependencies
+
+sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.8 -y && \
+curl -O https://releases.hashicorp.com/vagrant/2.2.8/vagrant_2.2.8_x86_64.deb && sudo apt install -y ./vagrant_2.2.8_x86_64.deb --allow-downgrades && \
+sudo apt-get update && sudo apt-get install -y python3-pip && pip3 install --upgrade pip && pip3 install setuptools_rust && sudo python3.8 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
+
+#sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.9 -y
+# sudo apt-get update && sudo apt install python3.9-distutils -y && sudo apt-get install -y python3-pip && sudo python3.9 -m pip install --upgrade pip && pip3 install --upgrade setuptools && \
+# pip3 install setuptools_rust && pip3 install --upgrade pip && pip3 install --upgrade distlib  && sudo python3.9 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
+
+# reconfigure libvirt by setting: security_driver = "none" to file /etc/libvirt/qemu.conf with: sudo nano /etc/libvirt/qemu.conf and restart libvirt with: sudo systemctl restart libvirtd
+# cat /sys/module/kvm/parameters/halt_poll_ns
+
+sudo usermod -aG libvirt iason && sudo adduser `id -un` libvirt-qemu && sudo adduser `id -un` kvm && sudo adduser `id -un` libvirt-dnsmasq && sudo sed -i 's/0770/0777/' /etc/libvirt/libvirtd.conf && \
+echo 0 | sudo tee /sys/module/kvm/parameters/halt_poll_ns && echo 'security_driver = "none"' | sudo tee /etc/libvirt/qemu.conf && \
+sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+exit
+
+su - iason
+
+vagrant -v && virsh list --all && virsh net-list --all && virsh pool-list && vagrant plugin list && vagrant box list && ansible --version && python3 --version && python --version && python3.8 --version && mkdir -p /home/iason/tmp
+
+### Create new vagrant-libvirt network
+
+cat << EOF | tee /home/iason/tmp/vagrant-libvirt.xml
+<network>
+  <name>vagrant-libvirt</name>
+  <uuid>7ed704dd-3901-452c-91d0-58ad75901b1d</uuid>
+  <forward mode='nat'>
+    <nat>
+      <port start='1024' end='65535'/>
+    </nat>
+  </forward>
+  <bridge name='virbr1' stp='on' delay='0'/>
+  <mac address='52:54:00:d8:3f:0d'/>
+  <ip address='192.168.121.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.121.2' end='192.168.121.99'/>
+      <host mac='08:4F:A9:00:00:01' ip='192.168.121.101'/>
+      <host mac='08:4F:A9:00:00:02' ip='192.168.121.102'/>
+      <host mac='08:4F:A9:00:00:03' ip='192.168.121.103'/>
+      <host mac='08:4F:A9:00:00:04' ip='192.168.121.104'/>
+      <host mac='08:4F:A9:00:00:05' ip='192.168.121.105'/>
+      <host mac='08:4F:A9:00:00:06' ip='192.168.121.106'/>
+      <host mac='08:4F:A9:00:00:07' ip='192.168.121.107'/>
+      <host mac='08:4F:A9:00:00:08' ip='192.168.121.108'/>
+      <host mac='08:4F:A9:00:00:09' ip='192.168.121.109'/>
+      <host mac='08:4F:A9:00:00:0A' ip='192.168.121.110'/>
+      <host mac='08:4F:A9:00:00:0B' ip='192.168.121.111'/>
+      <host mac='08:4F:A9:00:00:0C' ip='192.168.121.112'/>
+      <host mac='08:4F:A9:00:00:0D' ip='192.168.121.113'/>
+      <host mac='08:4F:A9:00:00:0E' ip='192.168.121.114'/>
+      <host mac='08:4F:A9:00:00:0F' ip='192.168.121.115'/>
+      <host mac='08:4F:A9:00:00:10' ip='192.168.121.116'/>
+      <host mac='08:4F:A9:00:00:11' ip='192.168.121.117'/>
+      <host mac='08:4F:A9:00:00:12' ip='192.168.121.118'/>
+      <host mac='08:4F:A9:00:00:13' ip='192.168.121.119'/>
+      <host mac='08:4F:A9:00:00:14' ip='192.168.121.120'/>
+      <host mac='08:4F:A9:00:00:15' ip='192.168.121.121'/>
+      <host mac='08:4F:A9:00:00:16' ip='192.168.121.122'/>
+      <host mac='08:4F:A9:00:00:17' ip='192.168.121.123'/>
+      <host mac='08:4F:A9:00:00:18' ip='192.168.121.124'/>
+      <host mac='08:4F:A9:00:00:19' ip='192.168.121.125'/>
+      <host mac='08:4F:A9:00:00:1A' ip='192.168.121.126'/>
+      <host mac='08:4F:A9:00:00:1B' ip='192.168.121.127'/>
+      <host mac='08:4F:A9:00:00:1C' ip='192.168.121.128'/>
+      <host mac='08:4F:A9:00:00:1D' ip='192.168.121.129'/>
+      <host mac='08:4F:A9:00:00:1E' ip='192.168.121.130'/>
+      <host mac='08:4F:A9:00:00:1F' ip='192.168.121.131'/>
+      <host mac='08:4F:A9:00:00:20' ip='192.168.121.132'/>       
+      <host mac='08:4F:A9:00:00:21' ip='192.168.121.133'/>
+      <host mac='08:4F:A9:00:00:22' ip='192.168.121.134'/>
+      <host mac='08:4F:A9:00:00:23' ip='192.168.121.135'/>
+      <host mac='08:4F:A9:00:00:24' ip='192.168.121.136'/>
+      <host mac='08:4F:A9:00:00:25' ip='192.168.121.137'/>
+      <host mac='08:4F:A9:00:00:26' ip='192.168.121.138'/>
+      <host mac='08:4F:A9:00:00:27' ip='192.168.121.139'/>
+      <host mac='08:4F:A9:00:00:28' ip='192.168.121.140'/>
+      <host mac='08:4F:A9:00:00:29' ip='192.168.121.141'/>
+      <host mac='08:4F:A9:00:00:2A' ip='192.168.121.142'/>
+      <host mac='08:4F:A9:00:00:2B' ip='192.168.121.143'/>
+      <host mac='08:4F:A9:00:00:2C' ip='192.168.121.144'/>
+      <host mac='08:4F:A9:00:00:2D' ip='192.168.121.145'/>
+      <host mac='08:4F:A9:00:00:2E' ip='192.168.121.146'/>
+      <host mac='08:4F:A9:00:00:2F' ip='192.168.121.147'/>
+      <host mac='08:4F:A9:00:00:30' ip='192.168.121.148'/>
+      <host mac='08:4F:A9:00:00:31' ip='192.168.121.149'/>
+      <host mac='08:4F:A9:00:00:32' ip='192.168.121.150'/>      
+      <host mac='52:54:00:7A:00:01' ip='192.168.121.200'/>
+      <host mac='52:54:00:05:00:01' ip='192.168.121.201'/>
+    </dhcp>
+  </ip>
+</network>
+EOF
+
+# To delete the existing vagrant-libvirt netwrk: 
+# virsh net-destroy vagrant-libvirt && rm -rf /home/iason/tmp/vagrant-libvirt.xml
+
+virsh net-undefine vagrant-libvirt && virsh net-define /home/iason/tmp/vagrant-libvirt.xml && virsh net-start vagrant-libvirt && virsh net-autostart vagrant-libvirt && virsh net-list
+
+# For Cisco CSR router change: no ip domain-lookup to: no ip domain lookup
+# sudo sed -i 's/no ip domain-lookup/no ip domain lookup/' /usr/local/lib/python3.9/dist-packages/netsim/ansible/templates/initial/ios.j2
+sudo sed -i 's/no ip domain-lookup/no ip domain lookup/' /usr/local/lib/python3.8/dist-packages/netsim/ansible/templates/initial/ios.j2
+
+# For Arista router in order to use EVPN change:
+#sudo sed -i '1i service routing protocols model multi-agent' /usr/local/lib/python3.8/dist-packages/netsim/ansible/templates/initial/eos.j2 && \
+#sudo sed -i '2i !' /usr/local/lib/python3.8/dist-packages/netsim/ansible/templates/initial/eos.j2
+
+#################################################################################################################################################################
+### Main Test ###
+#################################################################################################################################################################
+
+### Test ISP4 ###
+# EVPN L2 multipoint & IP-VPN connectivity scenarios using MPLS over Segment Routing IPv6 core 
+
+################################################################################################################################################################
+    x11 - e7             e8 - x12
+          II             II
+     x5 - e5             e6 - x6
+          II             II
+x1 - e1 - a1 - c1 - c2 - a3 - e3 - x2
+x9 --'  X II X |  X |  X II X '-- x10
+x3 - e2 - a2 - c3 - c4 - a4 - e4 - x4
+    /                         \    
+   x7                          x8
+#################################################################################################################################################################
+
+mkdir -p isp4 && cat << EOF | tee isp4/topology.yml
+# Service Provider Network Topology
+# This topology includes IBGP sessions between AS-edge devices
+# and EBGP sessions with two external routers, based on an SRv6-enabled core.
+#
+nodes:
+# Core routers - P routers - backbone super-spine switches
+  c1:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48
+  c3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48        
+# Agreggation routers - PE L1 routers - distribution super-spine switches
+  a1:
+    device: eos
+    module: [ sr,isis ] 
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+# Edge routers - PE L2 routers - access/spine switches
+  e1:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65100
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48
+  e3:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e4:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65100
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48
+  e5:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65200
+  e6:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65200
+  e7:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65300
+  e8:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65300      
+# Customer routers - CE routers - leaf/ToR switches
+  x1:
+    device: iosv
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: iosv
+    module: [ bgp ]
+    bgp:
+      as: 65002
+  x3:
+    device: cumulus
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48    
+  x4:
+    device: cumulus
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48    
+  x5:
+    device: eos
+  x6:
+    device: eos
+  x7:
+    device: cumulus
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48    
+  x8:
+    device: cumulus
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48    
+  x9:
+    device: iosv
+    module: [ bgp ]
+    bgp:
+      as: 65003
+  x10:
+    device: iosv
+    module: [ bgp ]
+    bgp:
+      as: 65004
+  x11:
+    device: eos
+  x12:
+    device: eos     
+
+links:
+# Core layer links
+- c1-c2
+- c1-c3
+- c2-c4
+- c3-c4
+- c1-c4
+- c2-c3
+
+# Agreggation layer links
+- a1-c1
+- a1-c2
+- a2-c1
+- a2-c2
+- a1-a2
+- a3-c3
+- a3-c4
+- a4-c3
+- a4-c4
+- a3-a4
+
+# Edge layer links
+- e1-a1
+- e1-a2
+- e2-a1
+- e2-a2
+- e3-a3
+- e3-a4
+- e4-a3
+- e4-a4
+- e5-a1
+- e5-a2
+- e6-a3
+- e6-a4
+- e7-a1
+- e7-a2
+- e8-a3
+- e8-a4
+
+# External links
+- x1-e1
+- x2-e3
+- x3-e2
+- x4-e4
+- x5-e5
+- x6-e6
+- x7-e2
+- x8-e4
+- x9-e1
+- x10-e3
+- x11-e7
+- x12-e8
+
+# Stub links
+- x1
+- x2
+- x3
+- x4
+- x5
+- x6
+- x7
+- x8
+- x9
+- x10
+- x11
+- x12
+EOF
+
+cd isp4/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+# netlab initial -v
+
+netlab connect x1
+show ip route
+exit
+
+netlab connect x2
+ping 172.16.0.17 source GigabitEthernet0/2
+traceroute 172.16.0.17 source GigabitEthernet0/2
+exit
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab collect
+
+#######################################################################################################################################
+### EVPN L2/L3 multipoint over MPLS
+# Nodes: e2, e3, x3, x4, x7, x8
+# Change IP addresses based on the output of the collected e2.cfg and e4.cfg files by the previous command
+cat << EOF | tee e2econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 22
+   name CUST234
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 22
+   switchport mode trunk
+!
+interface Ethernet4
+   switchport
+!
+interface Ethernet4
+   switchport access vlan 22
+   switchport mode access
+!
+router bgp 65100
+   router-id 10.0.0.10
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.12 remote-as 65100
+   neighbor 10.0.0.12 update-source Loopback0
+   neighbor 10.0.0.12 fall-over bfd
+   neighbor 10.0.0.12 send-community standard extended
+   neighbor 10.0.0.12 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.12 activate
+   !
+   no address-family ipv4
+      no network 10.0.0.10/32
+   !
+   vlan 22
+      rd 10.0.0.10:234
+      route-target both 65100:234
+      redistribute learned
+   !
+!
+EOF
+
+cat << EOF | tee e4econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 22
+   name CUST234
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 22
+   switchport mode trunk
+!
+interface Ethernet4
+   switchport
+!
+interface Ethernet4
+   switchport access vlan 22
+   switchport mode access
+!
+router bgp 65100
+   router-id 10.0.0.12
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.10 remote-as 65100
+   neighbor 10.0.0.10 update-source Loopback0
+   neighbor 10.0.0.10 fall-over bfd
+   neighbor 10.0.0.10 send-community standard extended
+   neighbor 10.0.0.10 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback0
+      neighbor 10.0.0.10 activate
+   !
+   no address-family ipv4
+      no network 10.0.0.12/32
+  !
+   vlan 22
+      rd 10.0.0.12:234
+      route-target both 65100:234
+      redistribute learned
+   !
+!
+EOF
+
+netlab config e2econf.j2 -l e2 && netlab config e4econf.j2 -l e4
+
+netlab connect e2
+wr mem
+reload now
+
+netlab connect e4
+wr mem
+reload now
+
+netlab connect e2
+show bgp ipv4 unicast summary
+show bgp evpn summary
+show bgp evpn extcommunity rt 65100:234
+exit
+
+# Change IP addresses based on the output of the collected x3.cfg and x4.cfg files by the previous command
+netlab connect x3
+# configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 22 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 22 && sudo net add vlan 22 hwaddress 00:FF:5E:00:00:22 && sudo net add vlan 22 ip address 192.168.0.22/24 && sudo net add vlan 22 vlan-id 22 && sudo net add vlan 22 vlan-raw-device bridge && sudo net add vlan 22 vrf CUST1 && sudo net add vrf CUST1 vrf-table auto && sudo net commit && sudo net show configuration
+exit
+
+netlab connect x4
+# configuration
+sudo net add bridge bridge ports swp1 && sudo net add bridge bridge vids 22 && sudo net add bridge bridge vlan-aware && sudo net add interface swp1 bridge vids 22 && sudo net add vlan 22 hwaddress 00:FF:5E:00:00:24 && sudo net add vlan 22 ip address 192.168.0.24/24 && sudo net add vlan 22 vlan-id 22 && sudo net add vlan 22 vlan-raw-device bridge && sudo net add vlan 22 vrf CUST1 && sudo net add vrf CUST1 vrf-table auto && sudo net commit && sudo net show configuration
+exit
+
+netlab connect x7
+# configuration
+sudo net add interface swp1 ip address 192.168.0.25/24 && sudo net commit && sudo net show configuration
+exit
+
+netlab connect x8
+# configuration
+sudo net add interface swp1 ip address 192.168.0.26/24 && sudo net commit && sudo net show configuration
+exit
+
+netlab connect x3
+# Tests
+ping -I CUST1 192.168.0.22 -c 3
+ping -I CUST1 192.168.0.24 -c 3
+ping -I CUST1 192.168.0.25 -c 3
+ping -I CUST1 192.168.0.26 -c 3
+sudo ip vrf exec CUST1 traceroute 192.168.0.26
+exit
+
+#######################################################################################################################################
+### EVPN L2/L3 multipoint over VXLAN
+# Nodes: e5, e6, x5, x6
+# Change IP addresses based on the output of the collected e5.cfg and e6.cfg files by the previous command
+cat << EOF | tee e5econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 33
+!
+vlan 34
+!
+vrf instance CUST-C
+!
+vrf instance GATEWAY
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 33 vni 330
+   vxlan vlan 34 vni 340
+   vxlan vrf CUST-C vni 1230
+   vxlan vrf GATEWAY vni 9999
+   vxlan learn-restrict any
+!
+ip routing
+ip routing vrf CUST-C
+!
+ip routing vrf CUST-A
+ip routing vrf CUST-B
+ip route vrf CUST-A 0.0.0.0/0 192.168.10.254
+ip route vrf CUST-B 0.0.0.0/0 192.168.11.254
+!
+ip routing vrf GATEWAY
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST-C
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 33-34
+   switchport mode trunk
+!
+interface Vlan33
+   vrf GATEWAY
+   ip address 192.168.10.252/24
+   ip virtual-router address 192.168.10.254
+!
+interface Vlan34
+   vrf GATEWAY
+   ip address 192.168.11.252/24
+   ip virtual-router address 192.168.11.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0a
+!
+router bgp 65200
+   router-id 10.0.0.13
+   no bgp default ipv4-unicast
+   timers bgp 10 30
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.14 remote-as 65200
+   neighbor 10.0.0.14 update-source Loopback0
+   neighbor 10.0.0.14 fall-over bfd
+   neighbor 10.0.0.14 send-community standard extended
+   neighbor 10.0.0.14 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor 10.0.0.14 activate
+      network 10.0.0.13/32
+   !
+   no address-family ipv4
+      no network 10.0.0.13/32
+   !
+   vrf CUST-C
+      rd 10.0.0.13:123
+      route-target import evpn 123:1230
+      route-target export evpn 123:1230
+      redistribute connected
+   !
+   vrf GATEWAY
+      rd 10.0.0.13:9999
+      route-target import evpn 99:9999
+      route-target export evpn 99:9999
+      redistribute connected
+   !   
+   vlan 33
+      rd 65200:330
+      route-target both 33:330
+      redistribute learned
+   !
+   vlan 34
+      rd 65200:340
+      route-target both 34:340
+      redistribute learned
+  !
+!
+EOF
+
+cat << EOF | tee e6econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 33
+!
+vlan 34
+!
+vrf instance CUST-C
+!
+vrf instance GATEWAY
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 33 vni 330
+   vxlan vlan 34 vni 340
+   vxlan vrf CUST-C vni 1230
+   vxlan vrf GATEWAY vni 9999
+   vxlan learn-restrict any
+!
+ip routing
+ip routing vrf CUST-C
+!
+ip routing vrf CUST-A
+ip routing vrf CUST-B
+ip route vrf CUST-A 0.0.0.0/0 192.168.10.254
+ip route vrf CUST-B 0.0.0.0/0 192.168.11.254
+!
+ip routing vrf GATEWAY
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST-C
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 33-34
+   switchport mode trunk
+!
+interface Vlan33
+   vrf GATEWAY
+   ip address 192.168.10.253/24
+   ip virtual-router address 192.168.10.254
+!
+interface Vlan34
+   vrf GATEWAY
+   ip address 192.168.11.253/24
+   ip virtual-router address 192.168.11.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0a
+!
+router bgp 65200
+   router-id 10.0.0.14
+   no bgp default ipv4-unicast
+   timers bgp 10 30
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.13 remote-as 65200
+   neighbor 10.0.0.13 update-source Loopback0
+   neighbor 10.0.0.13 fall-over bfd
+   neighbor 10.0.0.13 send-community standard extended
+   neighbor 10.0.0.13 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor 10.0.0.13 activate
+      network 10.0.0.14/32
+   !
+   no address-family ipv4
+      no network 10.0.0.14/32
+  !
+  vrf CUST-C
+      rd 10.0.0.14:123
+      route-target import evpn 123:1230
+      route-target export evpn 123:1230
+      redistribute connected
+  !
+  vrf GATEWAY
+      rd 10.0.0.14:9999
+      route-target import evpn 99:9999
+      route-target export evpn 99:9999
+      redistribute connected
+  !    
+  vlan 33
+      rd 65200:330
+      route-target both 33:330
+      redistribute learned
+  !
+  vlan 34
+      rd 65200:340
+      route-target both 34:340
+      redistribute learned
+  !
+!
+EOF
+
+# Change IP addresses based on the output of the collected x5.cfg and x6.cfg files by the previous command
+
+cat << EOF | tee x5econf.j2
+!
+vrf instance CUST-A
+!
+vrf instance CUST-B
+!
+vlan 33
+!
+vlan 34
+!
+interface Ethernet1
+   switchport
+!
+interface Ethernet1
+   switchport trunk allowed vlan 33-34
+   switchport mode trunk
+!
+interface Vlan33
+   vrf CUST-A
+   ip address 192.168.10.5/24
+!
+interface Vlan34
+   vrf CUST-B
+   ip address 192.168.11.5/24
+!
+no ip routing
+no ip routing vrf CUST-A
+no ip routing vrf CUST-B
+!
+EOF
+
+cat << EOF | tee x6econf.j2
+!
+vrf instance CUST-A
+!
+vrf instance CUST-B
+!
+vlan 33
+!
+vlan 34
+!
+interface Ethernet1
+   switchport
+!
+interface Ethernet1
+   switchport trunk allowed vlan 33-34
+   switchport mode trunk
+!
+interface Vlan33
+   vrf CUST-A
+   ip address 192.168.10.6/24
+!
+interface Vlan34
+   vrf CUST-B
+   ip address 192.168.11.6/24
+!
+no ip routing
+no ip routing vrf CUST-A
+no ip routing vrf CUST-B
+!
+EOF
+
+netlab config e5econf.j2 -l e5 && netlab config e6econf.j2 -l e6 && netlab config x5econf.j2 -l x5 && netlab config x6econf.j2 -l x6
+
+netlab connect e5
+wr mem
+reload now
+
+netlab connect e6
+wr mem
+reload now
+
+netlab connect e5
+show bgp ipv4 unicast summary
+show bgp evpn summary
+show bgp evpn
+show ip route vrf GATEWAY
+show vxlan address-table
+show interfaces vxlan 1
+exit
+
+netlab connect x5
+# Tests
+ping vrf CUST-A 192.168.10.5
+ping vrf CUST-A 192.168.10.6
+traceroute vrf CUST-A 192.168.10.6
+ping vrf CUST-A 192.168.11.6
+traceroute vrf CUST-A 192.168.11.6
+show arp vrf CUST-A 
+exit
+
+#######################################################################################################################################
+### DMVPN
+# Nodes: e1, e3, x1, x2, x9, x10
+# https://sites.google.com/site/amitsciscozone/ipsec/dual-dmvpn
+
+# Primary Hub router
+cat << EOF | tee x1econf.j2
+!
+crypto isakmp policy 10
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key cisco address 0.0.0.0 0.0.0.0
+!
+crypto ipsec transform-set TS esp-aes 256 esp-sha256-hmac
+ mode transport
+!
+crypto ipsec profile DMVPN
+ set transform-set TS
+!
+interface Tunnel 11
+ ip address 10.0.1.1 255.255.255.0
+ tunnel mode gre multipoint
+ tunnel source GigabitEthernet0/2
+ tunnel key 123
+ ip nhrp map multicast dynamic
+ ip nhrp network-id 123
+ ip nhrp holdtime 60
+ no ip split-horizon eigrp 1
+ no ip next-hop-self eigrp 1
+ tunnel protection ipsec profile DMVPN
+ delay 5
+!
+router eigrp 1
+ ! VPN domain
+ !
+ no auto-summary
+ network 10.0.0.0
+ network 192.168.0.0
+!
+EOF
+
+# Backup Hub router
+cat << EOF | tee x2econf.j2
+!
+crypto isakmp policy 10
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key cisco address 0.0.0.0 0.0.0.0
+!
+crypto ipsec transform-set TS esp-aes 256 esp-sha256-hmac
+ mode transport
+!
+crypto ipsec profile DMVPN
+ set transform-set TS
+!
+interface Tunnel 22
+ ip address 10.0.2.1 255.255.255.0
+ tunnel mode gre multipoint
+ tunnel source GigabitEthernet0/2
+ tunnel key 456
+ ip nhrp map multicast dynamic
+ ip nhrp network-id 456
+ ip nhrp holdtime 60
+ delay 10
+ no ip split-horizon eigrp 1
+ no ip next-hop-self eigrp 1
+ tunnel protection ipsec profile DMVPN
+!
+router eigrp 1
+ ! VPN domain
+ !
+ no auto-summary
+ network 10.0.0.0
+ network 192.168.0.0
+!
+EOF
+
+# Spoke router
+cat << EOF | tee x9econf.j2
+!
+crypto isakmp policy 10
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key cisco address 0.0.0.0 0.0.0.0
+!
+crypto ipsec transform-set TS esp-aes 256 esp-sha256-hmac
+ mode transport
+!
+crypto ipsec profile DMVPN
+ set transform-set TS
+!
+interface Tunnel 11
+ ip address 10.0.1.2 255.255.255.0
+ tunnel mode gre multipoint
+ tunnel source GigabitEthernet0/2
+ tunnel key 123
+ ip nhrp map 10.0.1.1 172.16.0.15
+ ip nhrp map multicast 172.16.0.15
+ ip nhrp nhs 10.0.1.1
+ ip nhrp network-id 123
+ ip nhrp holdtime 60
+ delay 5
+ tunnel protection ipsec profile DMVPN shared
+!
+interface Tunnel 22
+ ip address 10.0.2.2 255.255.255.0
+ tunnel mode gre multipoint
+ tunnel source GigabitEthernet0/2
+ tunnel key 456
+ ip nhrp map 10.0.2.1 172.16.1.17
+ ip nhrp map multicast 172.16.1.17
+ ip nhrp nhs 10.0.2.1
+ ip nhrp network-id 456
+ ip nhrp holdtime 60
+ delay 10
+ tunnel protection ipsec profile DMVPN shared
+!
+router eigrp 1
+ no auto-summary
+ network 10.0.0.0
+ network 192.168.1.0
+!
+EOF
+
+# Spoke router
+cat << EOF | tee x10econf.j2
+!
+crypto isakmp policy 10
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp key cisco address 0.0.0.0 0.0.0.0
+!
+crypto ipsec transform-set TS esp-aes 256 esp-sha256-hmac
+ mode transport
+!
+crypto ipsec profile DMVPN
+ set transform-set TS
+!
+interface Tunnel 11
+ ip address 10.0.1.3 255.255.255.0
+ tunnel mode gre multipoint
+ tunnel source GigabitEthernet0/2
+ tunnel key 123
+ ip nhrp map 10.0.1.1 172.16.0.15
+ ip nhrp map multicast 172.16.0.15
+ ip nhrp nhs 10.0.1.1
+ ip nhrp network-id 123
+ ip nhrp holdtime 60
+ delay 5
+ tunnel protection ipsec profile DMVPN shared
+!
+interface Tunnel 22
+ ip address 10.0.2.3 255.255.255.0
+ tunnel mode gre multipoint
+ tunnel source GigabitEthernet0/2
+ tunnel key 456
+ ip nhrp map 10.0.2.1 172.16.1.17
+ ip nhrp map multicast 172.16.1.17
+ ip nhrp nhs 10.0.2.1
+ ip nhrp network-id 456
+ ip nhrp holdtime 60
+ delay 10
+ tunnel protection ipsec profile DMVPN shared
+!
+router eigrp 1
+ no auto-summary
+ network 10.0.0.0
+ network 192.168.2.0
+!
+EOF
+
+netlab config x1econf.j2 -l x1 && netlab config x2econf.j2 -l x2 && netlab config x9econf.j2 -l x9 && netlab config x10econf.j2 -l x10
+
+netlab connect x1
+show ip nhrp
+show ip route eigrp
+exit
+
+netlab connect x9
+show ip nhrp
+show ip route eigrp
+show ip cef 10.0.1.3
+ping 10.0.1.1
+ping 10.0.2.1
+ping 10.0.1.3
+ping 10.0.2.3
+show crypto isakmp sa
+show crypto ipsec sa
+exit
+
+### Dynamic Routing in terms of EVPN L2/L3 multipoint over VXLAN
+# Nodes: e7, e8, x11, x12
+# Change IP addresses based on the output of the collected e7.cfg and e8.cfg files by the previous command
+cat << EOF | tee e7econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 43
+!
+vlan 44
+!
+vrf instance CUST-D
+!
+vrf instance GATEWAY
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 43 vni 430
+   vxlan vlan 44 vni 440
+   vxlan vrf CUST-C vni 1240
+   vxlan vrf GATEWAY vni 8888
+   vxlan learn-restrict any
+!
+ip routing
+ip routing vrf CUST-D
+!
+ip routing vrf GATEWAY
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST-D
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   vrf GATEWAY
+   ip address 192.168.12.252/24
+   ip virtual-router address 192.168.12.254
+!
+interface Vlan44
+   vrf GATEWAY
+   ip address 192.168.13.252/24
+   ip virtual-router address 192.168.13.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0b
+!
+router bgp 65300
+   router-id 10.0.0.15
+   no bgp default ipv4-unicast
+   timers bgp 10 30
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.16 remote-as 65300
+   neighbor 10.0.0.16 update-source Loopback0
+   neighbor 10.0.0.16 fall-over bfd
+   neighbor 10.0.0.16 send-community standard extended
+   neighbor 10.0.0.16 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor 10.0.0.16 activate
+      network 10.0.0.15/32
+   !
+   no address-family ipv4
+      no network 10.0.0.15/32
+   !
+   vrf CUST-D
+      rd 10.0.0.15:124
+      route-target import evpn 124:1240
+      route-target export evpn 124:1240
+      redistribute connected
+   !
+   vrf GATEWAY
+      rd 10.0.0.15:8888
+      route-target import evpn 88:8888
+      route-target export evpn 88:8888
+      redistribute connected
+      redistribute ospf
+   !   
+   vlan 43
+      rd 65300:430
+      route-target both 43:430
+      redistribute learned
+   !
+   vlan 44
+      rd 65300:440
+      route-target both 44:440
+      redistribute learned
+  !
+!
+router ospf 1 vrf GATEWAY
+   redistribute bgp
+   network 192.168.12.0/24 area 0.0.0.0
+!   
+EOF
+
+cat << EOF | tee e8econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 43
+!
+vlan 44
+!
+vrf instance CUST-D
+!
+vrf instance GATEWAY
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 43 vni 430
+   vxlan vlan 44 vni 440
+   vxlan vrf CUST-C vni 1240
+   vxlan vrf GATEWAY vni 8888
+   vxlan learn-restrict any
+!
+ip routing
+ip routing vrf CUST-D
+!
+ip routing vrf GATEWAY
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST-D
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   vrf GATEWAY
+   ip address 192.168.12.253/24
+   ip virtual-router address 192.168.12.254
+!
+interface Vlan44
+   vrf GATEWAY
+   ip address 192.168.13.253/24
+   ip virtual-router address 192.168.13.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0b
+!
+router bgp 65300
+   router-id 10.0.0.16
+   no bgp default ipv4-unicast
+   timers bgp 10 30
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.15 remote-as 65300
+   neighbor 10.0.0.15 update-source Loopback0
+   neighbor 10.0.0.15 fall-over bfd
+   neighbor 10.0.0.15 send-community standard extended
+   neighbor 10.0.0.15 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor 10.0.0.15 activate
+      network 10.0.0.16/32
+   !
+   no address-family ipv4
+      no network 10.0.0.16/32
+  !
+  vrf CUST-D
+      rd 10.0.0.16:124
+      route-target import evpn 124:1240
+      route-target export evpn 124:1240
+      redistribute connected
+  !
+  vrf GATEWAY
+      rd 10.0.0.16:8888
+      route-target import evpn 88:8888
+      route-target export evpn 88:8888
+      redistribute connected
+      redistribute ospf
+  !    
+  vlan 43
+      rd 65300:430
+      route-target both 43:430
+      redistribute learned
+  !
+  vlan 44
+      rd 65300:440
+      route-target both 44:440
+      redistribute learned
+  !
+!
+router ospf 1 vrf GATEWAY
+   redistribute bgp
+   network 192.168.12.0/24 area 0.0.0.0
+!  
+EOF
+
+# Change IP addresses based on the output of the collected x11.cfg and x12.cfg files by the previous command
+
+cat << EOF | tee x11econf.j2
+!
+vlan 43
+!
+vlan 44
+!
+interface Ethernet1
+   switchport
+!
+interface Ethernet1
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   ip address 192.168.12.5/24
+!
+interface Vlan44
+   ip address 192.168.13.5/24
+!
+interface Loopback0
+   ip address 10.11.11.11/32
+!
+ip routing
+!
+router ospf 1
+   network 10.11.11.11/32 area 0.0.0.0
+   network 192.168.12.0/24 area 0.0.0.0
+!
+EOF
+
+cat << EOF | tee x12econf.j2
+!
+vlan 43
+!
+vlan 44
+!
+interface Ethernet1
+   switchport
+!
+interface Ethernet1
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   ip address 192.168.12.6/24
+!
+interface Vlan44
+   ip address 192.168.13.6/24
+!
+interface Loopback0
+   ip address 10.22.22.22/32
+!
+ip routing
+!
+router ospf 1
+   network 10.22.22.22/32 area 0.0.0.0
+   network 192.168.12.0/24 area 0.0.0.0
+!
+EOF
+
+netlab config e7econf.j2 -l e7 && netlab config e8econf.j2 -l e8 && netlab config x11econf.j2 -l x11 && netlab config x12econf.j2 -l x12
+
+netlab connect e7
+wr mem
+reload now
+
+netlab connect e8
+wr mem
+reload now
+
+netlab connect e7
+show bgp ipv4 unicast summary
+show bgp evpn summary
+show bgp evpn
+show ip route vrf GATEWAY
+show ip ospf neighbor vrf GATEWAY
+show vxlan address-table
+show interfaces vxlan 1
+exit
+
+netlab connect x11
+# Tests
+ping 192.168.12.5
+ping 192.168.12.6
+traceroute 192.168.12.6
+show ip route
+ping 10.22.22.22
+exit
+
+netlab connect e8
+show ip route vrf GATEWAY
+exit
+
+#######################################################################################################################################
+### Delete all
+vagrant destroy -f && vagrant destroy -f && cd
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+### Creation of Boxes ###
+#################################################################################################################################################################
+#################################################################################################################################################################
+
+#################################################################################################################################################################
+### Cisco Nexus box creation (cisco/nexus9300v) ### 
+#################################################################################################################################################################
+
+# cd /home/iason/tmp && wget http://37.156.146.163/PUB/Cisco/IOS/Nexus3K_9K/nexus9300v.9.3.4.box
+# vagrant box add nexus9300v.9.3.4.box --name cisco/nexus9300v
+# Install virtualbox
+#sudo apt update && \
+#wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add - && wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add - && \
+#sudo add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian bionic contrib" && sudo apt update && sudo apt install virtualbox-6.1 -y && sudo adduser `id -un` vboxusers
+#exit
+#su - iason
+#vboxmanage -V
+# vboxmanage setproperty machinefolder /mnt/extra/libvirt/ && vboxmanage list systemproperties | grep folder && vboxmanage list hostonlyifs
+
+vagrant box add vpasias/nswitch
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-nswitch/ /home/iason/.vagrant.d/boxes/cisco-VAGRANTSLASH-nexus9300v/
+vagrant plugin install vagrant-mutate && vagrant box list
+vagrant mutate cisco/nexus9300v libvirt
+vagrant box list && vagrant box remove cisco/nexus9300v --provider virtualbox && vagrant box list
+
+#sudo apt remove --purge *virtualbox* -y && sudo systemctl restart libvirtd && sudo systemctl status libvirtd
+
+#################################################################################################################################################################
+### Arista vEOS box creation (arista/veos) ### 
+#################################################################################################################################################################
+
+vagrant box add vpasias/verouter
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-verouter/ /home/iason/.vagrant.d/boxes/arista-VAGRANTSLASH-veos/
+vagrant box list
+
+# Test
+
+mkdir ~/arista-test && cd ~/arista-test
+
+cat << EOF | tee Vagrantfile
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "arista/veos"
+
+  # Turn off shared folders
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
+
+  # Dont change default SSH key
+  config.ssh.insert_key = false
+  config.ssh.shell = "bash"
+  config.vm.guest = :freebsd
+
+  config.vm.provider :libvirt do |domain|
+    domain.disk_bus = 'ide'
+    domain.cpus = 2
+    domain.memory = 2048
+  end
+
+end
+EOF
+
+vagrant up
+
+vagrant ssh
+show ip int brie
+exit
+
+vagrant destroy -f && cd
+
+#################################################################################################################################################################
+###  Creation of csr1000v box (cisco/csr1000v) ### 
+#################################################################################################################################################################
+
+vagrant box add vpasias/cixrouter
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-cixrouter/ /home/iason/.vagrant.d/boxes/cisco-VAGRANTSLASH-csr1000v/
+vagrant box list
+
+# Test
+
+mkdir ~/csrv-test && cd ~/csrv-test
+
+cat << EOF | tee Vagrantfile
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "cisco/csr1000v"
+
+  # Turn off shared folders
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Do not try to insert new SSH key
+  config.ssh.insert_key = false
+
+  # Give VM time to boot
+  config.vm.boot_timeout = 180
+
+  # Set guest type to prevent guest type detection
+  config.vm.guest = :freebsd
+
+  # Provider-specific configuration
+  config.vm.provider :libvirt do |domain|
+    domain.nic_adapter_count = 8
+    domain.memory = 4096
+    domain.cpus = 2
+    domain.driver = "kvm"
+  end
+
+end
+EOF
+
+vagrant up
+
+vagrant ssh
+show ip int brie
+exit
+
+vagrant destroy -f
+
+#################################################################################################################################################################
+###  Creation of IOSv box (cisco/iosv) ### 
+#################################################################################################################################################################
+
+vagrant box add vpasias/cirouter
+mv /home/iason/.vagrant.d/boxes/vpasias-VAGRANTSLASH-cirouter/ /home/iason/.vagrant.d/boxes/cisco-VAGRANTSLASH-iosv/
+vagrant box list
+
+# Test
+
+mkdir ~/iosv-test && cd ~/iosv-test
+
+cat << EOF | tee Vagrantfile
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.define "rt01" do |node|
+    node.vm.box = "cisco/iosv"
+
+    # Turn off shared folders
+    node.vm.synced_folder ".", "/vagrant", disabled: true
+
+    # Do not try to insert new SSH key
+    node.ssh.insert_key = false
+
+    # Give VM time to boot
+    node.vm.boot_timeout = 180
+
+    # Set guest type to prevent guest type detection
+    node.vm.guest = :freebsd
+
+    # Provider-specific configuration
+    node.vm.provider :libvirt do |domain|
+      domain.nic_adapter_count = 8
+      domain.memory = 512
+      domain.cpus = 1
+      domain.driver = "kvm"
+      domain.nic_model_type = "e1000"
+    end
+
+  end
+end
+EOF
+
+vagrant up
+
+vagrant ssh
+show ip int brie
+exit
+
+vagrant destroy -f
+
+#################################################################################################################################################################
+### Other Tests ###
+#################################################################################################################################################################
+
+### Test 1 ###
+
+mkdir -p ntest1
+cat << EOF | tee ntest1/topology.yml
+---
+defaults:
+  device: cumulus
+
+nodes: [ s1, s2, s3 ]
+links: [ s1-s2, s2-s3, s1-s2-s3 ]
+EOF
+
+cd ntest1/ && netlab create
+vagrant up
+vagrant ssh s1
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 2 ###
+
+mkdir -p ntest2
+
+cat << EOF | tee ntest2/topology.yml
+module: [ bgp, ospf ]
+
+bgp:
+  as: 65000
+ospf:
+  area: 0.0.0.0
+defaults:
+  device: cumulus
+nodes:
+  - name: r1
+  - name: r2
+links:
+  - r1-r2
+EOF
+
+cd ntest2/ && netlab create
+
+vagrant up
+
+#virsh list
+#virsh console netsim-tools_r1
+
+# ANSIBLE_STDOUT_CALLBACK=dense netlab initial -o
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect r1
+sudo vtysh
+sh ip ospf neighbor
+sh ip bgp neighbor
+sh ip bgp summary
+sh ip route
+exit
+exit
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 3 ###
+
+mkdir -p ntest3
+
+cat << EOF | tee ntest3/topology.yml
+---
+defaults:
+  device: eos
+module: [ ospf ]
+
+nodes: [ r1, r2 ]
+links:
+- r1
+- r2
+- r1-r2
+EOF
+
+cd ntest3/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect r1
+show ip ospf neighbor
+show ip route
+exit
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 4 ###
+
+mkdir -p ntest4
+
+cat << EOF | tee ntest4/topology.yml
+#
+# This topology combines SR-MPLS topology with IBGP session between AS-edge devices
+# and EBGP sessions with two external routers.
+#
+# The goal: test BGP-free core based on Segment Routing
+#
+nodes:
+  e1:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  c1:
+    device: eos
+    module: [ sr,isis ]
+  c2:
+    device: eos
+    module: [ sr,isis ]
+  x1:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65002
+
+links:
+# Core links
+- e1-c1
+- e1-c2
+- e2-c1
+- e2-c2
+
+# External links
+- x1-e1
+- x2-e2
+
+# Stub links
+- x1
+- x2
+EOF
+
+cd ntest4/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect x1
+show ip route
+
+netlab connect x2
+ping 172.16.0.5 source Ethernet2
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 5 ###
+
+mkdir -p ntest5
+
+cat << EOF | tee ntest5/topology.yml
+module: [ bgp, ospf ]
+
+bgp:
+  as: 65000
+ospf:
+  area: 0.0.0.0
+defaults:
+  device: nxos
+nodes:
+  - name: r1
+  - name: r2
+links:
+  - r1-r2
+EOF
+
+cd ntest5/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect r1
+#sh ip bgp neighbors | i "neighbor is"
+#sh ip route
+
+echo "no feature telnet" > config.j2
+netlab config config.j2
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 6 ###
+
+mkdir -p ntest6
+
+cat << EOF | tee ntest6/topology.yml
+#
+# Simple Leaf-Spine iBGP example
+#
+module: [ bgp,ospf ]
+
+addressing:
+  p2p:
+    unnumbered: true
+
+bgp:
+  as: 65000
+  rr_list: [ s1, s2 ]
+ospf:
+  area: 0.0.0.0
+defaults:
+  device: nxos
+
+nodes:
+  s1:
+    device: nxos
+  s2:
+    device: nxos
+  l1:
+    device: nxos
+  l2:
+    device: nxos
+  l3:
+    device: nxos
+  l4:
+    device: nxos
+
+links:
+- s1-l1
+- s1-l2
+- s1-l3
+- s1-l4
+- s2-l1
+- s2-l2
+- s2-l3
+- s2-l4
+EOF
+
+cd ntest6/ && netlab create
+
+vagrant up
+
+# wait 2 minutes and end vagrant with Ctrl+C + Ctrl+C
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect l1
+#sh ip bgp neighbors | i "neighbor is"
+#sh ip route
+
+echo "no feature telnet" > config.j2
+netlab config config.j2
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 7 ###
+
+mkdir -p ntest7
+
+cat << EOF | tee ntest7/topology.yml
+#
+# SR - ISIS topology file eos - csr
+#
+module: [ sr,isis ]
+
+addressing:
+  p2p:
+    unnumbered: true
+  loopback:
+    ipv6: 2001:db8:cafe::/48
+
+nodes:
+  e1:
+    device: eos
+  e2:
+    device: eos
+  c1:
+    device: eos
+  c2:
+    device: eos
+
+links:
+- e1-c1
+- e1-c2
+- e2-c1
+- e2-c2
+- e1
+- e2
+EOF
+
+cd ntest7/ && netlab create
+
+vagrant up
+#vagrant up c1 c2 && vagrant up e1 e2
+
+# wait 5 minutes and end vagrant with Ctrl+C + Ctrl+C
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect c1
+show ip route
+sh isis neighbors
+sh ipv6 route
+sh isis segment-routing adjacency-segments
+sh isis segment-routing prefix-segments
+exit
+
+netlab connect e1
+ping 10.0.0.4
+traceroute 10.0.0.4
+
+# rm -rf host_vars/
+# killall ruby && killall vagrant
+# ps -ef | grep ruby
+# ps -ef | grep vagrant
+# kill -9 ...
+
+# Delete
+vagrant destroy -f && cd
+
+### Test 8 ###
+
+mkdir -p ntest8
+
+cat << EOF | tee ntest8/topology.yml
+#
+# This topology combines SR-MPLS topology with IBGP session between AS-edge devices
+# and EBGP sessions with two external routers.
+#
+# The goal: test BGP-free core based on Segment Routing
+#
+
+nodes:
+  e1:
+    device: csr
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: csr
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  c1:
+    device: csr
+    module: [ sr,isis ]
+  c2:
+    device: csr
+    module: [ sr,isis ]
+  x1:
+    device: csr
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: csr
+    module: [ bgp ]
+    bgp:
+      as: 65002
+
+links:
+# Core links
+- e1-c1
+- e1-c2
+- e2-c1
+- e2-c2
+
+# External links
+- e1-x1
+- e2-x2
+
+# Stub links
+- x1
+- x2
+EOF
+
+cd ntest8/ && netlab create
+
+vagrant up
+# vagrant up c1 c2 && vagrant up e1 e2 && vagrant up x1 x2
+# vagrant up c1 c2 e1 e2 && vagrant up x1 x2
+
+# wait 2 minutes and end vagrant with Ctrl+Z
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect c1
+show ip route
+show ipv6 route
+sh isis neighbors
+sh isis segment-routing adjacency-segments
+sh isis segment-routing prefix-segments
+exit
+
+netlab connect e1
+sh ip bgp neighbors | i "neighbor is"
+exit
+
+netlab connect x2
+sh ip bgp neighbors | i "neighbor is"
+#ping 172.16.0.5 source Ethernet2
+#ping 172.16.0.5 source  GigabitEthernet3
+ping 172.16.0.5 source 172.16.1.6
+exit
+
+# Delete
+vagrant destroy -f && cd
+
+### Test ISP1 ###
+# General ISP connectivity over Segment Routing IPv6 core
+
+#################################################################################################################################################################
+x1 - e1 - a1 - c1 - c2 - a3 - e3 - x2
+        X |  X |  X |  X |  X
+     e2 - a2 - c3 - c4 - a4 - e4
+#################################################################################################################################################################
+
+mkdir -p isp1 && cat << EOF | tee isp1/topology.yml
+# Service Provider Network Topology
+# This topology includes IBGP sessions between AS-edge devices
+# and EBGP sessions with two external routers, based on an SRv6-enabled core.
+#
+nodes:
+# Core routers - P routers - backbone super-spine switches
+  c1:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48
+  c3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48      
+  c4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48        
+# Agreggation routers - PE L1 routers - distribution super-spine switches
+  a1:
+    device: eos
+    module: [ sr,isis ] 
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a2:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a3:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+  a4:
+    device: eos
+    module: [ sr,isis ]
+    addressing:
+      p2p:
+        unnumbered: true
+      loopback:
+        ipv6: 2001:db8:cafe::/48     
+# Edge routers - PE L2 routers - access/spine switches
+  e1:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e2:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e3:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+  e4:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65000
+# Customer routers - CE routers - leaf/ToR switches
+  x1:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65001
+  x2:
+    device: eos
+    module: [ bgp ]
+    bgp:
+      as: 65002
+
+links:
+# Core layer links
+- c1-c2
+- c1-c3
+- c2-c4
+- c3-c4
+- c1-c4
+- c2-c3
+
+# Agreggation layer links
+- a1-c1
+- a1-c2
+- a2-c1
+- a2-c2
+- a1-a2
+- a3-c3
+- a3-c4
+- a4-c3
+- a4-c4
+- a3-a4
+
+# Edge layer links
+- e1-a1
+- e1-a2
+- e2-a1
+- e2-a2
+- e3-a3
+- e3-a4
+- e4-a3
+- e4-a4
+
+# External links
+- x1-e1
+- x2-e3
+
+# Stub links
+- x1
+- x2
+EOF
+
+cd isp1/ && netlab create
+
+vagrant up
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+
+netlab connect x1
+show ip route
+exit
+
+netlab connect x2
+ping 172.16.0.13 source Ethernet2
+traceroute 172.16.0.13 source Ethernet2
+exit
+
+ANSIBLE_STDOUT_CALLBACK=dense netlab collect
+
+# Delete
+vagrant destroy -f && cd
+
+#################################################################################################################################################################
+#################################################################################################################################################################

@@ -230,6 +230,7 @@ cd isp4/ && netlab create
 vagrant up
 
 ANSIBLE_STDOUT_CALLBACK=dense netlab initial
+# netlab initial -v
 
 netlab connect x1
 show ip route
@@ -670,6 +671,7 @@ show arp vrf CUST-A
 exit
 
 ### DMVPN
+# Nodes: e1, e3, x1, x2, x9, x10
 # https://sites.google.com/site/amitsciscozone/ipsec/dual-dmvpn
 
 # Primary Hub router

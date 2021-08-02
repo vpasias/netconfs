@@ -111,6 +111,16 @@ nodes:
     module: [ sr, isis, bgp ]
     bgp:
       as: 65200
+  e7:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65300
+  e8:
+    device: eos
+    module: [ sr, isis, bgp ]
+    bgp:
+      as: 65300      
 # Customer routers - CE routers - leaf/ToR switches
   x1:
     device: iosv
@@ -164,6 +174,10 @@ nodes:
     module: [ bgp ]
     bgp:
       as: 65004
+  x11:
+    device: eos
+  x12:
+    device: eos     
 
 links:
 # Core layer links
@@ -199,6 +213,10 @@ links:
 - e5-a2
 - e6-a3
 - e6-a4
+- e7-a1
+- e7-a2
+- e8-a3
+- e8-a4
 
 # External links
 - x1-e1
@@ -211,6 +229,8 @@ links:
 - x8-e4
 - x9-e1
 - x10-e3
+- x11-e7
+- x12-e8
 
 # Stub links
 - x1
@@ -223,6 +243,8 @@ links:
 - x8
 - x9
 - x10
+- x11
+- x12
 EOF
 
 cd isp4/ && netlab create
@@ -237,12 +259,13 @@ show ip route
 exit
 
 netlab connect x2
-ping 172.16.0.15 source GigabitEthernet0/2
-traceroute 172.16.0.15 source GigabitEthernet0/2
+ping 172.16.0.17 source GigabitEthernet0/2
+traceroute 172.16.0.17 source GigabitEthernet0/2
 exit
 
 ANSIBLE_STDOUT_CALLBACK=dense netlab collect
 
+#######################################################################################################################################
 ### EVPN L2/L3 multipoint over MPLS
 # Nodes: e2, e3, x3, x4, x7, x8
 # Change IP addresses based on the output of the collected e2.cfg and e4.cfg files by the previous command
@@ -382,6 +405,7 @@ ping -I CUST1 192.168.0.26 -c 3
 sudo ip vrf exec CUST1 traceroute 192.168.0.26
 exit
 
+#######################################################################################################################################
 ### EVPN L2/L3 multipoint over VXLAN
 # Nodes: e5, e6, x5, x6
 # Change IP addresses based on the output of the collected e5.cfg and e6.cfg files by the previous command
@@ -670,6 +694,7 @@ traceroute vrf CUST-A 192.168.11.6
 show arp vrf CUST-A 
 exit
 
+#######################################################################################################################################
 ### DMVPN
 # Nodes: e1, e3, x1, x2, x9, x10
 # https://sites.google.com/site/amitsciscozone/ipsec/dual-dmvpn
@@ -871,5 +896,296 @@ show crypto isakmp sa
 show crypto ipsec sa
 exit
 
+### Dynamic Routing in terms of EVPN L2/L3 multipoint over VXLAN
+# Nodes: e7, e8, x11, x12
+# Change IP addresses based on the output of the collected e7.cfg and e8.cfg files by the previous command
+cat << EOF | tee e7econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 43
+!
+vlan 44
+!
+vrf instance CUST-D
+!
+vrf instance GATEWAY
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 43 vni 430
+   vxlan vlan 44 vni 440
+   vxlan vrf CUST-C vni 1240
+   vxlan vrf GATEWAY vni 8888
+   vxlan learn-restrict any
+!
+ip routing
+ip routing vrf CUST-D
+!
+ip routing vrf GATEWAY
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST-D
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   vrf GATEWAY
+   ip address 192.168.12.252/24
+   ip virtual-router address 192.168.12.254
+!
+interface Vlan44
+   vrf GATEWAY
+   ip address 192.168.13.252/24
+   ip virtual-router address 192.168.13.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0b
+!
+router bgp 65300
+   router-id 10.0.0.15
+   no bgp default ipv4-unicast
+   timers bgp 10 30
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.16 remote-as 65300
+   neighbor 10.0.0.16 update-source Loopback0
+   neighbor 10.0.0.16 fall-over bfd
+   neighbor 10.0.0.16 send-community standard extended
+   neighbor 10.0.0.16 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor 10.0.0.16 activate
+      network 10.0.0.15/32
+   !
+   no address-family ipv4
+      no network 10.0.0.15/32
+   !
+   vrf CUST-D
+      rd 10.0.0.15:124
+      route-target import evpn 124:1240
+      route-target export evpn 124:1240
+      redistribute connected
+   !
+   vrf GATEWAY
+      rd 10.0.0.15:8888
+      route-target import evpn 88:8888
+      route-target export evpn 88:8888
+      redistribute connected
+      redistribute ospf
+   !   
+   vlan 43
+      rd 65300:430
+      route-target both 43:430
+      redistribute learned
+   !
+   vlan 44
+      rd 65300:440
+      route-target both 44:440
+      redistribute learned
+  !
+!
+router ospf 1 vrf GATEWAY
+   redistribute bgp
+   network 192.168.12.0/24 area 0.0.0.0
+!   
+EOF
+
+cat << EOF | tee e8econf.j2
+!
+service routing protocols model multi-agent
+!
+vlan 43
+!
+vlan 44
+!
+vrf instance CUST-D
+!
+vrf instance GATEWAY
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 43 vni 430
+   vxlan vlan 44 vni 440
+   vxlan vrf CUST-C vni 1240
+   vxlan vrf GATEWAY vni 8888
+   vxlan learn-restrict any
+!
+ip routing
+ip routing vrf CUST-D
+!
+ip routing vrf GATEWAY
+!
+ipv6 unicast-routing
+ipv6 unicast-routing vrf CUST-D
+!
+interface Ethernet3
+   switchport
+!
+interface Ethernet3
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   vrf GATEWAY
+   ip address 192.168.12.253/24
+   ip virtual-router address 192.168.12.254
+!
+interface Vlan44
+   vrf GATEWAY
+   ip address 192.168.13.253/24
+   ip virtual-router address 192.168.13.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0b
+!
+router bgp 65300
+   router-id 10.0.0.16
+   no bgp default ipv4-unicast
+   timers bgp 10 30
+   maximum-paths 128 ecmp 128
+   neighbor 10.0.0.15 remote-as 65300
+   neighbor 10.0.0.15 update-source Loopback0
+   neighbor 10.0.0.15 fall-over bfd
+   neighbor 10.0.0.15 send-community standard extended
+   neighbor 10.0.0.15 maximum-routes 12000
+   !
+   address-family evpn
+      neighbor 10.0.0.15 activate
+      network 10.0.0.16/32
+   !
+   no address-family ipv4
+      no network 10.0.0.16/32
+  !
+  vrf CUST-D
+      rd 10.0.0.16:124
+      route-target import evpn 124:1240
+      route-target export evpn 124:1240
+      redistribute connected
+  !
+  vrf GATEWAY
+      rd 10.0.0.16:8888
+      route-target import evpn 88:8888
+      route-target export evpn 88:8888
+      redistribute connected
+      redistribute ospf
+  !    
+  vlan 43
+      rd 65300:430
+      route-target both 43:430
+      redistribute learned
+  !
+  vlan 44
+      rd 65300:440
+      route-target both 44:440
+      redistribute learned
+  !
+!
+router ospf 1 vrf GATEWAY
+   redistribute bgp
+   network 192.168.12.0/24 area 0.0.0.0
+!  
+EOF
+
+# Change IP addresses based on the output of the collected x11.cfg and x12.cfg files by the previous command
+
+cat << EOF | tee x11econf.j2
+!
+vlan 43
+!
+vlan 44
+!
+interface Ethernet1
+   switchport
+!
+interface Ethernet1
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   ip address 192.168.12.5/24
+!
+interface Vlan44
+   ip address 192.168.13.5/24
+!
+interface Loopback0
+   ip address 10.11.11.11/32
+!
+ip routing
+!
+router ospf 1
+   network 10.11.11.11/32 area 0.0.0.0
+   network 192.168.12.0/24 area 0.0.0.0
+!
+EOF
+
+cat << EOF | tee x12econf.j2
+!
+vlan 43
+!
+vlan 44
+!
+interface Ethernet1
+   switchport
+!
+interface Ethernet1
+   switchport trunk allowed vlan 43-44
+   switchport mode trunk
+!
+interface Vlan43
+   ip address 192.168.12.6/24
+!
+interface Vlan44
+   ip address 192.168.13.6/24
+!
+interface Loopback0
+   ip address 10.22.22.22/32
+!
+ip routing
+!
+router ospf 1
+   network 10.22.22.22/32 area 0.0.0.0
+   network 192.168.12.0/24 area 0.0.0.0
+!
+EOF
+
+netlab config e7econf.j2 -l e7 && netlab config e8econf.j2 -l e8 && netlab config x11econf.j2 -l x11 && netlab config x12econf.j2 -l x12
+
+netlab connect e7
+wr mem
+reload now
+
+netlab connect e8
+wr mem
+reload now
+
+netlab connect e7
+show bgp ipv4 unicast summary
+show bgp evpn summary
+show bgp evpn
+show ip route vrf GATEWAY
+show ip ospf neighbor vrf GATEWAY
+show vxlan address-table
+show interfaces vxlan 1
+exit
+
+netlab connect x11
+# Tests
+ping 192.168.12.5
+ping 192.168.12.6
+traceroute 192.168.12.6
+show ip route
+ping 10.22.22.22
+exit
+
+netlab connect e8
+show ip route vrf GATEWAY
+exit
+
+#######################################################################################################################################
 ### Delete all
 vagrant destroy -f && vagrant destroy -f && cd

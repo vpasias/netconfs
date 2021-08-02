@@ -1,4 +1,4 @@
-mkdir -p isp3 && cat << EOF | tee isp3/topology.yml
+mkdir -p isp4 && cat << EOF | tee isp4/topology.yml
 # Service Provider Network Topology
 # This topology includes IBGP sessions between AS-edge devices
 # and EBGP sessions with two external routers, based on an SRv6-enabled core.
@@ -225,7 +225,7 @@ links:
 - x10
 EOF
 
-cd isp3/ && netlab create
+cd isp4/ && netlab create
 
 vagrant up
 

@@ -243,6 +243,7 @@ exit
 ANSIBLE_STDOUT_CALLBACK=dense netlab collect
 
 ### EVPN L2/L3 multipoint over MPLS
+# Nodes: e2, e3, x3, x4, x7, x8
 # Change IP addresses based on the output of the collected e2.cfg and e4.cfg files by the previous command
 cat << EOF | tee e2econf.j2
 !
@@ -381,34 +382,41 @@ sudo ip vrf exec CUST1 traceroute 192.168.0.26
 exit
 
 ### EVPN L2/L3 multipoint over VXLAN
+# Nodes: e5, e6, x5, x6
 # Change IP addresses based on the output of the collected e5.cfg and e6.cfg files by the previous command
 cat << EOF | tee e5econf.j2
 !
 service routing protocols model multi-agent
 !
 vlan 33
-   name CUST-A
 !
 vlan 34
-   name CUST-B
 !
 vrf instance CUST-C
+!
+vrf instance GATEWAY
 !
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
    vxlan vlan 33 vni 330
    vxlan vlan 34 vni 340
-   vxlan vrf CUST-A vni 1230
+   vxlan vrf CUST-C vni 1230
+   vxlan vrf GATEWAY vni 9999
    vxlan learn-restrict any
 !
 ip routing
+ip routing vrf CUST-C
+!
 ip routing vrf CUST-A
 ip routing vrf CUST-B
+ip route vrf CUST-A 0.0.0.0/0 192.168.10.254
+ip route vrf CUST-B 0.0.0.0/0 192.168.11.254
+!
+ip routing vrf GATEWAY
 !
 ipv6 unicast-routing
-ipv6 unicast-routing vrf CUST-A
-ipv6 unicast-routing vrf CUST-B
+ipv6 unicast-routing vrf CUST-C
 !
 interface Ethernet3
    switchport
@@ -416,6 +424,18 @@ interface Ethernet3
 interface Ethernet3
    switchport trunk allowed vlan 33-34
    switchport mode trunk
+!
+interface Vlan33
+   vrf GATEWAY
+   ip address 192.168.10.252/24
+   ip virtual-router address 192.168.10.254
+!
+interface Vlan34
+   vrf GATEWAY
+   ip address 192.168.11.252/24
+   ip virtual-router address 192.168.11.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0a
 !
 router bgp 65200
    router-id 10.0.0.13
@@ -440,12 +460,18 @@ router bgp 65200
       route-target import evpn 123:1230
       route-target export evpn 123:1230
       redistribute connected
-  !
+   !
+   vrf GATEWAY
+      rd 10.0.0.13:9999
+      route-target import evpn 99:9999
+      route-target export evpn 99:9999
+      redistribute connected
+   !   
    vlan 33
       rd 65200:330
       route-target both 33:330
       redistribute learned
-  !
+   !
    vlan 34
       rd 65200:340
       route-target both 34:340
@@ -459,28 +485,34 @@ cat << EOF | tee e6econf.j2
 service routing protocols model multi-agent
 !
 vlan 33
-   name CUST-A
 !
 vlan 34
-   name CUST-B
 !
 vrf instance CUST-C
+!
+vrf instance GATEWAY
 !
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
    vxlan vlan 33 vni 330
    vxlan vlan 34 vni 340
-   vxlan vrf CUST-A vni 1230
+   vxlan vrf CUST-C vni 1230
+   vxlan vrf GATEWAY vni 9999
    vxlan learn-restrict any
 !
 ip routing
+ip routing vrf CUST-C
+!
 ip routing vrf CUST-A
 ip routing vrf CUST-B
+ip route vrf CUST-A 0.0.0.0/0 192.168.10.254
+ip route vrf CUST-B 0.0.0.0/0 192.168.11.254
+!
+ip routing vrf GATEWAY
 !
 ipv6 unicast-routing
-ipv6 unicast-routing vrf CUST-A
-ipv6 unicast-routing vrf CUST-B
+ipv6 unicast-routing vrf CUST-C
 !
 interface Ethernet3
    switchport
@@ -488,6 +520,18 @@ interface Ethernet3
 interface Ethernet3
    switchport trunk allowed vlan 33-34
    switchport mode trunk
+!
+interface Vlan33
+   vrf GATEWAY
+   ip address 192.168.10.253/24
+   ip virtual-router address 192.168.10.254
+!
+interface Vlan34
+   vrf GATEWAY
+   ip address 192.168.11.253/24
+   ip virtual-router address 192.168.11.254
+!
+ip virtual-router mac-address 00:00:00:00:00:0a
 !
 router bgp 65200
    router-id 10.0.0.14
@@ -507,18 +551,24 @@ router bgp 65200
    no address-family ipv4
       no network 10.0.0.14/32
   !
-   vrf CUST-C
-      rd 10.0.0.13:123
+  vrf CUST-C
+      rd 10.0.0.14:123
       route-target import evpn 123:1230
       route-target export evpn 123:1230
       redistribute connected
   !
-   vlan 33
+  vrf GATEWAY
+      rd 10.0.0.14:9999
+      route-target import evpn 99:9999
+      route-target export evpn 99:9999
+      redistribute connected
+  !    
+  vlan 33
       rd 65200:330
       route-target both 33:330
       redistribute learned
   !
-   vlan 34
+  vlan 34
       rd 65200:340
       route-target both 34:340
       redistribute learned
@@ -535,10 +585,8 @@ vrf instance CUST-A
 vrf instance CUST-B
 !
 vlan 33
-   name CUST-A
 !
 vlan 34
-   name CUST-B
 !
 interface Ethernet1
    switchport
@@ -568,10 +616,8 @@ vrf instance CUST-A
 vrf instance CUST-B
 !
 vlan 33
-   name CUST-A
 !
 vlan 34
-   name CUST-B
 !
 interface Ethernet1
    switchport
@@ -608,6 +654,7 @@ netlab connect e5
 show bgp ipv4 unicast summary
 show bgp evpn summary
 show bgp evpn
+show ip route vrf GATEWAY
 exit
 
 netlab connect x5
@@ -618,6 +665,8 @@ traceroute vrf CUST-A 192.168.10.6
 ping 192.168.11.5
 ping 192.168.11.6
 traceroute 192.168.11.6
+ping vrf CUST-A 192.168.11.6
+show arp vrf CUST-A 
 exit
 
 ### DMVPN

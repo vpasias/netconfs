@@ -301,11 +301,13 @@ nodes:
 # Customer routers - CE routers - leaf/ToR switches
   x1:
     device: iosv
+    dhcp_prefix: 10.41.41.0/24
     module: [ bgp ]
     bgp:
       as: 65001
   x2:
     device: iosv
+    dhcp_prefix: 10.42.42.0/24   
     module: [ bgp ]
     bgp:
       as: 65002
@@ -355,6 +357,15 @@ nodes:
     device: eos
   x12:
     device: eos     
+# Client routers
+  z1:
+    device: iosv
+  z2:
+    device: iosv
+  z3:
+    device: iosv
+  z4:
+    device: iosv     
 
 links:
 # Core layer links
@@ -419,6 +430,18 @@ links:
 - x10-e3
 - x11-e7
 - x12-e8
+- x1:
+  z1:
+  role: dhcp
+- x2:
+  z2:
+  role: dhcp
+- x1:
+  z3:
+  role: dhcp
+- x2:
+  z4:
+  role: dhcp  
 
 # Stub links
 - x1
@@ -1372,6 +1395,44 @@ exit
 
 netlab connect e8
 show ip route vrf GATEWAY
+exit
+
+#######################################################################################################################################
+### Unnumbered Ethernet Interfaces - DHCP 
+# Nodes: x1, x2, z1, z2, z3, z4
+
+cat << EOF | tee dhcp-server.j2
+interface Loopback1
+ ip address {{ dhcp_prefix|ipaddr(1)|ipaddr('address') }} {{ dhcp_prefix|ipaddr('netmask') }}
+!
+ip dhcp pool Access
+ network {{ dhcp_prefix|ipaddr(1)|ipaddr('address') }} {{ dhcp_prefix|ipaddr('netmask') }}
+ default-router {{ dhcp_prefix|ipaddr(1)|ipaddr('address') }}
+!
+{% for l in links|default([]) if 'dhcp' in l.role|default('') %}
+interface {{ l.ifname }}
+ no ip address
+ ip unnumbered Loopback1
+{% endfor %}
+EOF
+
+cat << EOF | tee dhcp-client.j2
+{% for l in links|default([]) if 'dhcp' in l.role|default('') %}
+interface {{ l.ifname }}
+ no ip address
+ ip address dhcp
+{% endfor %}
+EOF
+
+netlab config dhcp-client.j2 -l z1,z2,z3,z4 && netlab config dhcp-server.j2 -l x1,x2
+
+netlab connect x1
+show ip dhcp binding
+show ip route 10.41.41.0 longer-prefixes | begin Gateway
+exit
+
+netlab connect z1
+ping 10.41.41.3
 exit
 
 #######################################################################################################################################

@@ -1398,7 +1398,8 @@ show ip route vrf GATEWAY
 exit
 
 #######################################################################################################################################
-### Unnumbered Ethernet Interfaces - DHCP 
+### Unnumbered Ethernet Interfaces - DHCP
+# https://blog.ipspace.net/2021/06/unnumbered-ethernet-dhcp.html
 # Nodes: x1, x2, z1, z2, z3, z4
 
 cat << EOF | tee dhcp-server.j2

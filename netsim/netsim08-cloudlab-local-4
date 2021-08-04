@@ -447,8 +447,8 @@ show ip route
 exit
 
 netlab connect x2
-ping 172.16.0.17 source GigabitEthernet0/2
-traceroute 172.16.0.17 source GigabitEthernet0/2
+ping 172.16.0.21 source GigabitEthernet0/2
+traceroute 172.16.0.21 source GigabitEthernet0/2
 exit
 
 ANSIBLE_STDOUT_CALLBACK=dense netlab collect

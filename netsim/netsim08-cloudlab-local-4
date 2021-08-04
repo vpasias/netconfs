@@ -29,12 +29,9 @@ sudo apt update && sudo apt install software-properties-common && sudo add-apt-r
 curl -O https://releases.hashicorp.com/vagrant/2.2.8/vagrant_2.2.8_x86_64.deb && sudo apt install -y ./vagrant_2.2.8_x86_64.deb --allow-downgrades && \
 sudo apt-get update && sudo apt-get install -y python3-pip && pip3 install --upgrade pip && pip3 install setuptools_rust && sudo python3.8 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
 
-#sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.9 -y
+# sudo apt update && sudo apt install software-properties-common && sudo add-apt-repository ppa:deadsnakes/ppa && sudo apt update && sudo apt install python3.9 -y
 # sudo apt-get update && sudo apt install python3.9-distutils -y && sudo apt-get install -y python3-pip && sudo python3.9 -m pip install --upgrade pip && pip3 install --upgrade setuptools && \
 # pip3 install setuptools_rust && pip3 install --upgrade pip && pip3 install --upgrade distlib  && sudo python3.9 -m pip install netsim-tools && netlab install ubuntu ansible libvirt
-
-# reconfigure libvirt by setting: security_driver = "none" to file /etc/libvirt/qemu.conf with: sudo nano /etc/libvirt/qemu.conf and restart libvirt with: sudo systemctl restart libvirtd
-# cat /sys/module/kvm/parameters/halt_poll_ns
 
 sudo usermod -aG libvirt iason && sudo adduser `id -un` libvirt-qemu && sudo adduser `id -un` kvm && sudo adduser `id -un` libvirt-dnsmasq && sudo sed -i 's/0770/0777/' /etc/libvirt/libvirtd.conf && \
 echo 0 | sudo tee /sys/module/kvm/parameters/halt_poll_ns && echo 'security_driver = "none"' | sudo tee /etc/libvirt/qemu.conf && \

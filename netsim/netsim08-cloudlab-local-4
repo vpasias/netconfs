@@ -148,8 +148,6 @@ sudo sed -i 's/no ip domain-lookup/no ip domain lookup/' /usr/local/lib/python3.
 
 mkdir -p isp4 && cat << EOF | tee isp4/topology.yml
 # Service Provider Network Topology
-# This topology includes IBGP sessions between AS-edge devices
-# and EBGP sessions with two external routers, based on an SRv6-enabled core.
 #
 nodes:
 # Core routers - P routers - backbone super-spine switches

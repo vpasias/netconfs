@@ -1067,7 +1067,7 @@ router bgp 65510.2
    !   
 !      
 interface po5
-   description '[host] host2-site1'
+   description 'host2-site1'
    switchport
    switchport mode trunk
    evpn ethernet-segment

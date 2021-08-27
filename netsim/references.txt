@@ -38,3 +38,6 @@ https://stubarea51.net/2021/07/20/wisp-cheat-sheet-for-mpls-vpls-mtu/
 
 Cumulus EVPN:
 https://clabs.netdevops.me/rs/cvx04/
+
+# BGP Multihoming
+https://sites.google.com/site/amitsciscozone/bgp/bgp-multihoming

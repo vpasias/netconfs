@@ -41,3 +41,10 @@ https://clabs.netdevops.me/rs/cvx04/
 
 # BGP Multihoming
 https://sites.google.com/site/amitsciscozone/bgp/bgp-multihoming
+
+# Clustering KVM with Ceph Storage
+https://nbailey.ca/post/cephfs-kvm-virtual-san/
+
+# Project Neco: Building Cloud Native On-Premise Data Centers
+# https://blog.kintone.io/entry/neco
+# https://github.com/cybozu-go/neco

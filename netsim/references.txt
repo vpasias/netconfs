@@ -44,7 +44,14 @@ https://sites.google.com/site/amitsciscozone/bgp/bgp-multihoming
 
 # Clustering KVM with Ceph Storage
 https://nbailey.ca/post/cephfs-kvm-virtual-san/
+
+# Active-Passive Cluster
 https://houseofbrick.com/active-passive-cluster-for-near-ha-using-pacemaker-drbd-corosync-and-mysql/
+
+# Active/Active High Availability Pacemaker Cluster with GFS2 and iSCSI Shared Storage on CentOS 7
+https://www.lisenet.com/2016/activeactive-high-availability-pacemaker-cluster-with-gfs2-and-iscsi-shared-storage-on-centos-7/
+https://fossies.org/linux/pacemaker/doc/sphinx/Clusters_from_Scratch/active-active.rst
+https://isardvdi-the-docs-repo.readthedocs.io/en/latest/setups/ha/active_active/#constraints_1
 
 # Project Neco: Building Cloud Native On-Premise Data Centers
 https://blog.kintone.io/entry/neco

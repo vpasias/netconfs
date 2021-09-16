@@ -44,7 +44,8 @@ https://sites.google.com/site/amitsciscozone/bgp/bgp-multihoming
 
 # Clustering KVM with Ceph Storage
 https://nbailey.ca/post/cephfs-kvm-virtual-san/
+https://houseofbrick.com/active-passive-cluster-for-near-ha-using-pacemaker-drbd-corosync-and-mysql/
 
 # Project Neco: Building Cloud Native On-Premise Data Centers
-# https://blog.kintone.io/entry/neco
-# https://github.com/cybozu-go/neco
+https://blog.kintone.io/entry/neco
+https://github.com/cybozu-go/neco

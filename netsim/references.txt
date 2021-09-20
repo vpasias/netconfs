@@ -45,6 +45,9 @@ https://sites.google.com/site/amitsciscozone/bgp/bgp-multihoming
 # Clustering KVM with Ceph Storage
 https://nbailey.ca/post/cephfs-kvm-virtual-san/
 
+# Gluster
+https://www.alexdumitru.com/setup-a-glusterfs-dispersed-volume-on-3-servers-and-6-bricks/
+
 # Active-Passive Cluster
 https://houseofbrick.com/active-passive-cluster-for-near-ha-using-pacemaker-drbd-corosync-and-mysql/
 

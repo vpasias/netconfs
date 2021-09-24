@@ -56,6 +56,9 @@ https://www.lisenet.com/2016/activeactive-high-availability-pacemaker-cluster-wi
 https://fossies.org/linux/pacemaker/doc/sphinx/Clusters_from_Scratch/active-active.rst
 https://isardvdi-the-docs-repo.readthedocs.io/en/latest/setups/ha/active_active/#constraints_1
 
+# ZFS High-Availability NAS
+https://github.com/ewwhite/zfs-ha/wiki
+
 # Project Neco: Building Cloud Native On-Premise Data Centers
 https://blog.kintone.io/entry/neco
 https://github.com/cybozu-go/neco

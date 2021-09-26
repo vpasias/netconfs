@@ -1,1 +1,64 @@
+Arista L3VPN:
+https://blog.thomarite.uk/index.php/2020/05/25/mpls-segment-routing-arista-lab/
+https://github.com/thomarite/ceos-testing/tree/master/topology/config
+https://www.arista.com/en/um-eos/eos-bgpmpls-l3-vpn
+https://routingcraft.net/close-to-the-edge/
+# Layer 3 EVPN with multiple VRFs and VLANs per host
+https://changineer.info/network/arista_eos/arista_eos_evpn_layer3.html
+# Layer 3 EVPN between different customers/ISPs (different VLANs)
+https://changineer.info/network/arista_eos/arista_eos_evpn_isp.html
 
+Arista L2VPN:
+https://changineer.info/network/arista_eos/arista_eos_evpn_layer2.html
+
+Arista MLAG:
+# One VLAN per host
+https://changineer.info/network/arista_eos/arista_eos_mlag_l2evpn.html
+# Multiple VLANs per host
+https://changineer.info/network/arista_eos/arista_eos_mlag_l3evpn.html
+https://changineer.info/network/arista_eos/arista_eos_mlag_isp.html
+
+Arista EVPN Data Center
+https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjVh8jjmfTxAhXI8qQKHWf5AM8QFjABegQIAxAD&url=http%3A%2F%2Fallvpc.net%2FEVPN_Deployment_Guide.pdf&usg=AOvVaw1c3fyysBypwMHys6kBmL9g
+
+Juniper:
+https://gitlab.com/mwiget
+
+Terrible: IaC for QEMU/KVM
+https://github.com/89luca89/terrible
+
+Network Engineering:
+https://netquirks.co.uk/
+
+Nautobot:
+http://blog.networktocode.com/post/getting-nautobot-up-and-running-in-the-lab/
+
+Wireless ISP:
+https://stubarea51.net/2021/07/20/wisp-cheat-sheet-for-mpls-vpls-mtu/
+
+Cumulus EVPN:
+https://clabs.netdevops.me/rs/cvx04/
+
+# BGP Multihoming
+https://sites.google.com/site/amitsciscozone/bgp/bgp-multihoming
+
+# Clustering KVM with Ceph Storage
+https://nbailey.ca/post/cephfs-kvm-virtual-san/
+
+# Gluster
+https://www.alexdumitru.com/setup-a-glusterfs-dispersed-volume-on-3-servers-and-6-bricks/
+
+# Active-Passive Cluster
+https://houseofbrick.com/active-passive-cluster-for-near-ha-using-pacemaker-drbd-corosync-and-mysql/
+
+# Active/Active High Availability Pacemaker Cluster with GFS2 and iSCSI Shared Storage on CentOS 7
+https://www.lisenet.com/2016/activeactive-high-availability-pacemaker-cluster-with-gfs2-and-iscsi-shared-storage-on-centos-7/
+https://fossies.org/linux/pacemaker/doc/sphinx/Clusters_from_Scratch/active-active.rst
+https://isardvdi-the-docs-repo.readthedocs.io/en/latest/setups/ha/active_active/#constraints_1
+
+# ZFS High-Availability NAS
+https://github.com/ewwhite/zfs-ha/wiki
+
+# Project Neco: Building Cloud Native On-Premise Data Centers
+https://blog.kintone.io/entry/neco
+https://github.com/cybozu-go/neco

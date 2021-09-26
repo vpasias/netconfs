@@ -7,7 +7,7 @@ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubun
 sudo add-apt-repository ppa:cz.nic-labs/bird -y
 sudo apt update
 sudo apt install -y bird2
-sudo apt install -y build-essential systemd-container lldpd qemu qemu-kvm socat picocom swtpm cloud-utils squid chrony dnsmasq jq freeipmi-tools unzip skopeo fakeroot docker-ce docker-ce-cli containerd.io
+sudo apt install -y build-essential systemd-container lldpd qemu qemu-kvm socat picocom swtpm cloud-utils squid chrony dnsmasq jq freeipmi-tools unzip skopeo fakeroot docker-ce docker-ce-cli containerd.io golang-go
 wget https://github.com/qemu/qemu/raw/master/pc-bios/bios.bin
 wget https://github.com/qemu/qemu/raw/master/pc-bios/bios-256k.bin
 sudo install -m 0644 -b bios.bin bios-256k.bin /usr/share/seabios/

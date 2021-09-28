@@ -62,3 +62,8 @@ https://github.com/ewwhite/zfs-ha/wiki
 # Project Neco: Building Cloud Native On-Premise Data Centers
 https://blog.kintone.io/entry/neco
 https://github.com/cybozu-go/neco
+
+# HA k3s cluster
+https://github.com/xanmanning/vagrant-kubernetes-cluster
+https://github.com/pmvrolijk/k3s-cluster
+https://github.com/digitalis-io/k3s-on-prem-production

@@ -67,4 +67,5 @@ https://github.com/cybozu-go/neco
 https://github.com/xanmanning/vagrant-kubernetes-cluster
 https://github.com/pmvrolijk/k3s-cluster
 https://github.com/digitalis-io/k3s-on-prem-production
+https://towardsdatascience.com/monitoring-and-observability-in-cloud-native-architectures-54e68e52b103
 https://rpi4cluster.com/

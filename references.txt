@@ -67,3 +67,4 @@ https://github.com/cybozu-go/neco
 https://github.com/xanmanning/vagrant-kubernetes-cluster
 https://github.com/pmvrolijk/k3s-cluster
 https://github.com/digitalis-io/k3s-on-prem-production
+https://rpi4cluster.com/

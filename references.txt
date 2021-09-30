@@ -69,3 +69,6 @@ https://github.com/pmvrolijk/k3s-cluster
 https://github.com/digitalis-io/k3s-on-prem-production
 https://towardsdatascience.com/monitoring-and-observability-in-cloud-native-architectures-54e68e52b103
 https://rpi4cluster.com/
+
+# Hyperconverged MicroK8s cluster
+https://jonathangazeley.com/2020/09/10/building-a-hyperconverged-kubernetes-cluster-with-microk8s-and-ceph/

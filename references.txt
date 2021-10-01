@@ -75,3 +75,4 @@ https://jonathangazeley.com/2020/09/10/building-a-hyperconverged-kubernetes-clus
 
 # OpenSVC
 https://docs.opensvc.com/latest/howto.getting.started.html
+https://github.com/opensvc/vdc/tree/master/build

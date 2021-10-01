@@ -76,3 +76,12 @@ https://jonathangazeley.com/2020/09/10/building-a-hyperconverged-kubernetes-clus
 # OpenSVC
 https://docs.opensvc.com/latest/howto.getting.started.html
 https://github.com/opensvc/vdc/tree/master/build
+
+# LXD Cluster
+https://osm.etsi.org/docs/user-guide/16-lxd-cluster.html
+https://www.mightygio.com/blog/clustering-in-lxd-3/
+https://discuss.linuxcontainers.org/t/my-two-cents-lxd-cluster-with-ceph-storage-backend/9688
+https://brian-candler.medium.com/linstor-networked-storage-without-the-complexity-c3178960ce6b
+https://github.com/openstack-charmers/openstack-on-lxd
+https://www.thomas-krenn.com/en/wiki/HA_Cluster_with_Linux_Containers_based_on_Heartbeat,_Pacemaker,_DRBD_and_LXC
+https://blog.pekanbaru.go.id/?p=534

@@ -72,3 +72,6 @@ https://rpi4cluster.com/
 
 # Hyperconverged MicroK8s cluster
 https://jonathangazeley.com/2020/09/10/building-a-hyperconverged-kubernetes-cluster-with-microk8s-and-ceph/
+
+# OpenSVC
+https://docs.opensvc.com/latest/howto.getting.started.html

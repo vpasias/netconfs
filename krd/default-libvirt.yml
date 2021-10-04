@@ -23,7 +23,7 @@
     - kube-master
     - etcd
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
 - name: "controller02"
@@ -41,7 +41,7 @@
     - kube-master
     - etcd
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
 - name: "controller03"
@@ -59,7 +59,7 @@
     - kube-master
     - etcd
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/    
 - name: "worker01"
@@ -77,34 +77,18 @@
   cpus: 8
   roles:
     - kube-node
-  storage_controllers:
-    - name: Virtual I/O Device SCSI controller
-      type: virtio-scsi
-      controller: VirtIO
-    - name: AHCI Controller
-      type: sata
-      controller: IntelAhci
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
-      controller: Virtual I/O Device SCSI controller
-      port: 1
-      device: 0
     - name: sdc
       size: 20
     - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-      controller: AHCI Controller
-      port: 1
-      device: 0
     - name: sde
       size: 120
       mount: /mnt/disks/vol2
-      controller: AHCI Controller
-      port: 2
-      device: 0
 - name: "worker02"
   os:
     name: ubuntu
@@ -120,34 +104,18 @@
   cpus: 8
   roles:
     - kube-node
-  storage_controllers:
-    - name: Virtual I/O Device SCSI controller
-      type: virtio-scsi
-      controller: VirtIO
-    - name: AHCI Controller
-      type: sata
-      controller: IntelAhci
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
-      controller: Virtual I/O Device SCSI controller
-      port: 1
-      device: 0
     - name: sdc
       size: 20
     - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-      controller: AHCI Controller
-      port: 1
-      device: 0
     - name: sde
       size: 120
       mount: /mnt/disks/vol2
-      controller: AHCI Controller
-      port: 2
-      device: 0
 - name: "worker03"
   os:
     name: ubuntu
@@ -163,31 +131,15 @@
   cpus: 8
   roles:
     - kube-node
-  storage_controllers:
-    - name: Virtual I/O Device SCSI controller
-      type: virtio-scsi
-      controller: VirtIO
-    - name: AHCI Controller
-      type: sata
-      controller: IntelAhci
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
-      controller: Virtual I/O Device SCSI controller
-      port: 1
-      device: 0
     - name: sdc
       size: 20
     - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-      controller: AHCI Controller
-      port: 1
-      device: 0
     - name: sde
       size: 120
       mount: /mnt/disks/vol2
-      controller: AHCI Controller
-      port: 2
-      device: 0

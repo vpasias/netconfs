@@ -113,13 +113,15 @@
       port: 1
       device: 0
     - name: sdc
-      size: 120
+      size: 120      
+    - name: sdd
+      size: 100
       mount: /mnt/disks/vol1
       controller: LSI Logic SAS controller
       port: 1
       device: 0
-    - name: sdd
-      size: 120
+    - name: sde
+      size: 100
       mount: /mnt/disks/vol2
       controller: LSI Logic SAS controller
       port: 2
@@ -154,13 +156,15 @@
       port: 1
       device: 0
     - name: sdc
-      size: 120
+      size: 120      
+    - name: sdd
+      size: 100
       mount: /mnt/disks/vol1
       controller: LSI Logic SAS controller
       port: 1
       device: 0
-    - name: sdd
-      size: 120
+    - name: sde
+      size: 100
       mount: /mnt/disks/vol2
       controller: LSI Logic SAS controller
       port: 2
@@ -195,13 +199,15 @@
       port: 1
       device: 0
     - name: sdc
-      size: 120
+      size: 120      
+    - name: sdd
+      size: 100
       mount: /mnt/disks/vol1
       controller: LSI Logic SAS controller
       port: 1
       device: 0
-    - name: sdd
-      size: 120
+    - name: sde
+      size: 100
       mount: /mnt/disks/vol2
       controller: LSI Logic SAS controller
       port: 2

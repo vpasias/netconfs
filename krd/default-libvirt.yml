@@ -82,11 +82,9 @@
       size: 80
       mount: /var/lib/docker/
     - name: sdc
-      size: 20
-    - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-    - name: sde
+    - name: sdd
       size: 120
       mount: /mnt/disks/vol2
 - name: "worker02"
@@ -109,11 +107,9 @@
       size: 80
       mount: /var/lib/docker/
     - name: sdc
-      size: 20
-    - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-    - name: sde
+    - name: sdd
       size: 120
       mount: /mnt/disks/vol2
 - name: "worker03"
@@ -136,10 +132,8 @@
       size: 80
       mount: /var/lib/docker/
     - name: sdc
-      size: 20
-    - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-    - name: sde
+    - name: sdd
       size: 120
       mount: /mnt/disks/vol2

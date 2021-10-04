@@ -81,9 +81,9 @@
     - name: Virtual I/O Device SCSI controller
       type: virtio-scsi
       controller: VirtIO
-    - name: AHCI Controller
-      type: sata
-      controller: IntelAhci
+    - name: LSI Logic SAS controller
+      type: sas
+      controller: LSILogicSAS
   volumes:
     - name: sda
       size: 80
@@ -96,13 +96,13 @@
     - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-      controller: AHCI Controller
+      controller: LSI Logic SAS controller
       port: 1
       device: 0
     - name: sde
       size: 120
       mount: /mnt/disks/vol2
-      controller: AHCI Controller
+      controller: LSI Logic SAS controller
       port: 2
       device: 0
 - name: "worker02"
@@ -124,9 +124,9 @@
     - name: Virtual I/O Device SCSI controller
       type: virtio-scsi
       controller: VirtIO
-    - name: AHCI Controller
-      type: sata
-      controller: IntelAhci
+    - name: LSI Logic SAS controller
+      type: sas
+      controller: LSILogicSAS
   volumes:
     - name: sda
       size: 80
@@ -139,13 +139,13 @@
     - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-      controller: AHCI Controller
+      controller: LSI Logic SAS controller
       port: 1
       device: 0
     - name: sde
       size: 120
       mount: /mnt/disks/vol2
-      controller: AHCI Controller
+      controller: LSI Logic SAS controller
       port: 2
       device: 0
 - name: "worker03"
@@ -167,9 +167,9 @@
     - name: Virtual I/O Device SCSI controller
       type: virtio-scsi
       controller: VirtIO
-    - name: AHCI Controller
-      type: sata
-      controller: IntelAhci
+    - name: LSI Logic SAS controller
+      type: sas
+      controller: LSILogicSAS
   volumes:
     - name: sda
       size: 80
@@ -182,12 +182,12 @@
     - name: sdd
       size: 120
       mount: /mnt/disks/vol1
-      controller: AHCI Controller
+      controller: LSI Logic SAS controller
       port: 1
       device: 0
     - name: sde
       size: 120
       mount: /mnt/disks/vol2
-      controller: AHCI Controller
+      controller: LSI Logic SAS controller
       port: 2
       device: 0

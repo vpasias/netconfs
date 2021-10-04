@@ -22,10 +22,17 @@
   roles:
     - kube-master
     - etcd
+  storage_controllers:
+    - name: Virtual I/O Device SCSI controller
+      type: virtio-scsi
+      controller: VirtIO
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
+      controller: Virtual I/O Device SCSI controller
+      port: 1
+      device: 0      
 - name: "controller02"
   os:
     name: "ubuntu"
@@ -40,10 +47,17 @@
   roles:
     - kube-master
     - etcd
+  storage_controllers:
+    - name: Virtual I/O Device SCSI controller
+      type: virtio-scsi
+      controller: VirtIO
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
+      controller: Virtual I/O Device SCSI controller
+      port: 1
+      device: 0      
 - name: "controller03"
   os:
     name: "ubuntu"
@@ -58,10 +72,17 @@
   roles:
     - kube-master
     - etcd
+  storage_controllers:
+    - name: Virtual I/O Device SCSI controller
+      type: virtio-scsi
+      controller: VirtIO 
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
-      mount: /var/lib/docker/    
+      mount: /var/lib/docker/
+      controller: Virtual I/O Device SCSI controller
+      port: 1
+      device: 0      
 - name: "worker01"
   os:
     name: ubuntu
@@ -85,21 +106,19 @@
       type: sas
       controller: LSILogicSAS
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
       controller: Virtual I/O Device SCSI controller
       port: 1
       device: 0
     - name: sdc
-      size: 20
-    - name: sdd
       size: 120
       mount: /mnt/disks/vol1
       controller: LSI Logic SAS controller
       port: 1
       device: 0
-    - name: sde
+    - name: sdd
       size: 120
       mount: /mnt/disks/vol2
       controller: LSI Logic SAS controller
@@ -128,21 +147,19 @@
       type: sas
       controller: LSILogicSAS
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
       controller: Virtual I/O Device SCSI controller
       port: 1
       device: 0
     - name: sdc
-      size: 20
-    - name: sdd
       size: 120
       mount: /mnt/disks/vol1
       controller: LSI Logic SAS controller
       port: 1
       device: 0
-    - name: sde
+    - name: sdd
       size: 120
       mount: /mnt/disks/vol2
       controller: LSI Logic SAS controller
@@ -171,21 +188,19 @@
       type: sas
       controller: LSILogicSAS
   volumes:
-    - name: sda
+    - name: sdb
       size: 80
       mount: /var/lib/docker/
       controller: Virtual I/O Device SCSI controller
       port: 1
       device: 0
     - name: sdc
-      size: 20
-    - name: sdd
       size: 120
       mount: /mnt/disks/vol1
       controller: LSI Logic SAS controller
       port: 1
       device: 0
-    - name: sde
+    - name: sdd
       size: 120
       mount: /mnt/disks/vol2
       controller: LSI Logic SAS controller

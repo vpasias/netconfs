@@ -1,0 +1,7 @@
+# 9-10/10
+- OLCNE
+- Kubeadm HA v1
+- Kubeadm HA v2
+- Netsim dc6
+- LXD Cluster
+- K3s HA

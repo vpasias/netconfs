@@ -1,4 +1,4 @@
-Arista L3VPN:
+# Arista L3VPN:
 https://blog.thomarite.uk/index.php/2020/05/25/mpls-segment-routing-arista-lab/
 https://github.com/thomarite/ceos-testing/tree/master/topology/config
 https://www.arista.com/en/um-eos/eos-bgpmpls-l3-vpn
@@ -8,37 +8,37 @@ https://changineer.info/network/arista_eos/arista_eos_evpn_layer3.html
 # Layer 3 EVPN between different customers/ISPs (different VLANs)
 https://changineer.info/network/arista_eos/arista_eos_evpn_isp.html
 
-Arista L2VPN:
+# Arista L2VPN:
 https://changineer.info/network/arista_eos/arista_eos_evpn_layer2.html
 
-Arista MLAG:
+# Arista MLAG:
 # One VLAN per host
 https://changineer.info/network/arista_eos/arista_eos_mlag_l2evpn.html
 # Multiple VLANs per host
 https://changineer.info/network/arista_eos/arista_eos_mlag_l3evpn.html
 https://changineer.info/network/arista_eos/arista_eos_mlag_isp.html
 
-Arista EVPN Data Center
+# Arista EVPN Data Center
 https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjVh8jjmfTxAhXI8qQKHWf5AM8QFjABegQIAxAD&url=http%3A%2F%2Fallvpc.net%2FEVPN_Deployment_Guide.pdf&usg=AOvVaw1c3fyysBypwMHys6kBmL9g
 
-Juniper:
+# Juniper:
 https://gitlab.com/mwiget
 
 # Terraform
-Terrible: IaC for QEMU/KVM
+# Terrible IaC
 https://github.com/89luca89/terrible
 https://github.com/YoungjuWang/libvirt-terraform
 
-Network Engineering:
+# Network Engineering:
 https://netquirks.co.uk/
 
-Nautobot:
+# Nautobot:
 http://blog.networktocode.com/post/getting-nautobot-up-and-running-in-the-lab/
 
-Wireless ISP:
+# Wireless ISP:
 https://stubarea51.net/2021/07/20/wisp-cheat-sheet-for-mpls-vpls-mtu/
 
-Cumulus EVPN:
+# Cumulus EVPN:
 https://clabs.netdevops.me/rs/cvx04/
 
 # BGP Multihoming
@@ -93,3 +93,6 @@ https://blog.pekanbaru.go.id/?p=534
 
 # k8s HA
 https://github.com/tsl0922/kubeadm-vagrant
+
+# Ceph
+https://computingforgeeks.com/persistent-storage-for-kubernetes-with-ceph-rbd/

@@ -24,8 +24,10 @@ https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ve
 Juniper:
 https://gitlab.com/mwiget
 
+# Terraform
 Terrible: IaC for QEMU/KVM
 https://github.com/89luca89/terrible
+https://github.com/YoungjuWang/libvirt-terraform
 
 Network Engineering:
 https://netquirks.co.uk/

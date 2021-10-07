@@ -96,3 +96,6 @@ https://github.com/tsl0922/kubeadm-vagrant
 
 # Ceph
 https://computingforgeeks.com/persistent-storage-for-kubernetes-with-ceph-rbd/
+
+# Docker Swarm
+https://itc-life.ru/consul-cluster-ha-in-docker-swarm/

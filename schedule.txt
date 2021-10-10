@@ -1,5 +1,5 @@
 # 9-10/10
-- OLCNE
+- OLCNE - OK
 - Kubeadm HA v1
 - Kubeadm HA v2
 - Netsim dc6

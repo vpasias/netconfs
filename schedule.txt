@@ -3,5 +3,5 @@
 - Kubeadm HA v1 - No
 - Kubeadm HA v2 - OK
 - Netsim dc6
-- LXD Cluster - OK
+- LXD Cluster - OK basic infrastructure
 - K3s HA

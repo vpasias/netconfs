@@ -5,3 +5,4 @@
 - Netsim dc6
 - LXD Cluster - OK basic infrastructure - Pending juju
 - K3s HA
+- Kuberef

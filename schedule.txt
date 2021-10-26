@@ -1,8 +1,8 @@
 # Labs scheduled or executed
 - OLCNE - OK
-- Kubeadm HA v1 - No with Docker - Pending CRI-O
+- Kubeadm HA v1 - No with Docker - No with CRI-O
 - Kubeadm HA v2 - OK
 - Netsim dc6
-- LXD Cluster - OK basic infrastructure - Pending juju
+- LXD Cluster - OK basic infrastructure - OK juju
 - K3s HA
-- Kuberef
+- Kuberef - No

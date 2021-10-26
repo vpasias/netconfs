@@ -90,6 +90,7 @@ https://github.com/openstack-charmers/openstack-on-lxd
 https://paulylinux.wordpress.com/2018/02/28/configure-lxd-for-openstack/
 https://www.thomas-krenn.com/en/wiki/HA_Cluster_with_Linux_Containers_based_on_Heartbeat,_Pacemaker,_DRBD_and_LXC
 https://blog.pekanbaru.go.id/?p=534
+https://discourse.ubuntu.com/t/lxd-4-0-quick-recipe-lxc-and-kvm-coexisting/15222
 
 # k8s HA
 https://github.com/tsl0922/kubeadm-vagrant

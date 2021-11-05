@@ -104,3 +104,4 @@ https://itc-life.ru/consul-cluster-ha-in-docker-swarm/
 # HA Packstack
 https://www.golinuxcloud.com/configure-openstack-high-availability-pacemaker/
 https://www.golinuxcloud.com/configure-haproxy-in-openstack-high-availability/
+http://gbraad.nl/blog/highly-available-storage-using-glusterfs.html

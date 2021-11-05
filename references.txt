@@ -100,3 +100,7 @@ https://computingforgeeks.com/persistent-storage-for-kubernetes-with-ceph-rbd/
 
 # Docker Swarm
 https://itc-life.ru/consul-cluster-ha-in-docker-swarm/
+
+# HA Packstack
+https://www.golinuxcloud.com/configure-openstack-high-availability-pacemaker/
+https://www.golinuxcloud.com/configure-haproxy-in-openstack-high-availability/

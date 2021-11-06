@@ -109,3 +109,7 @@ http://gbraad.nl/blog/highly-available-storage-using-glusterfs.html
 # PBOS - Pure Baremetal OpenStack
 http://www.iorchard.net/2021/09/23/demo_pbos_installation.html
 https://github.com/iorchard/pbos-ansible
+
+# Pengrix Kubernetes(PK)
+https://github.com/iorchard/p5x-ansible
+https://github.com/iorchard/p5x-ansible

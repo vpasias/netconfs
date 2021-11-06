@@ -105,3 +105,7 @@ https://itc-life.ru/consul-cluster-ha-in-docker-swarm/
 https://www.golinuxcloud.com/configure-openstack-high-availability-pacemaker/
 https://www.golinuxcloud.com/configure-haproxy-in-openstack-high-availability/
 http://gbraad.nl/blog/highly-available-storage-using-glusterfs.html
+
+# PBOS - Pure Baremetal OpenStack
+http://www.iorchard.net/2021/09/23/demo_pbos_installation.html
+https://github.com/iorchard/pbos-ansible

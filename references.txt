@@ -35,8 +35,11 @@ https://netquirks.co.uk/
 # Nautobot:
 http://blog.networktocode.com/post/getting-nautobot-up-and-running-in-the-lab/
 
-# Wireless ISP:
+# Wireless ISP design:
 https://stubarea51.net/2021/07/20/wisp-cheat-sheet-for-mpls-vpls-mtu/
+
+# ISP design:
+https://stubarea51.net/2021/11/14/isp-design-guide-separation-of-network-functions-introduction-and-overview/
 
 # Cumulus EVPN:
 https://clabs.netdevops.me/rs/cvx04/

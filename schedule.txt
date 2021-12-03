@@ -6,7 +6,7 @@
 - LXD Cluster - OK basic infrastructure - OK juju
 - K3s HA
 - Kuberef - No
-- PBOS - OK 
+- PBOS - OK (vlans, bonded interfaces)
 - Pengrix Kubernetes
 - Netsim BGP Anycast
 - Netsim BGP AddPath

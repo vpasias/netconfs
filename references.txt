@@ -102,6 +102,11 @@ https://github.com/tsl0922/kubeadm-vagrant
 https://computingforgeeks.com/persistent-storage-for-kubernetes-with-ceph-rbd/
 
 # Docker Swarm
+https://www.linuxtechi.com/install-docker-and-docker-compose-rocky-linux/
+https://www.server-world.info/en/note?os=CentOS_Stream_8&p=docker&f=5
+https://kifarunix.com/install-and-setup-glusterfs-storage-cluster-on-centos-8/
+https://thenewstack.io/tutorial-create-a-docker-swarm-with-persistent-storage-using-glusterfs/
+https://dockerlabs.collabnix.com/intermediate/Implementing_High_Availability_with_Docker_Swarm.html
 https://itc-life.ru/consul-cluster-ha-in-docker-swarm/
 https://github.com/gotoz/runq
 

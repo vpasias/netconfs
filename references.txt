@@ -70,6 +70,10 @@ https://github.com/ewwhite/zfs-ha/wiki
 https://blog.kintone.io/entry/neco
 https://github.com/cybozu-go/neco
 
+# Placemat: Powerful Data Center Virtualization Tool
+https://blog.kintone.io/entry/2021/04/05/095458
+https://github.com/cybozu-go/placemat
+
 # HA k3s cluster
 https://github.com/xanmanning/vagrant-kubernetes-cluster
 https://github.com/pmvrolijk/k3s-cluster

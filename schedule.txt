@@ -6,8 +6,10 @@
 - LXD Cluster - OK basic infrastructure - OK juju
 - K3s HA
 - Kuberef - No
-- PBOS - OK (3-node Rocky Linux cluster with vlans, bonded interfaces)
-- Pengrix Kubernetes
+- PBOS - OK (3-node Rocky Linux cluster with vlans, bonded interfaces) - No ubuntu 20.04, debian 11
+- Pengrix Kubernetes - No
 - Netsim BGP Anycast
 - Netsim BGP AddPath
 - Docker Swarm HA
+- Containerlab + KVM VMs via bridging
+- Openstack OCI PoC on debian 11 VM

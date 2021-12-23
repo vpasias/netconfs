@@ -10,6 +10,7 @@
 - Pengrix Kubernetes - No
 - Netsim BGP Anycast
 - Netsim BGP AddPath
-- Docker Swarm HA
+# 26/12 - 2/1
 - Containerlab + KVM VMs via bridging
 - Openstack OCI PoC on debian 11 VM
+- Docker Swarm HA with Consul

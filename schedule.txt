@@ -11,6 +11,7 @@
 - Netsim BGP Anycast
 - Netsim BGP AddPath
 # 26/12 - 2/1
-- Containerlab + KVM VMs via bridging
-- Openstack OCI PoC on debian 11 VM
+- Containerlab + KVM VMs via bridging - OK
+- Openstack OCI PoC on debian 11 VM - No
 - Docker Swarm HA with Consul
+- Netsim SR-MPLS topology based on SR Linux - OK

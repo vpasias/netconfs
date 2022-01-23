@@ -50,3 +50,7 @@ https://github.com/mweisel/cisco-nxos9kv-vagrant-libvirt
 
 # Juniper Junos
 https://ns2.cloche.ca/juniper/images/
+
+# Create vSRX box
+https://codingpackets.com/blog/juniper-vsrx3-0-vagrant-libvirt-box-install/
+https://github.com/mweisel/juniper-vsrx-vagrant-libvirt

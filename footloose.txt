@@ -1,0 +1,3 @@
+https://blog.stephane-robert.info/post/kubernetes-cluster-ignite-footloose-kubespray/
+
+https://blog.stephane-robert.info/post/gipts-ignite-firecracker-micro-vm/

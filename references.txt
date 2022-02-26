@@ -125,3 +125,6 @@ https://github.com/iorchard/pbos-ansible
 
 # Pengrix Kubernetes(PK)
 https://github.com/iorchard/p5x-ansible
+
+# Kubernetes with MAAS, LXD, and Juju
+https://github.com/antongisli/maas-baremetal-k8s-tutorial

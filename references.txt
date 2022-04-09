@@ -128,3 +128,6 @@ https://github.com/iorchard/p5x-ansible
 
 # Kubernetes with MAAS, LXD, and Juju
 https://github.com/antongisli/maas-baremetal-k8s-tutorial
+
+# Spin up a Ubuntu VM using Pulumi and libvirt
+https://dustinspecker.com/posts/ubuntu-vm-pulumi-libvirt/

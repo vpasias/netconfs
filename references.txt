@@ -131,3 +131,7 @@ https://github.com/antongisli/maas-baremetal-k8s-tutorial
 
 # Spin up a Ubuntu VM using Pulumi and libvirt
 https://dustinspecker.com/posts/ubuntu-vm-pulumi-libvirt/
+
+# Full-Stack Network Automation
+https://livio.zanol.com.br/full-stack-it-automation-part-1
+https://github.com/liviozanol/full-stack_automation

@@ -22,7 +22,7 @@ qemu-system-x86_64 \
   -cpu host \
   -m 4G \
   -smp cores=4 \
-  -k pt \
+  -k en \
   -qmp unix:test.socket,server,nowait \
   -netdev bridge,id=net0,br=virbr0 \
   -device vmxnet3,id=nic0,netdev=net0,mac=52:54:00:12:34:56 \

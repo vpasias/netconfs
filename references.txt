@@ -135,3 +135,7 @@ https://dustinspecker.com/posts/ubuntu-vm-pulumi-libvirt/
 # Full-Stack Network Automation
 https://livio.zanol.com.br/full-stack-it-automation-part-1
 https://github.com/liviozanol/full-stack_automation
+
+# Harvester iPXE Examples - Vagrant
+https://github.com/harvester/ipxe-examples.git
+

@@ -51,3 +51,5 @@ iso=/home/iason/esxi/VMware-VMvisor-Installer-7.0U3d-19482537.x86_64.iso
 disk_pool=default
 
 virt-install --virt-type=kvm --name=esxi1 --cpu host-passthrough --ram 73728 --vcpus=24 --virt-type=kvm --hvm --cdrom $iso --network network:default,model=vmxnet3 --graphics vnc --video qxl --disk pool=$disk_pool,size=900,sparse=true,bus=ide,format=qcow2 --boot cdrom,hd,menu=on --noautoconsole --force
+
+virsh console esxi1

@@ -46,7 +46,7 @@ ssh -v root@192.168.121.111
 # open a browser session.
 xdg-open https://192.168.121.111
 
-iso=/home/iason/esxi/VMware-VMvisor-Installer-7.0U3-18644231.x86_64.iso
+iso=/home/iason/esxi/VMware-VMvisor-Installer-7.0U3d-19482537.x86_64.iso
 
 disk_pool=default
 

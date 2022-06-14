@@ -56,4 +56,4 @@ virsh console esxi1
 
 cd /home/iason/tmp/ && wget https://releases.ubuntu.com/20.04/ubuntu-20.04.4-desktop-amd64.iso && cd ~
 
-virt-install –-name=node15 –os-variant ubuntu20.04 –vcpus 2 –ram 4096 --cdrom /home/iason/tmp/ubuntu-20.04.4-desktop-amd64.iso --network network:default,model=virtio --disk pool=$disk_pool,size=80,format=qcow2 --boot cdrom,hd,menu=on –graphics vnc,port=5901 --noautoconsole --force --mac xyz
+virt-install –-name=node15 –os-variant ubuntu20.04 –vcpus 2 –ram 4096 --cdrom /home/iason/tmp/ubuntu-20.04.4-desktop-amd64.iso --network network:mgt,model=virtio --disk pool=$disk_pool,size=80,format=qcow2 --boot cdrom,hd,menu=on –graphics vnc,port=5901 --noautoconsole --force --mac xyz

@@ -101,6 +101,7 @@ https://discourse.ubuntu.com/t/lxd-4-0-quick-recipe-lxc-and-kvm-coexisting/15222
 
 # k8s HA
 https://github.com/tsl0922/kubeadm-vagrant
+https://github.com/kaan-keskin/kubernetes-cluster-vagrant-script
 
 # Ceph
 https://computingforgeeks.com/persistent-storage-for-kubernetes-with-ceph-rbd/

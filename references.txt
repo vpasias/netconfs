@@ -152,3 +152,6 @@ https://github.com/fultonj/xena
 https://github.com/martimy
 https://github.com/sflow-rt/containerlab
 https://www.inetsix.net/posts/avd-with-containerlab/
+
+# KubeFire (create and manage Kubernetes clusters running on FireCracker microVMs via weaveworks/ignite)
+https://github.sre.pub/innobead/kubefire

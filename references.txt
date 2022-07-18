@@ -114,6 +114,7 @@ https://thenewstack.io/tutorial-create-a-docker-swarm-with-persistent-storage-us
 https://dockerlabs.collabnix.com/intermediate/Implementing_High_Availability_with_Docker_Swarm.html
 https://itc-life.ru/consul-cluster-ha-in-docker-swarm/
 https://github.com/gotoz/runq
+https://github.com/kaan-keskin/docker-swarm-cluster-vagrant-script
 
 # HA Packstack
 https://www.golinuxcloud.com/configure-openstack-high-availability-pacemaker/

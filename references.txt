@@ -151,3 +151,4 @@ https://github.com/fultonj/xena
 # Containerlab
 https://github.com/martimy
 https://github.com/sflow-rt/containerlab
+https://www.inetsix.net/posts/avd-with-containerlab/

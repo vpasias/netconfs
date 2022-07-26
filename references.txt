@@ -103,6 +103,7 @@ https://discourse.ubuntu.com/t/lxd-4-0-quick-recipe-lxc-and-kvm-coexisting/15222
 https://github.com/tsl0922/kubeadm-vagrant
 https://github.com/kaan-keskin/kubernetes-cluster-vagrant-script
 https://github.com/justmeandopensource/kubernetes
+https://graspingtech.com/install-kubernetes-ubuntu-20.04/
 
 # Ceph
 https://computingforgeeks.com/persistent-storage-for-kubernetes-with-ceph-rbd/

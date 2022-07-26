@@ -156,3 +156,6 @@ https://www.inetsix.net/posts/avd-with-containerlab/
 
 # KubeFire (create and manage Kubernetes clusters running on FireCracker microVMs via weaveworks/ignite)
 https://github.com/innobead/kubefire
+
+# Ignite
+https://github.com/kimlehtinen/kubeadm-ignite

@@ -146,6 +146,7 @@ https://github.com/harvester/ipxe-examples.git
 # VMWare:
 https://fabianlee.org/2021/11/18/kvm-deploying-a-nested-version-of-vmware-esxi-7-0-on-kvm/
 https://fabianlee.org/2021/11/18/kvm-deploy-the-vmware-vcenter-7-0-appliance-using-the-cli-installer/
+https://github.com/goneri/deploy-vmware-ci
 
 # TripleO
 https://github.com/fultonj/xena

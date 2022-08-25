@@ -150,6 +150,10 @@ https://github.com/goneri/deploy-vmware-ci
 
 # TripleO
 https://github.com/fultonj/xena
+https://www.pubstack.com/blog/2019/02/05/tripleo-quickstart-deployments.html
+https://docs.openstack.org/tripleo-quickstart/latest/getting-started.html
+https://hackmd.io/@rh-openstack-ci/ByxRg5aBr
+https://psachin.gitlab.io/ooo_quickstart.html
 
 # Containerlab
 https://github.com/martimy

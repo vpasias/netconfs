@@ -171,3 +171,6 @@ https://issuecloser.com/blog/how-to-install-weave-s-ignite-for-firecracker-vms-w
 https://github.com/firecracker-microvm/firecracker/blob/main/docs/getting-started.md
 https://www.ongres.com/blog/automation-to-run-vms-based-on-vanilla-cloud-images-on-firecracker/
 https://gitlab.com/ongresinc/blog-posts-src/-/tree/master/202012-firecracker_cloud_image_automation
+
+# Openshift
+https://github.com/timhughes/vagrant_ansible_okd4

@@ -174,3 +174,4 @@ https://gitlab.com/ongresinc/blog-posts-src/-/tree/master/202012-firecracker_clo
 
 # Openshift
 https://github.com/timhughes/vagrant_ansible_okd4
+https://github.com/karmab/aicli

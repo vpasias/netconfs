@@ -178,3 +178,7 @@ https://computingforgeeks.com/how-to-deploy-openshift-container-platform-on-kvm/
 https://github.com/timhughes/vagrant_ansible_okd4
 https://github.com/karmab/aicli
 https://github.com/cchen666/OpenShift-Labs/tree/main/Installation/assistedInstaller/files
+
+# Kcli
+https://eclipsys.ca/fr/kvm-lab-inside-a-virtualbox-vm-nested-virtualization-using-vagrant/
+https://github.com/brokedba/KVM-on-virtualbox

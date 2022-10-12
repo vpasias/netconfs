@@ -105,6 +105,7 @@ https://github.com/kaan-keskin/kubernetes-cluster-vagrant-script
 https://github.com/justmeandopensource/kubernetes
 https://graspingtech.com/install-kubernetes-ubuntu-20.04/
 https://github.com/smartxworks/virtink
+https://github.com/kubealex/libvirt-k8s-provisioner
 
 # Ceph
 https://computingforgeeks.com/persistent-storage-for-kubernetes-with-ceph-rbd/
@@ -178,6 +179,7 @@ https://computingforgeeks.com/how-to-deploy-openshift-container-platform-on-kvm/
 https://github.com/timhughes/vagrant_ansible_okd4
 https://github.com/karmab/aicli
 https://github.com/cchen666/OpenShift-Labs/tree/main/Installation/assistedInstaller/files
+https://github.com/kubealex/libvirt-ocp4-provisioner
 
 # Kcli
 https://eclipsys.ca/fr/kvm-lab-inside-a-virtualbox-vm-nested-virtualization-using-vagrant/

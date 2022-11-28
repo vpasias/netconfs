@@ -87,6 +87,7 @@ https://github.com/openstack-snaps/snap-microstack
 # Hyperconverged MicroK8s cluster
 https://jonathangazeley.com/2020/09/10/building-a-hyperconverged-kubernetes-cluster-with-microk8s-and-ceph/
 https://www.portainer.io/blog/portainer-on-microk8s-openebs-metallb-and-ingress
+https://microk8s.io/docs/addon-openebs
 
 # OpenSVC
 https://docs.opensvc.com/latest/howto.getting.started.html

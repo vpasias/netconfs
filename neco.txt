@@ -5,7 +5,7 @@ export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 exec $SHELL
 go version
-sudo add-apt-repository ppa:smoser/swtpm
+sudo add-apt-repository ppa:smoser/swtpm -y
 echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /' | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
 curl -fsSL https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_20.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/devel_kubic_libcontainers_stable.gpg > /dev/null
 wget -O - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -

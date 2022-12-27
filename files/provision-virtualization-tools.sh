@@ -97,3 +97,5 @@ smbpasswd -a -s ubuntu <<'EOF'
 ubuntu
 ubuntu
 EOF
+apt-get install -y sysfsutils
+systool -m kvm_intel -v

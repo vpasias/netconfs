@@ -31,9 +31,9 @@ apt-get install -y virt-manager
 #   Could not open '/var/lib/libvirt/images/terraform_example_root.img': Permission denied'
 sed -i -E 's,#?(security_driver)\s*=.*,\1 = "none",g' /etc/libvirt/qemu.conf
 systemctl restart libvirtd
-# let the vagrant user manage libvirtd.
+# let the ubuntu user manage libvirtd.
 # see /usr/share/polkit-1/rules.d/60-libvirt.rules
-usermod -aG libvirt vagrant
+usermod -aG libvirt ubuntu
 
 # install terraform.
 terraform_version=0.12.24

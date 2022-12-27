@@ -9,6 +9,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # install iso creation tool.
 # NB xorriso is compatible with genisoimage and mkisofs and is also available in msys2 (windows).
+apt-get update -y
 apt-get install -y xorriso
 
 # install the iso-info tool.

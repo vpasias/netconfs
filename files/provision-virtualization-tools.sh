@@ -61,7 +61,7 @@ rm $terraform_libvirt_provider_filename
 # install Packer.
 apt-get install -y unzip
 packer_version=1.6.1
-wget -q -O/tmp/packer_${packer_version}_linux_amd64.zip https://releases.hashicorp.com/packer/${packer_version}/packer_${packer_version}_linux_amd64.zip
+wget -q -O /tmp/packer_${packer_version}_linux_amd64.zip https://releases.hashicorp.com/packer/${packer_version}/packer_${packer_version}_linux_amd64.zip
 unzip /tmp/packer_${packer_version}_linux_amd64.zip -d /usr/local/bin
 # install useful packer plugins.
 wget -q -O/tmp/packer-provisioner-windows-update-linux.tgz https://github.com/rgl/packer-provisioner-windows-update/releases/download/v0.9.0/packer-provisioner-windows-update-linux.tgz

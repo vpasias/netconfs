@@ -47,7 +47,7 @@ rm terraform $terraform_filename
 terraform_libvirt_provider_url='https://github.com/dmacvicar/terraform-provider-libvirt/releases/download/v0.6.2/terraform-provider-libvirt-0.6.2+git.1585292411.8cbe9ad0.Ubuntu_18.04.amd64.tar.gz'
 terraform_libvirt_provider_filename="/tmp/$(basename $terraform_libvirt_provider_url)"
 wget -qO$terraform_libvirt_provider_filename $terraform_libvirt_provider_url
-su vagrant -c bash <<VAGRANT_EOF
+su ubuntu -c bash <<VAGRANT_EOF
 #!/bin/bash
 set -euxo pipefail
 cd ~
@@ -76,7 +76,7 @@ dpkg -i /tmp/vagrant_${vagrant_version}_x86_64.deb
 rm /tmp/vagrant_${vagrant_version}_x86_64.deb
 # install useful vagrant plugins.
 apt-get install -y libvirt-dev gcc make
-su vagrant -c bash <<'VAGRANT_EOF'
+su ubuntu -c bash <<'VAGRANT_EOF'
 #!/bin/bash
 set -eux
 cd ~
@@ -93,7 +93,7 @@ patch -p1 <ed7139fa1e896d0b84ed32180b72a647bf9f37eb.patch
 rm ed7139fa1e896d0b84ed32180b72a647bf9f37eb.patch
 popd
 apt-get install -y samba smbclient
-smbpasswd -a -s vagrant <<'EOF'
-vagrant
-vagrant
+smbpasswd -a -s ubuntu <<'EOF'
+ubuntu
+ubuntu
 EOF

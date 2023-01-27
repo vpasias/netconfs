@@ -190,3 +190,6 @@ https://github.com/kubealex/libvirt-ocp4-provisioner
 # Kcli
 https://eclipsys.ca/fr/kvm-lab-inside-a-virtualbox-vm-nested-virtualization-using-vagrant/
 https://github.com/brokedba/KVM-on-virtualbox
+
+#YAOOK - Lifecycle Management Tool for OpenStack
+https://yaook.cloud/

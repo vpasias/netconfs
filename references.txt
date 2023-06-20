@@ -84,6 +84,10 @@ https://rpi4cluster.com/
 
 # Microstack
 https://github.com/openstack-snaps/snap-microstack
+https://microstack.run/docs
+
+# MicroCloud
+https://canonical-microcloud.readthedocs-hosted.com/en/latest/
 
 # Hyperconverged MicroK8s cluster
 https://jonathangazeley.com/2020/09/10/building-a-hyperconverged-kubernetes-cluster-with-microk8s-and-ceph/

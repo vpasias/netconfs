@@ -201,3 +201,6 @@ https://yaook.cloud/
 
 #OpenGFW - Open Great Firewall of China
 https://github.com/apernet/OpenGFW
+
+#NOC project is an Operation Support System (OSS) for telecom companies, service providers, and enterprise Network Operation Centers (NOC)
+https://github.com/nocproject/noc

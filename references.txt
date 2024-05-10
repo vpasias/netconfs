@@ -204,15 +204,3 @@ https://github.com/apernet/OpenGFW
 
 #NOC project is an Operation Support System (OSS) for telecom companies, service providers, and enterprise Network Operation Centers (NOC)
 https://github.com/nocproject/noc
-
-#Debian stable to unstable (sid)
-#Use the current "stable" installer to install a minimal stable system (recommended).
-#Change your apt sources to point to "unstable" - https://unix.stackexchange.com/questions/644349/correct-sources-list-for-debian-unstable
-sudo sed -i 's/bookworm/unstable/g' /etc/apt/sources.list
-vim /etc/apt/sources.list
-deb https://deb.debian.org/debian/ unstable main contrib non-free
-deb-src https://deb.debian.org/debian/ unstable main contrib non-free
-# all other references are commented out
-#Run 'apt update' and 'apt full-upgrade'. 
-sudo apt update -y
-sudo apt full-upgrade -y

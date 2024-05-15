@@ -197,11 +197,16 @@ https://github.com/kubealex/libvirt-ocp4-provisioner
 https://eclipsys.ca/fr/kvm-lab-inside-a-virtualbox-vm-nested-virtualization-using-vagrant/
 https://github.com/brokedba/KVM-on-virtualbox
 
-#YAOOK - Lifecycle Management Tool for OpenStack
+# YAOOK - Lifecycle Management Tool for OpenStack
 https://yaook.cloud/
 
-#OpenGFW - Open Great Firewall of China
+# OpenGFW - Open Great Firewall of China
 https://github.com/apernet/OpenGFW
 
-#NOC project is an Operation Support System (OSS) for telecom companies, service providers, and enterprise Network Operation Centers (NOC)
+# NOC project is an Operation Support System (OSS) for telecom companies, service providers, and enterprise Network Operation Centers (NOC)
 https://github.com/nocproject/noc
+
+# Kolla-Openstack
+https://www.roksblog.de/deploy-openstack-using-kolla-ansible-and-terraform/
+https://github.com/r0k5t4r/tf-esxi-kolla-ansible?ref=roksblog.de
+https://github.com/rgl/ovftool-binaries

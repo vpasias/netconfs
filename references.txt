@@ -206,7 +206,9 @@ https://github.com/apernet/OpenGFW
 # NOC project is an Operation Support System (OSS) for telecom companies, service providers, and enterprise Network Operation Centers (NOC)
 https://github.com/nocproject/noc
 
-# Kolla-Openstack
+# Kolla-Openstack on ESXi VMs
 https://www.roksblog.de/deploy-openstack-using-kolla-ansible-and-terraform/
 https://github.com/r0k5t4r/tf-esxi-kolla-ansible?ref=roksblog.de
+https://developer.hashicorp.com/terraform/install
+https://blog.zuthof.nl/2024/01/15/vsphere-tidbits-using-ovftool-on-linux/
 https://github.com/rgl/ovftool-binaries

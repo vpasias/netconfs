@@ -213,3 +213,6 @@ https://developer.hashicorp.com/terraform/install
 https://blog.zuthof.nl/2024/01/15/vsphere-tidbits-using-ovftool-on-linux/
 https://docs.vmware.com/en/VMware-Telco-Cloud-Operations/1.4.0/deployment-guide-140/GUID-95301A42-F6F6-4BA9-B3A0-A86A268754B6.html
 https://github.com/rgl/ovftool-binaries
+
+# Kolla-Openstack with Ceph
+https://achchusnulchikam.medium.com/deploy-production-ready-openstack-using-kolla-ansible-9cd1d1f210f1

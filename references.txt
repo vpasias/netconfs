@@ -216,3 +216,6 @@ https://github.com/rgl/ovftool-binaries
 
 # Kolla-Openstack with Ceph
 https://achchusnulchikam.medium.com/deploy-production-ready-openstack-using-kolla-ansible-9cd1d1f210f1
+
+# Build Multinode Kolla-Ansible Openstack LAB using LXD
+https://satishdotpatel.github.io/build-multinode-kolla-lab-using-lxd/

@@ -219,3 +219,6 @@ https://achchusnulchikam.medium.com/deploy-production-ready-openstack-using-koll
 
 # Build Multinode Kolla-Ansible Openstack LAB using LXD
 https://satishdotpatel.github.io/build-multinode-kolla-lab-using-lxd/
+
+# Microstack
+https://github.com/nobuto-m/quick-microstack/tree/master

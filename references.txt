@@ -224,5 +224,8 @@ https://satishdotpatel.github.io/build-multinode-kolla-lab-using-lxd/
 https://github.com/nobuto-m/quick-microstack/tree/master
 https://ubuntu.com/server/docs/create-cloud-image-vms-with-uvtool
 
+# MAAS - Openstack - Kubernetes Lab
+https://github.com/nobuto-m/quick-maas
+
 # Charmed OpenStack Ironic Lab
 https://github.com/openstack-charmers/tf-ironic-lab

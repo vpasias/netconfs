@@ -229,3 +229,6 @@ https://github.com/nobuto-m/quick-maas
 
 # Charmed OpenStack Ironic Lab
 https://github.com/openstack-charmers/tf-ironic-lab
+
+# Krake: an orchestrator engine used to automatically manage containerised workloads on distributed and heterogeneous cloud platforms
+https://krake.cloud/en/

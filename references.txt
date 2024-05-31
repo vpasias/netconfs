@@ -193,6 +193,7 @@ https://github.com/karmab/aicli
 https://github.com/cchen666/OpenShift-Labs/tree/main/Installation/assistedInstaller/files
 https://github.com/kubealex/libvirt-ocp4-provisioner
 https://github.com/RHFieldProductManagement/openshift-aio
+https://github.com/jdandrea/ocp4_setup_upi_kvm
 
 # Kcli
 https://eclipsys.ca/fr/kvm-lab-inside-a-virtualbox-vm-nested-virtualization-using-vagrant/

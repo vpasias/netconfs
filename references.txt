@@ -236,3 +236,6 @@ https://github.com/openstack-charmers/tf-ironic-lab
 
 # Krake: an orchestrator engine used to automatically manage containerised workloads on distributed and heterogeneous cloud platforms
 https://krake.cloud/en/
+
+# Deployment of OpenStack Kubernetes with operators
+https://sigs.centos.org/cloud/rdo_on_okd/CRC_PoC/

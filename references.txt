@@ -239,3 +239,4 @@ https://krake.cloud/en/
 
 # Deployment of OpenStack Kubernetes with operators
 https://sigs.centos.org/cloud/rdo_on_okd/CRC_PoC/
+https://qiita.com/xotaki/items/ca3a4a3cfafa45d84d17

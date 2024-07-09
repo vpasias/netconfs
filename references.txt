@@ -246,3 +246,6 @@ https://qiita.com/xotaki/items/ca3a4a3cfafa45d84d17
 # Vexxhost Atmosphere
 https://vexxhost.github.io/atmosphere/quick-start.html
 https://github.com/vexxhost/atmosphere/tree/main
+
+# Opennebula
+https://github.com/OpenNebula/one-deploy

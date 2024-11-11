@@ -260,3 +260,6 @@ https://github.com/DoclerLabs/openstack/
 
 # Mininet
 https://github.com/bobuhiro11/mininetlab
+
+# Windows inside a Docker container
+https://github.com/dockur/windows

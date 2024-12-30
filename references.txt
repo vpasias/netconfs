@@ -198,6 +198,7 @@ https://github.com/RHFieldProductManagement/openshift-aio
 https://github.com/jdandrea/ocp4_setup_upi_kvm
 https://lewisdenny.io/openstack_operator_deployment/
 https://red-hat-storage.github.io/ocs-training/training/ocs4/odf4-install-no-ui.html
+https://github.com/bn222/cluster-deployment-automation
 
 # Kcli
 https://eclipsys.ca/fr/kvm-lab-inside-a-virtualbox-vm-nested-virtualization-using-vagrant/

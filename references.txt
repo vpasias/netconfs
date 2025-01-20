@@ -268,3 +268,6 @@ https://github.com/bobuhiro11/mininetlab
 
 # Windows inside a Docker container
 https://github.com/dockur/windows
+
+# Rockoon: Kubernetes controller that provides Life Cycle Management for OpenStack services
+https://github.com/Mirantis/rockoon

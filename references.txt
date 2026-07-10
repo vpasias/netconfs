@@ -230,6 +230,7 @@ https://achchusnulchikam.medium.com/deploy-production-ready-openstack-using-koll
 https://kdinesh.in/deploying-ceph-storage-cluster-using-cephadm/
 https://kdinesh.in/openstackhacluster/
 https://wiki.vidalinux.org/index.php/Howto_openstack_kolla
+https://github.com/rashesh91/openstack-kolla-deploy
 
 # Build Multinode Kolla-Ansible Openstack LAB using LXD
 https://satishdotpatel.github.io/build-multinode-kolla-lab-using-lxd/

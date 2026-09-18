@@ -24,6 +24,9 @@ https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ve
 #FRR
 https://fedepaol.github.io/posts/
 https://github.com/fedepaol
+https://github.com/dbono711/clab-frr-srv6
+https://github.com/dbono711/clab-frr-evpn-vxlan
+https://github.com/dbono711/clab-frr-bgp-peering
 
 # Juniper:
 https://gitlab.com/mwiget

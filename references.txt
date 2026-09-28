@@ -275,3 +275,9 @@ https://github.com/dockur/windows
 
 # Rockoon: Kubernetes controller that provides Life Cycle Management for OpenStack services
 https://github.com/Mirantis/rockoon
+
+# Provisioning Infrastructure with Terraform and Libvirt for OpenStack Deployment
+https://github.com/jicarretero/deploy-openstack-tofu
+
+# DeployStack
+https://github.com/St3vSoft/DeployStack

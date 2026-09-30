@@ -266,6 +266,7 @@ https://github.com/OpenNebula/one-deploy
 
 # OpenStack Cloud Deployment
 https://github.com/DoclerLabs/openstack/
+https://github.com/ams0/openstack-native
 
 # Mininet
 https://github.com/bobuhiro11/mininetlab
@@ -281,3 +282,6 @@ https://github.com/jicarretero/deploy-openstack-tofu
 
 # DeployStack
 https://github.com/St3vSoft/DeployStack
+
+# multiprox - Run large Proxmox VE clusters on container infrastructure
+https://github.com/ams0/multiprox

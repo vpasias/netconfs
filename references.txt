@@ -24,9 +24,6 @@ https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ve
 #FRR
 https://fedepaol.github.io/posts/
 https://github.com/fedepaol
-https://github.com/dbono711/clab-frr-srv6
-https://github.com/dbono711/clab-frr-evpn-vxlan
-https://github.com/dbono711/clab-frr-bgp-peering
 
 # Juniper:
 https://gitlab.com/mwiget
@@ -181,6 +178,9 @@ https://psachin.gitlab.io/ooo_quickstart.html
 https://github.com/martimy
 https://github.com/sflow-rt/containerlab
 https://www.inetsix.net/posts/avd-with-containerlab/
+https://github.com/dbono711/clab-frr-srv6
+https://github.com/dbono711/clab-frr-evpn-vxlan
+https://github.com/dbono711/clab-frr-bgp-peering
 
 # KubeFire (create and manage Kubernetes clusters running on FireCracker microVMs via weaveworks/ignite)
 https://github.com/innobead/kubefire
